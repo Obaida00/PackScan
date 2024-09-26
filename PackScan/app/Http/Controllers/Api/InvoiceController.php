@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\InvoiceResource;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class InvoiceController extends Controller
 {
@@ -15,7 +16,7 @@ class InvoiceController extends Controller
     public function index()
     {
         //todo paginate
-        return InvoiceResource::collection(Invoice::query()->orderby('created_at', 'desc')->get());
+        return InvoiceResource::collection(Invoice::query()->orderby('created_at', 'desc')->paginate(10));
     }
 
     /**
@@ -24,7 +25,14 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
         $data = $request->toArray();
+        // use this to remove the file from the request
+        // $data = $request->except(['content']);
+
         $invoice = Invoice::create($data);
+
+        //todo storing files
+        // add file extension and complete the put and get of files
+        // Storage::put('filebase/' . $invoice->id, $request['content']);
         return response(new InvoiceResource($invoice), 201);
     }
 

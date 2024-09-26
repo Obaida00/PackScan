@@ -9,3 +9,12 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::apiResource('/invoices', InvoiceController::class);
+
+// todo storage examples
+// Route::put("/New", function () {
+//     Storage::put('files/newFile.txt', 'Hello I am txt');
+// });
+// Route::get("/New", function () {
+//     return Storage::download('files/newFile.txt');
+//or     return Storage::get('files/newFile.txt');
+// });

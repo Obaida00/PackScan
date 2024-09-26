@@ -19,8 +19,8 @@ class InvoiceFactory extends Factory
         return [
             'id' => fake()->unique()->numberBetween(1000, 9999),
             'manager' => fake()->name(),
-            'pharmacist'=> fake()-> name(),
-            'status' => fake() -> randomElement(['Pending', 'In Progress', 'Done'])
+            'pharmacist' => fake()->name(),
+            'status' => fake()->randomElement(['Pending', 'In Progress', 'Done']),
         ];
     }
 }
