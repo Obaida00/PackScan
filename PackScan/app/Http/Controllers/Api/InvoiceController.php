@@ -33,7 +33,7 @@ class InvoiceController extends Controller
         //todo storing files
         // add file extension and complete the put and get of files
         // Storage::put('filebase/' . $invoice->id, $request['content']);
-        return response(new InvoiceResource($invoice), 201);
+        return response((new InvoiceResource($invoice))->toJson(), 201);
     }
 
     /**
@@ -60,6 +60,7 @@ class InvoiceController extends Controller
      */
     public function destroy(Invoice $invoice)
     {
+        //todo delete the stored file or move to trash folder
         $invoice->delete();
         return response("", 204);
     }
