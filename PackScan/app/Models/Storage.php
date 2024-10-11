@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Storage extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'id',
+        'name',
+        'code'
+    ];
+
+    public function invoices(){
+        return $this->hasMany(Invoice::class);
+    }
 }

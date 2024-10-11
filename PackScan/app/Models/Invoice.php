@@ -14,5 +14,16 @@ class Invoice extends Model
         'manager',
         'pharmacist',
         'status'
+        // todo 'file'
     ];
+
+    public function InvoiceItems()
+    {
+        return $this->hasMany(InvoiceItem::class);
+    }
+
+    public function storage()
+    {
+        return $this->belongsTo(Storage::class);
+    }
 }

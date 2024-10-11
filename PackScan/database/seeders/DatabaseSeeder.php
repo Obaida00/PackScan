@@ -4,7 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Invoice;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\InvoiceItem;
+use App\Models\PackageItem;
 use Illuminate\Database\Seeder;
+use App\Models\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,6 +23,34 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        Invoice::factory()->count(50)->create();
+        $invoices_0 = Invoice::factory()
+            ->hasInvoiceItems(20)
+            ->count(2)
+            ->create(["storage_id" => 0]);
+
+
+        Storage::factory()
+            ->hasInvoices($invoices_0)
+            ->create([
+                "id" => 0,
+                "name" => "almousoaa",
+                "code" => "mo"
+            ]);
+
+
+        $invoices_1 = Invoice::factory()
+            ->hasInvoiceItems(20)
+            ->count(4)
+            ->create(["storage_id" => 1]);
+            
+        Storage::factory()
+            ->hasInvoices($invoices_1)
+            ->create([
+                "id" => 1,
+                "name" => "advanced",
+                "code" => "ad"
+            ]);
+
+
     }
 }

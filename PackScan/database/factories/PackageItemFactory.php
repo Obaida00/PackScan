@@ -17,7 +17,8 @@ class PackageItemFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "name"=>fake()->unique()->word(),
+            "barcode"=>fake()->unique()->numberBetween(1000000000, 1000001000)
         ];
     }
 }

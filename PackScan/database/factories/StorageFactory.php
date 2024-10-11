@@ -16,8 +16,12 @@ class StorageFactory extends Factory
      */
     public function definition(): array
     {
+        $name = fake()->unique()->randomElement(["almousoaa", "advanced"]);
+        $code = $name == "almousoaa" ? "mo" : "ad";
+
         return [
-            //
+            "name" => $name,
+            "code" => $code
         ];
     }
 }
