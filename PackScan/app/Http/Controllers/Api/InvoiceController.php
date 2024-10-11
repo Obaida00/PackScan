@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\InvoiceResource;
 use App\Models\Invoice;
+use App\Services\InvoiceQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,10 +14,23 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //todo paginate
-        return InvoiceResource::collection(Invoice::query()->orderby('created_at', 'desc')->paginate(10));
+        $filter = new InvoiceQuery();
+        $queryItems = $filter->transform($request); //[['column', 'operator', 'value']]
+
+        if (count($queryItems) == 0) {
+            return InvoiceResource::collection(
+                Invoice::orderby('id', 'desc')
+                    ->paginate(10)
+            );
+        } else {
+            return InvoiceResource::collection(
+                Invoice::where($queryItems)
+                    ->orderBy('id', 'desc')
+                    ->paginate(10)
+            );
+        }
     }
 
     /**
