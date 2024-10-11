@@ -1,0 +1,16 @@
+@layer {
+  .modal {
+    @apply w-[80%] md:w-[60%] lg:w-[40%];
+  }
+  .modal > .item {
+    @apply w-full border-b-2 border-solid border-slate-500 text-center text-xl p-[15px];
+  }
+}
+.popup-content {
+  margin: auto;
+  width: 100%;
+}
+
+.popup-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}

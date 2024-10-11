@@ -10,14 +10,22 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@tauri-apps/api": ">=2.0.0",
+    "@tauri-apps/plugin-shell": ">=2.0.0",
+    "axios": "^1.7.7",
+    "flowbite-react": "^0.10.1",
+    "intellisense": "^0.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@tauri-apps/api": ">=2.0.0",
-    "@tauri-apps/plugin-shell": ">=2.0.0"
+    "react-router-dom": "^6.26.2",
+    "reactjs-popup": "^2.0.6"
   },
   "devDependencies": {
+    "@tauri-apps/cli": ">=2.0.0",
     "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.3.1",
-    "@tauri-apps/cli": ">=2.0.0"
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "vite": "^5.3.1"
   }
 }

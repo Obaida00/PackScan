@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: "Cocon Regular";
+    font-style: normal;
+    font-weight: normal;
+    src: local("Cocon Regular"),
+      url("./assets/fonts/CoconRegularFont.woff") format("woff");
+  }
+  @font-face {
+    font-family: "Cocon Arabic";
+    font-style: normal;
+    font-weight: normal;
+    src: local("Cocon Arabic"),
+      url("./assets/fonts/CoconArabic.woff") format("woff");
+  }
+
+}
