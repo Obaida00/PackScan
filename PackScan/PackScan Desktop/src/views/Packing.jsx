@@ -23,7 +23,8 @@ function Packing() {
                     return {
                         ...v,
                         count: 0,
-                        color: '#1f2937',
+                        colorMain: '#1f2937',
+                        colorSecond: '#1c64f2',
                     };
                 });
 
@@ -44,11 +45,23 @@ function Packing() {
                 const updatedItems = [...prevState]; //create a copy
                 var i = updatedItems.indexOf(item); //index of the item that needs updating
                 updatedItems[i].count += 1; //update index in the copied array
+
+                //if completed
                 if(updatedItems[i].count == updatedItems[i].totalCount){
                     console.log(item.count, item.totalCount);
                     
-                    updatedItems[i].color = 'green'
+                    updatedItems[i].colorMain = '#03543f'
+                    updatedItems[i].colorSecond = '#0e9f6e'
                 }
+
+                //if overshoot
+                if(updatedItems[i].count > updatedItems[i].totalCount){
+                    console.log(item.count, item.totalCount);
+                    
+                    updatedItems[i].colorMain = '#c81e1e'
+                    updatedItems[i].colorSecond = '#771d1d'
+                }
+
                 return updatedItems;
             });
         }
