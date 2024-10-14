@@ -19,6 +19,6 @@ class InvoiceItem extends Model
     }
 
     public function packageItem(){
-        return $this->hasOne(PackageItem::class); 
+        return $this->belongsTo(PackageItem::class); 
     }
 }

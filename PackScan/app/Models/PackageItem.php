@@ -14,4 +14,7 @@ class PackageItem extends Model
         "barcode",
     ];
 
+    public function invoiceItems(){
+        return $this->hasMany(InvoiceItem::class);
+    }
 }
