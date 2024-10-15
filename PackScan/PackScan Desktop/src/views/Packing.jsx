@@ -23,8 +23,8 @@ function Packing() {
                     return {
                         ...v,
                         count: 0,
-                        colorMain: '#1f2937',
-                        colorSecond: '#1c64f2',
+                        colorMain: "#1f2937",
+                        colorSecond: "#1c64f2",
                     };
                 });
 
@@ -47,19 +47,15 @@ function Packing() {
                 updatedItems[i].count += 1; //update index in the copied array
 
                 //if completed
-                if(updatedItems[i].count == updatedItems[i].totalCount){
-                    console.log(item.count, item.totalCount);
-                    
-                    updatedItems[i].colorMain = '#03543f'
-                    updatedItems[i].colorSecond = '#0e9f6e'
+                if (updatedItems[i].count == updatedItems[i].totalCount) {
+                    updatedItems[i].colorMain = "#03543f";
+                    updatedItems[i].colorSecond = "#0e9f6e";
                 }
 
                 //if overshoot
-                if(updatedItems[i].count > updatedItems[i].totalCount){
-                    console.log(item.count, item.totalCount);
-                    
-                    updatedItems[i].colorMain = '#c81e1e'
-                    updatedItems[i].colorSecond = '#771d1d'
+                if (updatedItems[i].count > updatedItems[i].totalCount) {
+                    updatedItems[i].colorMain = "#c81e1e";
+                    updatedItems[i].colorSecond = "#771d1d";
                 }
 
                 return updatedItems;
@@ -67,9 +63,36 @@ function Packing() {
         }
     };
 
-  const submit = () => {};
+    const decrement = (input) => {
+        var item = items.find((x) => x.barcode == input);
+        if (item) {
+            setItems((prevState) => {
+                const updatedItems = [...prevState]; //create a copy
+                var i = updatedItems.indexOf(item); //index of the item that needs updating
+                updatedItems[i].count -= 1; //update index in the copied array
+
+                //if completed
+                if (updatedItems[i].count == updatedItems[i].totalCount) {
+                    updatedItems[i].colorMain = "#03543f";
+                    updatedItems[i].colorSecond = "#0e9f6e";
+                }
+
+                //if undershoot
+                if (updatedItems[i].count < updatedItems[i].totalCount) {
+                    updatedItems[i].colorMain = "#1f2937";
+                    updatedItems[i].colorSecond = "#1c64f2";
+                }
+
+                return updatedItems;
+            });
+        }
+    };
+
+    const submit = () => {};
     const reset = () => {};
-  const submitEnable = () => { return true };
+    const submitEnable = () => {
+        return true;
+    };
     const backWithAlert = () => {
         alert("progress will not be saved");
         //if alert submit then clear and go back
@@ -102,6 +125,7 @@ function Packing() {
 
                 {/* search */}
                 <SearchBox action={barcode} />
+
                 <div className="flex justify-center">
                     <div className="w-[80vw] my-4 overflow-x-auto shadow-gray-950 shadow-md rounded-xl">
                         {loading ? (
@@ -109,7 +133,7 @@ function Packing() {
                                 Loading...
                             </h1>
                         ) : (
-                            <PackingTable data={items} />
+                            <PackingTable data={items} decrementFunc={decrement}/>
                         )}
                     </div>
                 </div>
