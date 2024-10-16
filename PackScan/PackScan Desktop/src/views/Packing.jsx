@@ -69,7 +69,7 @@ function Packing() {
             setItems((prevState) => {
                 const updatedItems = [...prevState]; //create a copy
                 var i = updatedItems.indexOf(item); //index of the item that needs updating
-                updatedItems[i].count = Math.max(updatedItems[i].count-1, 0); //update index in the copied array
+                updatedItems[i].count = Math.max(updatedItems[i].count - 1, 0); //update index in the copied array
 
                 //if completed
                 if (updatedItems[i].count == updatedItems[i].totalCount) {
@@ -89,7 +89,15 @@ function Packing() {
     };
 
     const submit = () => {};
-    const reset = () => {};
+    const reset = () => {
+        var newItems = [...items];
+        for (var i = 0; i < newItems.length; i++) {
+            newItems.at(i).count = 0;
+            newItems.at(i).colorMain = "#1f2937";
+            newItems.at(i).colorSecond = "#1c64f2";
+        }
+        setItems(newItems);
+    };
     const submitEnable = () => {
         return true;
     };
@@ -133,13 +141,16 @@ function Packing() {
                                 Loading...
                             </h1>
                         ) : (
-                            <PackingTable data={items} decrementFunc={decrement}/>
+                            <PackingTable
+                                data={items}
+                                decrementFunc={decrement}
+                            />
                         )}
                     </div>
                 </div>
 
-                <div>
-                    <div className="flex justify-between px-5">
+                <div className="flex justify-center">
+                    <div className="w-[90%] flex justify-between px-5">
                         {/* Reset Button */}
                         <div className="flex justify-center py-4">
                             <div className="min-h-[5vh] w-[90%] flex justify-end">
