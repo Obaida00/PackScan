@@ -22,11 +22,7 @@ function StorageIndex({ storageIndex }) {
         axiosClient
             .get(uri)
             .then(({ data }) => {
-                if (data.data.length < 100) {
-                    console.log(data.data);
-
-                    setOrders(data.data);
-                }
+                setOrders(data.data);
                 setLoading(false);
             })
             .catch((e) => {

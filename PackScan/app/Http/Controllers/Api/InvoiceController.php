@@ -19,18 +19,11 @@ class InvoiceController extends Controller
         $filter = new InvoiceQuery();
         $queryItems = $filter->transform($request); //[['column', 'operator', 'value']]
 
-        if (count($queryItems) == 0) {
-            return InvoiceResource::collection(
-                Invoice::orderby('id', 'desc')
-                    ->paginate(10)
-            );
-        } else {
-            return InvoiceResource::collection(
-                Invoice::where($queryItems)
-                    ->orderBy('id', 'desc')
-                    ->paginate(10)
-            );
-        }
+        return InvoiceResource::collection(
+            Invoice::where($queryItems)
+                ->orderBy('id', 'desc')
+                ->paginate(10)
+        );
     }
 
     /**

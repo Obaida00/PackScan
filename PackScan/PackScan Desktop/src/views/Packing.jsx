@@ -69,7 +69,7 @@ function Packing() {
             setItems((prevState) => {
                 const updatedItems = [...prevState]; //create a copy
                 var i = updatedItems.indexOf(item); //index of the item that needs updating
-                updatedItems[i].count -= 1; //update index in the copied array
+                updatedItems[i].count = Math.max(updatedItems[i].count-1, 0); //update index in the copied array
 
                 //if completed
                 if (updatedItems[i].count == updatedItems[i].totalCount) {
