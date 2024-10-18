@@ -8,10 +8,19 @@ function Packing() {
     const { id } = useParams();
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [canSubmit, setCanSubmit] = useState(false);
 
     useEffect(() => {
         getItems();
     }, []);
+
+    useEffect(() => {
+        items.forEach((item) => {
+            if (item.count != item.totalCount) setCanSubmit(false);
+            return;
+        });
+        setCanSubmit(true);
+    }, [items]);
 
     const getItems = () => {
         setLoading(true);
@@ -98,9 +107,7 @@ function Packing() {
         }
         setItems(newItems);
     };
-    const submitEnable = () => {
-        return true;
-    };
+
     const backWithAlert = () => {
         alert("progress will not be saved");
         //if alert submit then clear and go back
@@ -168,7 +175,7 @@ function Packing() {
                                 <button
                                     onClick={submit}
                                     className="disabled:bg-slate-600 disabled:text-slate-400 text-slate-100 border border-slate-400 bg-green-700 focus:ring-2 focus:outline-none focus:ring-slate-300 font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-75"
-                                    disabled={submitEnable()}
+                                    disabled={canSubmit}
                                 >
                                     <p>Submit</p>
                                     &nbsp;
