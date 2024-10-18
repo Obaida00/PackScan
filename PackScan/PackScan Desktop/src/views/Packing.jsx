@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axiosClient from "../axios-client";
 import { useParams } from "react-router-dom";
+import axiosClient from "../axios-client";
 import PackingTable from "../components/TableComponents/Packing/PackingTable";
 import SearchBox from "../components/SearchBox";
 
@@ -28,9 +28,9 @@ function Packing() {
             .get(`/invoices/${id}`)
             .then(({ data }) => {
                 //adding a current counter set to 0 to each item
-                var items = data.data.items.map((v) => {
+                var items = data.data.items.map((item) => {
                     return {
-                        ...v,
+                        ...item,
                         count: 0,
                         colorMain: "#1f2937",
                         colorSecond: "#1c64f2",
@@ -55,18 +55,7 @@ function Packing() {
                 var i = updatedItems.indexOf(item); //index of the item that needs updating
                 updatedItems[i].count += 1; //update index in the copied array
 
-                //if completed
-                if (updatedItems[i].count == updatedItems[i].totalCount) {
-                    updatedItems[i].colorMain = "#03543f";
-                    updatedItems[i].colorSecond = "#0e9f6e";
-                }
-
-                //if overshoot
-                if (updatedItems[i].count > updatedItems[i].totalCount) {
-                    updatedItems[i].colorMain = "#c81e1e";
-                    updatedItems[i].colorSecond = "#771d1d";
-                }
-
+                updatedItems[i] = updateItemState(updatedItems[i]);
                 return updatedItems;
             });
         }
@@ -80,18 +69,7 @@ function Packing() {
                 var i = updatedItems.indexOf(item); //index of the item that needs updating
                 updatedItems[i].count = Math.max(updatedItems[i].count - 1, 0); //update index in the copied array
 
-                //if completed
-                if (updatedItems[i].count == updatedItems[i].totalCount) {
-                    updatedItems[i].colorMain = "#03543f";
-                    updatedItems[i].colorSecond = "#0e9f6e";
-                }
-
-                //if undershoot
-                if (updatedItems[i].count < updatedItems[i].totalCount) {
-                    updatedItems[i].colorMain = "#1f2937";
-                    updatedItems[i].colorSecond = "#1c64f2";
-                }
-
+                updatedItems[i] = updateItemState(updatedItems[i]);
                 return updatedItems;
             });
         }
@@ -101,9 +79,8 @@ function Packing() {
     const reset = () => {
         var newItems = [...items];
         for (var i = 0; i < newItems.length; i++) {
-            newItems.at(i).count = 0;
-            newItems.at(i).colorMain = "#1f2937";
-            newItems.at(i).colorSecond = "#1c64f2";
+            newItems[i].count = 0;
+            updatedItems[i] = setItemStateNormal(newItems[i]);
         }
         setItems(newItems);
     };
@@ -198,3 +175,27 @@ function Packing() {
 }
 
 export default Packing;
+
+function updateItemState(item) {
+    //if undershoot
+    if (item.count < item.totalCount) return setItemStateNormal(item);
+    //if completed
+    if (item.count == item.totalCount) return setItemStateComplete(item);
+    //if overshoot
+    if (item.count > item.totalCount) return setItemStateOverShoot(item);
+}
+function setItemStateNormal(item) {
+    item.colorMain = "#1f2937";
+    item.colorSecond = "#1c64f2";
+    return item;
+}
+function setItemStateComplete(item) {
+    item.colorMain = "#03543f";
+    item.colorSecond = "#0e9f6e";
+    return item;
+}
+function setItemStateOverShoot(item) {
+    item.colorMain = "#c81e1e";
+    item.colorSecond = "#771d1d";
+    return item;
+}

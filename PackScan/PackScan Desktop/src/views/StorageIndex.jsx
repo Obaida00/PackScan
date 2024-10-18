@@ -16,8 +16,6 @@ function StorageIndex({ storageIndex }) {
         fetchOrders(`/invoices?st[eq]=${storageCode}&id[li]=${input}%`);
     };
     const fetchOrders = (uri) => {
-        console.log(uri);
-
         setLoading(true);
         axiosClient
             .get(uri)
