@@ -15,11 +15,20 @@ function Packing() {
     }, []);
 
     useEffect(() => {
-        items.forEach((item) => {
-            if (item.count != item.totalCount) setCanSubmit(false);
-            return;
-        });
-        setCanSubmit(true);
+        if (!loading) {
+            var complete = 0;
+            items.forEach((item) => {
+                if (item.count == item.totalCount) {
+                    complete = complete + 1;
+                }
+            });
+
+            if (complete == items.length) {
+                setCanSubmit(true);
+            } else {
+                setCanSubmit(false);
+            }
+        }
     }, [items]);
 
     const getItems = () => {
@@ -32,6 +41,7 @@ function Packing() {
                     return {
                         ...item,
                         count: 0,
+                        //progress bar colors
                         colorMain: "#1f2937",
                         colorSecond: "#1c64f2",
                     };
@@ -152,7 +162,7 @@ function Packing() {
                                 <button
                                     onClick={submit}
                                     className="disabled:bg-slate-600 disabled:text-slate-400 text-slate-100 border border-slate-400 bg-green-700 focus:ring-2 focus:outline-none focus:ring-slate-300 font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-75"
-                                    disabled={canSubmit}
+                                    disabled={!canSubmit}
                                 >
                                     <p>Submit</p>
                                     &nbsp;
