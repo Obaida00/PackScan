@@ -63,6 +63,18 @@ class InvoiceController extends Controller
     }
 
     /**
+     * mark the current invoice as Done
+     */
+    public function markInvoiceAsDone(int $invoice)
+    {
+        $invoice = Invoice::find($invoice);
+        $invoice->status = "Done";
+        $invoice->save();
+
+        return new InvoiceResource($invoice);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Invoice $invoice)

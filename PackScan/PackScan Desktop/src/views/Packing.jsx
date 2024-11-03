@@ -85,7 +85,17 @@ function Packing() {
         }
     };
 
-    const submit = () => {};
+    const submit = () => {
+        axiosClient
+            .post(`/invoices/${id}/done`)
+            .then(() => {
+                alert("operation succeeded");
+            })
+            .catch(() => {
+                alert("operation rejected");
+            });
+    };
+    
     const reset = () => {
         var newItems = [...items];
         for (var i = 0; i < newItems.length; i++) {

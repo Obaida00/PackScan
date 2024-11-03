@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::apiResource('/invoices', InvoiceController::class);
+Route::post("/invoices/{id}/done", [InvoiceController::class, 'markInvoiceAsDone']);
 
 // todo storage examples
 // Route::put("/New", function () {
