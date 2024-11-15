@@ -1,0 +1,58 @@
+{
+  "name": "Packscan",
+  "productName": "packscan",
+  "version": "1.0.0",
+  "description": "packscan desktop frontend project",
+  "main": ".webpack/main",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
+    "@electron-forge/cli": "^7.5.0",
+    "@electron-forge/maker-deb": "^7.5.0",
+    "@electron-forge/maker-rpm": "^7.5.0",
+    "@electron-forge/maker-squirrel": "^7.5.0",
+    "@electron-forge/maker-zip": "^7.5.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.5.0",
+    "@electron-forge/plugin-fuses": "^7.5.0",
+    "@electron-forge/plugin-webpack": "^7.5.0",
+    "@electron/fuses": "^1.8.0",
+    "@types/react": "^18.3.11",
+    "@vercel/webpack-asset-relocator-loader": "^1.7.3",
+    "autoprefixer": "^10.4.20",
+    "babel-loader": "^9.2.1",
+    "chokidar": "4.0.1",
+    "css-loader": "^6.11.0",
+    "electron": "33.0.2",
+    "node-loader": "^2.0.0",
+    "postcss": "^8.4.49",
+    "postcss-loader": "^8.1.1",
+    "style-loader": "^3.3.4",
+    "tailwindcss": "^3.4.15",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Obaida Almelhem",
+    "email": "111151192+Obaida00@users.noreply.github.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "chokidar": "^4.0.1",
+    "electron-squirrel-startup": "^1.0.1",
+    "flowbite-react": "^0.10.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2",
+    "reactjs-popup": "^2.0.6"
+  }
+}

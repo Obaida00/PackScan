@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello World!</title>
+    <script>
+      // getting the event from electron to the ui
+      const { ipcRenderer } = require("electron");
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const logDiv = document.getElementById("log");
+        ipcRenderer.on("folder-change", (event, change) => {
+          const message = `Change detected: ${change.event} - ${change.path}`;
+          const messageElement = document.createElement("div");
+          messageElement.textContent = message;
+          logDiv.appendChild(messageElement);
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="log">
+      
+    </div>
+  </body>
+</html>
