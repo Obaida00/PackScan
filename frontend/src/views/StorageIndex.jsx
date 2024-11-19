@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useState } from "react";
-import axiosClient from "../axios-client.js";
 import StorageTable from "../components/TableComponents/Storage/StorageTable.jsx";
 import SearchBox from "../components/SearchBox.jsx";
 import { Link } from "react-router-dom";

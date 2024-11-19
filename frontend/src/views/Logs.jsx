@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Pagination } from "flowbite-react";
-import axiosClient from "../axios-client.js";
 import LogsTable from "../components/TableComponents/Logs/LogsTable.jsx";
 import { Link } from "react-router-dom";
 
@@ -13,21 +12,21 @@ function Logs() {
     getOrders();
   }, []);
 
-  const getOrders = (page) => {
-    setLoading(true);
-    axiosClient
-      .get(`/invoices?page=${page}`)
-      .then(({ data }) => {
-        setOrders(data.data);
-        setPagingMeta(data.meta);
-        setLoading(false);
-      })
-      .catch((e) => {
-        setLoading(true);
-        alert(e);
-        throw e;
-      });
-  };
+  // const getOrders = (page) => {
+  //   setLoading(true);
+  //   axiosClient
+  //     .get(`/invoices?page=${page}`)
+  //     .then(({ data }) => {
+  //       setOrders(data.data);
+  //       setPagingMeta(data.meta);
+  //       setLoading(false);
+  //     })
+  //     .catch((e) => {
+  //       setLoading(true);
+  //       alert(e);
+  //       throw e;
+  //     });
+  // };
 
   return (
     <>

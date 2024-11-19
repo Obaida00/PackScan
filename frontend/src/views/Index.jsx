@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Pagination } from "flowbite-react";
-import axiosClient from "../axios-client.js";
 import IndexTable from "../components/TableComponents/Index/IndexTable.jsx";
 import { useNavigate } from "react-router-dom";
 

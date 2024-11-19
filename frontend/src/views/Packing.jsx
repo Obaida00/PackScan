@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import axiosClient from "../axios-client.js";
 import PackingTable from "../components/TableComponents/Packing/PackingTable.jsx";
 import SearchBox from "../components/SearchBox.jsx";
 
