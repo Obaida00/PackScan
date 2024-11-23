@@ -1,6 +1,8 @@
 import pdfplumber
 import pandas as pd
 from bidi.algorithm import get_display
+import sys
+import json
 
 def extract_table_from_pdf(pdf_path):
     # Open the PDF file
@@ -19,17 +21,25 @@ def extract_table_from_pdf(pdf_path):
             print("No table found on the page.")
             return None
 
-def main(pdf_path: str):
-    # Provide the path to your PDF file
+def main():
+    # Get arguments passed from Electron
+    file_path = sys.argv[1] if len(sys.argv) > 1 else None
 
-    # Extract the table
-    table_df = extract_table_from_pdf(pdf_path)
+    # Return JSON output to Electron
+    print(json.dumps(
+        {
+            "path": file_path
+        }
+    ))
 
-    # If table is found, show the DataFrame
-    if table_df is not None:
-        print(table_df)
-        # Optionally save the table to a CSV file
-        table_df.to_csv("extracted_invoice.csv", index=False, encoding="utf-8")
+    # # Extract the table
+    # table_df = extract_table_from_pdf(pdf_path)
+
+    # # If table is found, show the DataFrame
+    # if table_df is not None:
+    #     print(table_df)
+    #     # Optionally save the table to a CSV file
+    #     table_df.to_csv("extracted_invoice.csv", index=False, encoding="utf-8")
 
 if __name__ == "__main__":
-    main("./ad.pdf")
+    main()

@@ -2,6 +2,8 @@ const { app, BrowserWindow } = require("electron");
 const chokidar = require("chokidar");
 const fs = require("fs");
 import "./axios-client.js";
+const path = require("path");
+const child_process = require("child_process");
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -72,8 +74,46 @@ const watcher = chokidar.watch(folderToWatch, {
 });
 
 // Watch for changes
-watcher.on("all", (event, path) => {
+watcher.on("add", (file_path) => {
   console.log(`Folder change detected: ${event} - ${path}`);
-  // sending the event to the frontend
-  if (mainWindow) mainWindow.webContents.send("folder-change", { event, path });
+  
+  // sending the event to the renderer process
+  executePythonScript(file_path);
+
+  if (mainWindow) mainWindow.webContents.send("folder-change", { file_path });
 });
+
+function executePythonScript(file_path) {
+  const pythonScript = path.join(__dirname, "script.py");
+
+  // Execute the Python script
+  child_process.execFile(
+    "python",
+    [pythonScript, file_path],
+    (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing Python script: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.error(`Python script error: ${stderr}`);
+        return;
+      }
+
+      // Parse and handle the output from the Python script
+      console.log(`Python script output: ${stdout}`);
+      handlePythonOutput(stdout);
+    }
+  );
+}
+
+// Process the Python script output
+function handlePythonOutput(output) {
+  try {
+    const data = JSON.parse(output); // Assuming the script outputs JSON
+    console.log("Extracted data:", data);
+    // todo Add logic to process or store the extracted data
+  } catch (e) {
+    console.error("Error parsing Python script output:", e);
+  }
+}
