@@ -58,7 +58,6 @@ app.on("window-all-closed", () => {
 // code. You can also put them in separate files and import them here.
 
 // chokidar monitoring setup and starting
-
 // Directory to watch
 const folderToWatch = "./watched";
 
@@ -75,12 +74,10 @@ const watcher = chokidar.watch(folderToWatch, {
 
 // Watch for changes
 watcher.on("add", (file_path) => {
-  console.log(`Folder change detected: ${event} - ${path}`);
-  
-  // sending the event to the renderer process
-  executePythonScript(file_path);
+  console.log(`New file detected: ${file_path}`);
 
-  if (mainWindow) mainWindow.webContents.send("folder-change", { file_path });
+  let data = executePythonScript(file_path);
+
 });
 
 function executePythonScript(file_path) {
