@@ -1,4 +1,3 @@
-const { ipcMain } = require("electron");
 const axios = require("axios");
 const { error } = require("console");
 
@@ -6,18 +5,18 @@ const { error } = require("console");
 //   baseURL: "http://localhost:8000/api",
 // });
 
-ipcMain.handle("fetch-orders", async (event, page = 1) => {
+export async function fetchAllInvoices(pageNumber = 1) {
   try {
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/invoices?page=${page}`
+      `http://127.0.0.1:8000/api/invoices?page=${pageNumber}`
     );
     return response.data;
   } catch (error) {
     throw error.message;
   }
-});
+}
 
-ipcMain.handle("fetch-storage-orders", async (event, storageCode, input) => {
+export async function getBySearchStorageInvoices(storageCode, input) {
   try {
     const response = await axios.get(
       `http://127.0.0.1:8000/api/invoices?st[eq]=${storageCode}&id[li]=${input}%`
@@ -26,9 +25,9 @@ ipcMain.handle("fetch-storage-orders", async (event, storageCode, input) => {
   } catch (error) {
     throw error.message;
   }
-});
+}
 
-ipcMain.handle("fetch-order", async (event, id) => {
+export async function getInvoiceById(id) {
   try {
     const response = await axios.get(
       `http://127.0.0.1:8000/api/invoices/${id}`
@@ -37,12 +36,22 @@ ipcMain.handle("fetch-order", async (event, id) => {
   } catch (error) {
     throw error.message;
   }
-});
+}
 
-ipcMain.handle("submit-order", async (event, id) => {
+export async function submitInvoice(id){
   try {
     await axios.post(`http://127.0.0.1:8000/api/invoices/${id}/done`);
   } catch {
     throw error.message;
   }
-});
+}
+
+export async function uploadNewInvoice(data){
+  console.log("uploading new invoice");
+  
+  try {
+    await axios.post(`http://127.0.0.1:8000/api/invoices`, data);
+  } catch (error) {
+    throw error.message;
+  }
+}

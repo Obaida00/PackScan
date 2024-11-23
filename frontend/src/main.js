@@ -1,7 +1,7 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const chokidar = require("chokidar");
 const fs = require("fs");
-import "./axios-client.js";
+import * as axiosClient from "./axios-client.js";
 const path = require("path");
 const child_process = require("child_process");
 
@@ -57,6 +57,20 @@ app.on("window-all-closed", () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
+// renderer process event listeners for axios callouts
+ipcMain.handle("fetch-orders", async (event, pageNumber) => {
+  return await axiosClient.fetchAllInvoices(pageNumber);
+});
+ipcMain.handle("fetch-storage-orders", async (event, storageCode, input) => {
+  return await axiosClient.getBySearchStorageInvoices(storageCode, input);
+});
+ipcMain.handle("fetch-order", async (event, id) => {
+  return await axiosClient.getInvoiceById(id);
+});
+ipcMain.handle("submit-order", async (event, id) => {
+  return await axiosClient.submitInvoice(id);
+});
+
 // chokidar monitoring setup and starting
 // Directory to watch
 const folderToWatch = "./watched";
@@ -78,6 +92,7 @@ watcher.on("add", (file_path) => {
 
   let data = executePythonScript(file_path);
 
+  axiosClient.uploadNewInvoice(data);
 });
 
 function executePythonScript(file_path) {
