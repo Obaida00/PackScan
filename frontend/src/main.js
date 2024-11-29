@@ -91,12 +91,16 @@ watcher.on("add", (file_path) => {
   console.log(`New file detected: ${file_path}`);
 
   let data = executePythonScript(file_path);
+  console.log("data before upload ", data); 
+  //TODO the data isnot awaited 
 
   axiosClient.uploadNewInvoice(data);
 });
 
 function executePythonScript(file_path) {
   const pythonScript = path.join(__dirname, "script.py");
+  
+  let output;
 
   // Execute the Python script
   child_process.execFile(
@@ -114,17 +118,19 @@ function executePythonScript(file_path) {
 
       // Parse and handle the output from the Python script
       console.log(`Python script output: ${stdout}`);
-      handlePythonOutput(stdout);
+      output = handlePythonOutput(stdout);
     }
   );
+
+  return output;
 }
 
 // Process the Python script output
-function handlePythonOutput(output) {
+function handlePythonOutput(stdout) {
   try {
-    const data = JSON.parse(output); // Assuming the script outputs JSON
+    const data = JSON.parse(stdout); // Assuming the script outputs JSON format
     console.log("Extracted data:", data);
-    // todo Add logic to process or store the extracted data
+    return data;
   } catch (e) {
     console.error("Error parsing Python script output:", e);
   }
