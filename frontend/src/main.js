@@ -4,6 +4,9 @@ const fs = require("fs");
 import * as axiosClient from "./axios-client.js";
 const path = require("path");
 const child_process = require("child_process");
+const util = require("util");
+
+const execFile = util.promisify(child_process.execFile);
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -87,51 +90,34 @@ const watcher = chokidar.watch(folderToWatch, {
 });
 
 // Watch for changes
-watcher.on("add", (file_path) => {
+watcher.on("add", async (file_path) => {
   console.log(`New file detected: ${file_path}`);
 
-  let data = executePythonScript(file_path);
-  console.log("data before upload ", data); 
-  //TODO the data isnot awaited 
-
-  axiosClient.uploadNewInvoice(data);
+  executePythonScript(file_path)
+    .then(async (data) => {
+      await axiosClient.uploadNewInvoice(data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 });
 
-function executePythonScript(file_path) {
+async function executePythonScript(file_path) {
   const pythonScript = path.join(__dirname, "script.py");
-  
-  let output;
 
   // Execute the Python script
-  child_process.execFile(
-    "python",
-    [pythonScript, file_path],
-    (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error executing Python script: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        console.error(`Python script error: ${stderr}`);
-        return;
-      }
-
-      // Parse and handle the output from the Python script
-      console.log(`Python script output: ${stdout}`);
-      output = handlePythonOutput(stdout);
-    }
-  );
-
-  return output;
-}
-
-// Process the Python script output
-function handlePythonOutput(stdout) {
   try {
-    const data = JSON.parse(stdout); // Assuming the script outputs JSON format
-    console.log("Extracted data:", data);
-    return data;
-  } catch (e) {
-    console.error("Error parsing Python script output:", e);
+    const { stdout, stderr } = await execFile("python", [
+      pythonScript,
+      file_path,
+    ]);
+
+    if (stderr) {
+      console.error(`Python script error: ${stderr}`);
+      return;
+    }
+    return stdout;
+  } catch (error) {
+    console.log(error);
   }
 }
