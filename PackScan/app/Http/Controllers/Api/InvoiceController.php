@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\InvoiceResource;
 use App\Models\Invoice;
+use App\Models\InvoiceItem;
+use App\Models\PackageItem;
 use App\Services\InvoiceQuery;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class InvoiceController extends Controller
 {
@@ -31,11 +32,56 @@ class InvoiceController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->toArray();
-        // use this to remove the file from the request
-        // $data = $request->except(['content']);
 
-        $invoice = Invoice::create($data);
+        // dd($request->toArray());
+        //create the invoice
+        $manager = $request->storage == "mo" ? "almousoaa manager" : "advanced manager";
+
+        $invoice = Invoice::find($request->id);
+        if ($invoice != null) {
+            $oldInvoiceItems = InvoiceItem::where('invoice_id', $invoice->id);
+            foreach ($oldInvoiceItems as $invoiceItem) {
+                $invoiceItem->delete();
+            }
+            Invoice::destroy($invoice->id);
+        }
+
+        $invoice = Invoice::Create(
+            [
+                'id' => $request->id,
+                'manager' => $manager,
+                'pharmacist' => $request->pharmacist,
+                'status' => "Pending",
+            ]
+        );
+
+        // Collect all product names from the items
+        $productNames = collect($request->items)->pluck('name')->unique();
+
+        // Fetch all matching products in one query
+        $packageItems = PackageItem::whereIn('name', $productNames)->get()->keyBy('name');
+
+        foreach ($request->items as $item) {
+            $packageItem = $packageItems->get($item['name']);
+
+            if (!$packageItem) {
+                return response()->json([
+                    'message' => "Product '{$item['name']}' not found."
+                ], 404);
+            }
+
+            // Create the items
+            $invoiceItem = new InvoiceItem();
+
+            $invoiceItem->total_count = $item['totalCount'];
+            $invoiceItem->invoice()->associate($invoice);
+            $invoiceItem->packageItem()->associate($packageItem);
+
+            $invoice->invoiceItems()->save($invoiceItem);
+            $packageItem->invoiceItems()->save($invoiceItem);
+        }
+
+
 
         //todo storing files
         // add file extension and complete the put and get of files

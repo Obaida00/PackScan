@@ -11,7 +11,8 @@ class InvoiceItem extends Model
 
     protected $fillable = [
         "id",
-        "totalCount"
+        "totalCount",
+        // "price"
     ];
 
     public function invoice(){
