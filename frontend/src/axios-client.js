@@ -46,19 +46,11 @@ export async function submitInvoice(id) {
 }
 
 export async function uploadNewInvoice(data) {
-  console.log("uploading new invoice");
-  console.log("data before upload ", data);
-  //{headers: {'content-type': 'application/x-www-form-urlencoded}}
-  await axios
-    .post(`http://127.0.0.1:8000/api/invoices`, data, {
+  try {
+    await axios.post(`http://127.0.0.1:8000/api/invoices`, data, {
       headers: { "Content-Type": "application/json" },
-    })
-    .then((response) => {
-      console.log("RRResponse");
-      console.log(response);
-    })
-    .catch((error) => {
-      console.log("req err");
-      throw error;
     });
+  } catch (error) {
+    throw error.data;
+  }
 }
