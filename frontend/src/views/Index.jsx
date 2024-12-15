@@ -32,7 +32,7 @@ function Index() {
       <div>
         <div className="flex justify-center pt-2">
           <div className="min-h-[5vh] w-[90vw] flex">
-            <button onClick={getOrders} className="">
+            <button onClick={async () => await getOrders()} className="">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 height="40px"
