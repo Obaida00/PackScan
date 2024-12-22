@@ -103,7 +103,7 @@ def extract_invoice_details(pdf_path):
                         "storage": storage,
                         "pharmacist": name.strip(),
                     }
-    return {"storage": "", "pharmacist": "invalid request"}
+    return {"err": "invalid request"}
 
 
 def main():
