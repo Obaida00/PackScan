@@ -26,6 +26,9 @@ const createWindow = () => {
     },
   });
 
+  // remove the menu bar
+  mainWindow.removeMenu();
+
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
