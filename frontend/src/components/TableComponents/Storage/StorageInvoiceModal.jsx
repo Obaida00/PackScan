@@ -3,9 +3,12 @@ import Popup from "reactjs-popup";
 import "/src/assets/css/modal.css";
 import { Link } from "react-router-dom";
 
-function IndexInvoiceModal({ invoice }) {
+function IndexInvoiceModal({ invoice, openModal }) {
   return (
     <Popup
+      defaultOpen={openModal}
+      closeOnEscape={true}
+      closeOnDocumentClick={true}
       trigger={
         <svg
           xmlns="http://wwz.w3.org/2000/svg"
