@@ -77,6 +77,12 @@ ipcMain.handle("submit-order", async (event, id) => {
   return await axiosClient.submitInvoice(id);
 });
 
+ipcMain.handle("go-back", async (event, id) => {
+  if (mainWindow.webContents.canGoBack()) {
+    mainWindow.webContents.goBack();
+  }
+});
+
 // chokidar monitoring setup and starting
 // Directory to watch
 const folderToWatch = "./watched";
