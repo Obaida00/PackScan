@@ -8,8 +8,11 @@ use App\Http\Resources\InvoiceResource;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\PackageItem;
+use App\Models\Storage;
 use App\Services\InvoiceQuery;
 use Illuminate\Http\Request;
+
+use function Pest\Laravel\json;
 
 class InvoiceController extends Controller
 {
@@ -33,11 +36,13 @@ class InvoiceController extends Controller
      */
     public function store(StoreInvoiceRequest $request)
     {
-
         // dd($request->toArray());
         //create the invoice
-        $manager = $request->storage == "mo" ? "almousoaa manager" : "advanced manager";
-
+        $manager = $request->storage . " manager";
+        $storage = Storage::firstOrCreate(["code" => $request->storage], [
+            "name" => $request->storage . " name",
+            "code" => $request->storage,
+        ]);
         $invoice = Invoice::find($request->id);
         if ($invoice != null) {
             $oldInvoiceItems = InvoiceItem::where('invoice_id', $invoice->id);
@@ -51,6 +56,7 @@ class InvoiceController extends Controller
             [
                 'id' => $request->id,
                 'manager' => $manager,
+                'storage_id' => $storage->id,
                 'pharmacist' => $request->pharmacist,
                 'status' => "Pending",
             ]
