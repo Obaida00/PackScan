@@ -7,7 +7,7 @@ function DefaultLayout() {
   return (
     <>
       <Header />
-      <div className="min-h-[90vh] bg-slate-600">
+      <div className="min-h-[90vh] bg-slate-700">
         <Outlet />
       </div>
     </>
