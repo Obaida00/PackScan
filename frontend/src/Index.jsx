@@ -1,6 +1,5 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
-import { StrictMode } from "react";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import Index from "./views/Index.jsx";
 import DefaultLayout from "./components/Layout/DefaultLayout.jsx";
@@ -20,37 +19,38 @@ root.render(
   //   <RouterProvider router={router} />
   // </StrictMode>
 
-  <Router>
-    <div className="min-h-screen max-h-full bg-gray-800">
-      <Routes>
-        <Route path="/" element={<Navigator />} />
-        <Route path="/monitor" element={<Index />} />
-        <Route path="/storage" element={<StorageSelector />} />
-        <Route
-          path="/storage/almousoaa"
-          element={<StorageIndex storageIndex={0} />}
-        />
-        <Route
-          path="/storage/advanced"
-          element={<StorageIndex storageIndex={1} />}
-        />
-        <Route
-          path="/storage/almousoaa/logs"
-          element={<Logs storageIndex={0} />}
-        />
-        <Route
-          path="/storage/advanced/logs"
-          element={<Logs storageIndex={1} />}
-        />
-        <Route
-          path="/storage/almousoaa/:id"
-          element={<Packing storageIndex={0} />}
-        />
-        <Route
-          path="/storage/advanced/:id"
-          element={<Packing storageIndex={1} />}
-        />
-      </Routes>
-    </div>
-  </Router>
+    // <div className="min-h-screen max-h-full bg-gray-800">
+      <Router>
+        <Routes>
+          <Route path="/" element={<DefaultLayout />}>
+            <Route index element={<Navigator />} />
+            <Route path="/monitor" element={<Index />} />
+            <Route path="/storage" element={<StorageSelector />} />
+            <Route
+              path="/storage/almousoaa"
+              element={<StorageIndex storageIndex={0} />}
+            />
+            <Route
+              path="/storage/advanced"
+              element={<StorageIndex storageIndex={1} />}
+            />
+            <Route
+              path="/storage/almousoaa/logs"
+              element={<Logs storageIndex={0} />}
+            />
+            <Route
+              path="/storage/advanced/logs"
+              element={<Logs storageIndex={1} />}
+            />
+            <Route
+              path="/storage/almousoaa/:id"
+              element={<Packing storageIndex={0} />}
+            />
+            <Route
+              path="/storage/advanced/:id"
+              element={<Packing storageIndex={1} />}
+            />
+          </Route>
+        </Routes>
+      </Router>
 );
