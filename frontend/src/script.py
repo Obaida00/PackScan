@@ -47,11 +47,11 @@ def process_table_to_json(df: pd.DataFrame):
     # Iterate through each row in the DataFrame
     for _, row in df.iterrows():
         try:
-            price = str(row[8]).replace(",", "")
+            price = str(row.iloc[8]).replace(",", "")
             # Create a product dictionary
             product = {
-                "name": row[13],
-                "totalCount": int(row[10]),
+                "name": row.iloc[13],
+                "totalCount": int(row.iloc[10]),
                 "price": int(float(price)),
             }
 
