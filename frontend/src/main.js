@@ -17,8 +17,11 @@ let mainWindow;
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    minWidth: 1000,
+    minHeight: 700,
+    width: 1000,
+    height: 700,
+    center: true,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       nodeIntegration: true,
@@ -104,27 +107,28 @@ watcher.on("add", async (file_path) => {
 
   executePythonScript(file_path)
     .then(async (data) => {
+      console.log("python exection started");
+      
       await axiosClient.uploadNewInvoice(data);
     })
-    .catch((error) => {
-      console.log(error);
-    });
+  
 });
 
 async function executePythonScript(file_path) {
-  const pythonScript = path.join(__dirname, "script.py");
-
+  
   // Execute the Python script
   try {
+    const pythonScript = path.join(__dirname, "script.py");
     const { stdout, stderr } = await execFile("python", [
       pythonScript,
       file_path,
-    ]);
+    ]).catch(()=>console.log("hell"));
 
     if (stderr) {
       console.error(`Python script error: ${stderr}`);
       return;
     }
+    console.log("all good so far");
     return stdout;
   } catch (error) {
     console.log(error);
