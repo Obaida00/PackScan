@@ -29,6 +29,10 @@ function Index() {
     }
   };
 
+  // Compute min and max IDs for the current page
+  const minId = orders.length > 0 ? Math.min(...orders.map((obj) => obj.id)) : 0;
+  const maxId = orders.length > 0 ? Math.max(...orders.map((obj) => obj.id)) : 0;
+
   return (
     <>
       <div>
@@ -45,7 +49,7 @@ function Index() {
                 Loading...
               </h1>
             ) : (
-              <IndexTable data={orders} />
+              <IndexTable data={orders} minId={minId} maxId={maxId} />
             )}
           </div>
         </div>
