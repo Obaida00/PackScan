@@ -1,13 +1,13 @@
 import * as React from "react";
 import TableHeader from "../TableHeader.jsx";
 import TableRow from "./IndexTableRow.jsx";
-import TableEmptyRow from "../TableEmptyRow.jsx";
+import IndexTableRowForMissingInvoices from "./IndexTableRowForMissingInvoices.jsx";
 
 function IndexTable({ data, minId, maxId }) {
   // Step 1: Create a full range of IDs for the current page
   const fullData = Array.from({ length: maxId - minId + 1 }, (_, i) => {
-    const id = maxId -i;
-    return data.find((obj) => obj.id === id) || null; // Use null for missing IDs
+    const id = maxId - i;
+    return data.find((obj) => obj.id === id) || { missing: id }; // Use null for missing IDs
   });
 
   return (
@@ -21,10 +21,10 @@ function IndexTable({ data, minId, maxId }) {
       </thead>
       <tbody>
         {fullData.map((obj, key) =>
-          obj ? (
-            <TableRow key={key} i={key} invoice={obj} />
+          obj["missing"] ? (
+            <IndexTableRowForMissingInvoices key={key} id={obj["missing"]} />
           ) : (
-            <TableEmptyRow key={key} />
+            <TableRow key={key} i={key} invoice={obj} />
           )
         )}
       </tbody>

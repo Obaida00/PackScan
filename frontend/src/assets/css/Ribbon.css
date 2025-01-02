@@ -1,0 +1,23 @@
+/* Custom ribbon style */
+.ribbon-wrapper {
+  position: relative;
+  height: 50px;
+}
+
+.ribbon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg);
+    background: #640a0a;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 10px 150px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px #0000004d;
+    z-index: 10;
+    text-align: center;
+    white-space: nowrap;
+  }
+  
