@@ -21,7 +21,7 @@ function IndexTable({ data, minId, maxId }) {
       </thead>
       <tbody>
         {fullData.map((obj, key) =>
-          obj["missing"] ? (
+          obj["missing"] !== undefined ? (
             <IndexTableRowForMissingInvoices key={key} id={obj["missing"]} />
           ) : (
             <TableRow key={key} i={key} invoice={obj} />
