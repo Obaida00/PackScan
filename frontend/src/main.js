@@ -5,6 +5,7 @@ import * as axiosClient from "./axios-client.js";
 const path = require("path");
 const child_process = require("child_process");
 const util = require("util");
+const sound = require("sound-play");
 
 const execFile = util.promisify(child_process.execFile);
 
@@ -80,10 +81,17 @@ ipcMain.handle("submit-order", async (event, id) => {
   return await axiosClient.submitInvoice(id);
 });
 
-ipcMain.handle("go-back", async (event, id) => {
-  if (mainWindow.webContents.canGoBack()) {
-    mainWindow.webContents.goBack();
+ipcMain.handle("go-back", async (event) => {
+  if (mainWindow.webContents.navigationHistory.canGoBack()) {
+    mainWindow.webContents.navigationHistory.goBack();
   }
+});
+
+ipcMain.handle("play-sound", async (event, soundName) => {
+  console.log(`playing sound: ${soundName}`);
+
+  const soundFilePath = path.join(__dirname, `sounds/${soundName}.mp3`);
+  await sound.play(soundFilePath);
 });
 
 // chokidar monitoring setup and starting
@@ -105,24 +113,21 @@ const watcher = chokidar.watch(folderToWatch, {
 watcher.on("add", async (file_path) => {
   console.log(`New file detected: ${file_path}`);
 
-  executePythonScript(file_path)
-    .then(async (data) => {
-      console.log("python exection started");
-      
-      await axiosClient.uploadNewInvoice(data);
-    })
-  
+  executePythonScript(file_path).then(async (data) => {
+    console.log("python exection started");
+
+    await axiosClient.uploadNewInvoice(data);
+  });
 });
 
 async function executePythonScript(file_path) {
-  
   // Execute the Python script
   try {
     const pythonScript = path.join(__dirname, "script.py");
     const { stdout, stderr } = await execFile("python", [
       pythonScript,
       file_path,
-    ]).catch(()=>console.log("hell"));
+    ]).catch(() => console.log("hell"));
 
     if (stderr) {
       console.error(`Python script error: ${stderr}`);

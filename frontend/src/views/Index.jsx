@@ -2,12 +2,10 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { Pagination } from "flowbite-react";
 import IndexTable from "../components/TableComponents/Index/IndexTable.jsx";
-import { useNavigate } from "react-router-dom";
 import BackButton from "../components/BackButton.jsx";
 import ReloadButton from "../components/ReloadButton.jsx";
 
 function Index() {
-  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagingMeta, setPagingMeta] = useState();
@@ -21,6 +19,7 @@ function Index() {
     try {
       const data = await ipcRenderer.invoke("fetch-orders", page);
       setOrders(data.data);
+      await ipcRenderer.invoke("play-sound", "scannerBeep");
       setPagingMeta(data.meta);
     } catch (e) {
       throw e;

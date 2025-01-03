@@ -15,6 +15,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: path.resolve(__dirname, "./src/script.py"), to: "./" },
+        { from: path.resolve(__dirname, "./src/assets/sounds/scannerBeep.mp3"), to: "./sounds" },
       ],
     }),
   ],
