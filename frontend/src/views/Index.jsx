@@ -19,7 +19,6 @@ function Index() {
     try {
       const data = await ipcRenderer.invoke("fetch-orders", page);
       setOrders(data.data);
-      await ipcRenderer.invoke("play-sound", "scannerBeep");
       setPagingMeta(data.meta);
     } catch (e) {
       throw e;

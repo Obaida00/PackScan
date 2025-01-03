@@ -26,6 +26,7 @@ function Packing() {
 
       if (complete == items.length) {
         setCanSubmit(true);
+        playCanSubmitSound();
       } else {
         setCanSubmit(false);
       }
@@ -65,7 +66,7 @@ function Packing() {
         var i = updatedItems.indexOf(item); //index of the item that needs updating
         updatedItems[i].count += 1; //update index in the copied array
 
-        updatedItems[i] = updateItemState(updatedItems[i]);
+        updatedItems[i] = updateItemState(updatedItems[i], true);
         return updatedItems;
       });
     }
@@ -79,14 +80,16 @@ function Packing() {
         var i = updatedItems.indexOf(item); //index of the item that needs updating
         updatedItems[i].count = Math.max(updatedItems[i].count - 1, 0); //update index in the copied array
 
-        updatedItems[i] = updateItemState(updatedItems[i]);
+        updatedItems[i] = updateItemState(updatedItems[i], false);
         return updatedItems;
       });
     }
   };
 
-  const submit = async () => {
-    await ipcRenderer.invoke("submit-order", id)
+  const submit = () => {
+    ipcRenderer.invoke("submit-order", id).then(() => {
+      playCanSubmitSound();
+    });
   };
 
   const reset = () => {
@@ -171,13 +174,25 @@ function Packing() {
 
 export default Packing;
 
-function updateItemState(item) {
+function updateItemState(item, increasing) {
   //if undershoot
-  if (item.count < item.totalCount) return setItemStateNormal(item);
+  if (item.count < item.totalCount) {
+    if (increasing) playItemScanSound();
+    return setItemStateNormal(item);
+  }
+
   //if completed
-  if (item.count == item.totalCount) return setItemStateComplete(item);
+  if (item.count == item.totalCount) {
+    playPackingCompleteSound();
+    if (increasing) playItemScanSound();
+    return setItemStateComplete(item);
+  }
+
   //if overshoot
-  if (item.count > item.totalCount) return setItemStateOverShoot(item);
+  if (item.count > item.totalCount) {
+    if (increasing) playItemOverScanSound();
+    return setItemStateOverShoot(item);
+  }
 }
 function setItemStateNormal(item) {
   item.colorMain = "#1f2937";
@@ -193,4 +208,20 @@ function setItemStateOverShoot(item) {
   item.colorMain = "#c81e1e";
   item.colorSecond = "#771d1d";
   return item;
+}
+
+function playItemScanSound() {
+  ipcRenderer.invoke("play-sound", "scannerBeep");
+}
+
+function playPackingCompleteSound() {
+  ipcRenderer.invoke("play-sound", "complete");
+}
+
+function playItemOverScanSound() {
+  ipcRenderer.invoke("play-sound", "error");
+}
+
+function playCanSubmitSound() {
+  ipcRenderer.invoke("play-sound", "complete2");
 }

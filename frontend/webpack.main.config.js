@@ -16,6 +16,9 @@ module.exports = {
       patterns: [
         { from: path.resolve(__dirname, "./src/script.py"), to: "./" },
         { from: path.resolve(__dirname, "./src/assets/sounds/scannerBeep.mp3"), to: "./sounds" },
+        { from: path.resolve(__dirname, "./src/assets/sounds/error.mp3"), to: "./sounds" },
+        { from: path.resolve(__dirname, "./src/assets/sounds/complete.mp3"), to: "./sounds" },
+        { from: path.resolve(__dirname, "./src/assets/sounds/complete2.mp3"), to: "./sounds" },
       ],
     }),
   ],
