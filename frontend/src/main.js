@@ -71,7 +71,10 @@ app.on("window-all-closed", () => {
 ipcMain.handle("fetch-orders", async (event, pageNumber) => {
   return await axiosClient.fetchAllInvoices(pageNumber);
 });
-ipcMain.handle("fetch-storage-orders", async (event, storageCode, input) => {
+ipcMain.handle("fetch-storage-orders", async (event, pageNumber, storageCode) => {
+  return await axiosClient.getStorageInvoices(pageNumber, storageCode);
+});
+ipcMain.handle("search-storage-orders", async (event, storageCode, input) => {
   return await axiosClient.getBySearchStorageInvoices(storageCode, input);
 });
 ipcMain.handle("fetch-order", async (event, id) => {

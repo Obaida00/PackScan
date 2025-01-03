@@ -10,10 +10,8 @@ function StorageIndex({ storageIndex }) {
   const [loading, setLoading] = useState(false);
 
   const storageCode = storageIndex == 0 ? "mo" : "ad";
+  const storageName = storageIndex == 0 ? "almousoaa" : "advanced";
 
-  //change to searchActionOnChange
-  //define searchActionOnSubmit
-  //if searchActionOnSubmit is called and there is 1 result then redirect immediately
   const searchAction = (input) => {
     fetchOrders(storageCode, input);
   };
@@ -21,7 +19,7 @@ function StorageIndex({ storageIndex }) {
     setLoading(true);
     try {
       const data = await ipcRenderer.invoke(
-        "fetch-storage-orders",
+        "search-storage-orders",
         storageCode,
         input
       );
@@ -48,7 +46,7 @@ function StorageIndex({ storageIndex }) {
             <div className="flex justify-center py-4">
               <div className="min-h-[5vh] w-[90%] flex justify-end">
                 <Link
-                  href={`logs`}
+                  to={`logs`}
                   type="button"
                   className="text-slate-400 hover:text-slate-100 border border-slate-400 hover:bg-slate-700 focus:ring-2 focus:outline-none focus:ring-slate-300 font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-75 group/start"
                 >

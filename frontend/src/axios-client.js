@@ -13,6 +13,17 @@ export async function fetchAllInvoices(pageNumber = 1) {
   return response.data;
 }
 
+export async function getStorageInvoices(pageNumber, storageCode) {
+  const response = await axios
+    .get(
+      `http://127.0.0.1:8000/api/invoices?page=${pageNumber}&st[eq]=${storageCode}`
+    )
+    .catch((error) => {
+      throw error;
+    });
+  return response.data;
+}
+
 export async function getBySearchStorageInvoices(storageCode, input) {
   const response = await axios
     .get(
