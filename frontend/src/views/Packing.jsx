@@ -87,8 +87,9 @@ function Packing() {
   };
 
   const submit = () => {
-    ipcRenderer.invoke("submit-order", id).then(() => {
+    ipcRenderer.invoke("submit-order", id).then(async () => {
       playCanSubmitSound();
+      await ipcRenderer.invoke("go-back");
     });
   };
 
