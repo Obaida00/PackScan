@@ -12,6 +12,7 @@ class Invoice extends Model
     protected $fillable = [
         'id',
         'manager',
+        'storage_id',
         'pharmacist',
         'status'
         // todo 'file'
