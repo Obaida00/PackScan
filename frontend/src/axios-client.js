@@ -1,63 +1,103 @@
 const axios = require("axios");
+const log = require("electron-log");
 
-// const axiosClient = axios.create({
-//   baseURL: "http://localhost:8000/api",
-// });
+log.transports.file.level = "info";
+log.transports.file.file = __dirname + "/log/log";
 
+const BASE_URL = process.env.API_BASE_URL || "http://127.0.0.1:8000";
+
+// Fetch all invoices
 export async function fetchAllInvoices(pageNumber = 1) {
-  const response = await axios
-    .get(`http://127.0.0.1:8000/api/invoices?page=${pageNumber}`)
-    .catch((error) => {
-      throw error;
-    });
-  return response.data;
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/invoices?page=${pageNumber}`
+    );
+    log.info(
+      "fetching invoices",
+      "- status : " + response.status,
+      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 }
 
+// Get storage invoices
 export async function getStorageInvoices(pageNumber, storageCode) {
-  const response = await axios
-    .get(
-      `http://127.0.0.1:8000/api/invoices?page=${pageNumber}&st[eq]=${storageCode}`
-    )
-    .catch((error) => {
-      throw error;
-    });
-  return response.data;
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/invoices?page=${pageNumber}&st[eq]=${storageCode}`
+    );
+    log.info(
+      "get storage invoice",
+      "- status : " + response.status,
+      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 }
 
+// Search storage invoices
 export async function getBySearchStorageInvoices(storageCode, input) {
-  const response = await axios
-    .get(
-      `http://127.0.0.1:8000/api/invoices?st[eq]=${storageCode}&id[li]=${input}%`
-    )
-    .catch((error) => {
-      throw error;
-    });
-  return response.data;
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/invoices?st[eq]=${storageCode}&id[li]=${input}%`
+    );
+    log.info(
+      "search storage invoices",
+      "- status : " + response.status,
+      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 }
 
+// Get invoice by ID
 export async function getInvoiceById(id) {
-  const response = await axios
-    .get(`http://127.0.0.1:8000/api/invoices/${id}`)
-    .catch((error) => {
-      throw error;
-    });
-  return response.data;
+  try {
+    const response = await axios.get(`${BASE_URL}/api/invoices/${id}`);
+    log.info(
+      "get invoice by id",
+      "- status : " + response.status,
+      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 }
 
+// Submit an invoice
 export async function submitInvoice(id) {
-  await axios
-    .post(`http://127.0.0.1:8000/api/invoices/${id}/done`)
-    .catch((error) => {
-      throw error;
-    });
+  try {
+    const response = await axios.post(`${BASE_URL}/api/invoices/${id}/done`);
+    log.info(
+      "submit invoice",
+      "- status : " + response.status,
+      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+    );
+  } catch (error) {
+    throw error;
+  }
 }
 
+// Upload a new invoice
 export async function uploadNewInvoice(data) {
-  await axios
-    .post(`http://127.0.0.1:8000/api/invoices`, data, {
+  try {
+    const response = await axios.post(`${BASE_URL}/api/invoices`, data, {
       headers: { "Content-Type": "application/json" },
-    })
-    .catch((error) => {
-      throw error;
     });
+    log.info(
+      "uploading invoice",
+      "- status : " + response.status,
+      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+    );
+  } catch (error) {
+    throw error;
+  }
 }
