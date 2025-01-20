@@ -11,6 +11,7 @@ use App\Models\PackageItem;
 use App\Models\Storage;
 use App\Services\InvoiceQuery;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 use function Pest\Laravel\json;
 
@@ -21,6 +22,7 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
+        Log::info("invoice index called");
         $filter = new InvoiceQuery();
         $queryItems = $filter->transform($request); //[['column', 'operator', 'value']]
 
@@ -36,13 +38,14 @@ class InvoiceController extends Controller
      */
     public function store(StoreInvoiceRequest $request)
     {
-        // dd($request->toArray());
+        Log::info("storing new invoice");
         //create the invoice
         $manager = $request->storage . " manager";
         $storage = Storage::firstOrCreate(["code" => $request->storage], [
             "name" => $request->storage . " name",
             "code" => $request->storage,
         ]);
+        Log::info(`the invoice belongs to the storage: {$storage->name}`);
         $invoice = Invoice::find($request->id);
         if ($invoice != null) {
             $oldInvoiceItems = InvoiceItem::where('invoice_id', $invoice->id);
@@ -61,6 +64,7 @@ class InvoiceController extends Controller
                 'status' => "Pending",
             ]
         );
+        return response()->json(['message' => "invoice created successfully"]);
 
         // Collect all product names from the items
         $productNames = collect($request->items)->pluck('name')->unique();
@@ -69,11 +73,13 @@ class InvoiceController extends Controller
         $packageItems = PackageItem::whereIn('name', $productNames)->get()->keyBy('name');
 
         foreach ($request->items as $item) {
+            //todo THIS DOES'T SEEM RIGHT
             $packageItem = $packageItems->get($item['name']);
 
             if (!$packageItem) {
+                Log::error("Product " . $item['name'] . " not found");
                 return response()->json([
-                    'message' => "Product '{$item['name']}' not found."
+                    'message' => "Product " . $item['name'] . " not found."
                 ], 404);
             }
 
@@ -86,6 +92,8 @@ class InvoiceController extends Controller
 
             $invoice->invoiceItems()->save($invoiceItem);
             $packageItem->invoiceItems()->save($invoiceItem);
+
+            return response()->json(['message' => "invoice created successfully"]);
         }
 
 
