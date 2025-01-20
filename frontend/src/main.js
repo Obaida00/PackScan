@@ -6,6 +6,12 @@ const path = require("path");
 const child_process = require("child_process");
 const util = require("util");
 const sound = require("sound-play");
+const log = require("electron-log");
+const os = require("os");
+
+log.transports.file.level = "info";
+log.transports.file.file = __dirname + "/log/log";
+
 
 const execFile = util.promisify(child_process.execFile);
 
@@ -91,7 +97,7 @@ ipcMain.handle("go-back", async (event) => {
 });
 
 ipcMain.handle("play-sound", async (event, soundName) => {
-  console.log(`playing sound: ${soundName}`);
+  log.info(`playing sound: ${soundName}`);
 
   const soundFilePath = path.join(__dirname, `sounds/${soundName}.mp3`);
   await sound.play(soundFilePath);
@@ -114,31 +120,52 @@ const watcher = chokidar.watch(folderToWatch, {
 
 // Watch for changes
 watcher.on("add", async (file_path) => {
-  console.log(`New file detected: ${file_path}`);
+  log.info(`New file detected: ${file_path}`);
 
   executePythonScript(file_path).then(async (data) => {
-    console.log("python exection started");
+    log.info("python exection finished");
 
     await axiosClient.uploadNewInvoice(data);
   });
 });
 
 async function executePythonScript(file_path) {
-  // Execute the Python script
+  log.info("python execution started");
+
   try {
-    const pythonScript = path.join(__dirname, "script.py");
+    let pythonScriptPath;
+
+    if (app.isPackaged) {
+      // In production, extract the Python script to a temp directory
+      const tempDir = os.tmpdir();
+      pythonScriptPath = path.join(tempDir, "script.py");
+
+      // Extract the script if it doesn't exist
+      if (!fs.existsSync(pythonScriptPath)) {
+        const asarScriptPath = path.join(app.getAppPath(), ".webpack\\main\\script.py");
+        fs.copyFileSync(asarScriptPath, pythonScriptPath);
+        log.info(`Python script extracted to: ${pythonScriptPath}`);
+      }
+    } else {
+      // In development, use the original script path
+      pythonScriptPath = path.join(__dirname, "script.py");
+    }
+
+  // Execute the Python script
+      log.info("python script path:", pythonScriptPath);
+
     const { stdout, stderr } = await execFile("python", [
-      pythonScript,
+      pythonScriptPath,
       file_path,
-    ]).catch(() => console.log("hell"));
+    ]).catch(() => log.info("error occured with execFile"));
 
     if (stderr) {
       console.error(`Python script error: ${stderr}`);
       return;
     }
-    console.log("all good so far");
+    log.info("python output => ", stdout);
     return stdout;
   } catch (error) {
-    console.log(error);
+    log.info(error);
   }
 }
