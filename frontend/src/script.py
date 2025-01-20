@@ -48,9 +48,10 @@ def process_table_to_json(df: pd.DataFrame):
     for _, row in df.iterrows():
         try:
             price = str(row.iloc[8]).replace(",", "")
+            name = row.iloc[13]
             # Create a product dictionary
             product = {
-                "name": row.iloc[13],
+                "name": name[::-1],
                 "totalCount": int(row.iloc[10]),
                 "price": int(float(price)),
             }
@@ -101,7 +102,7 @@ def extract_invoice_details(pdf_path):
                     return {
                         "id": int(id),
                         "storage": storage,
-                        "pharmacist": name.strip(),
+                        "pharmacist": name[::-1].strip(),
                     }
     return {"err": "invalid request"}
 
