@@ -25,7 +25,7 @@ class InvoiceQuery
         'ad' => '1'
     ];
 
-    public function transform(Request $request)
+    public function transform(Request $request) : array
     {
         $queryResult = [];
 

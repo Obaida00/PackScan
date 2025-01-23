@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Storage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,10 +18,11 @@ class InvoiceFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => fake()->unique()->numberBetween(1000, 9999),
+            'id' => fake()->unique()->numberBetween(6000, 7000),
             'manager' => fake()->name(),
-            'pharmacist' => fake()->name(),
-            'status' => fake()->randomElement(['Pending', 'In Progress', 'Done']),
+            'pharmacist' => $this->faker->name(),
+            'status' => $this->faker->randomElement(['Pending', 'In Progress', 'Done']),
+            'storage_id' => Storage::inRandomOrder()->first()->id,
         ];
     }
 }

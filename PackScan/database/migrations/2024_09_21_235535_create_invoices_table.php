@@ -12,11 +12,10 @@ return new class extends Migration {
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->integer("storage_id")->nullable();
+            $table->foreignId('storage_id')->constrained('storages')->onDelete('cascade');
             $table->string('manager');
             $table->string('pharmacist');
             $table->string('status');
-
             $table->timestamps();
         });
     }

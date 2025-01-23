@@ -22,16 +22,22 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        Log::info("invoice index called");
-        $filter = new InvoiceQuery();
-        $queryItems = $filter->transform($request); //[['column', 'operator', 'value']]
+        Log::info("Invoice index called");
 
-        return InvoiceResource::collection(
-            Invoice::where($queryItems)
-                ->orderBy('id', 'desc')
-                ->paginate(10)
-        );
+        $filter = new InvoiceQuery();
+        $queryItems = $filter->transform($request); // [['column', 'operator', 'value']]
+
+        if (!empty($queryItems)) {
+            $invoices = Invoice::where($queryItems)
+                ->orderBy('id', 'desc');
+        } else {
+            $invoices = Invoice::orderBy('id', 'desc');
+        }
+
+        $invoices = $invoices->paginate(10);
+        return InvoiceResource::collection($invoices);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -39,69 +45,53 @@ class InvoiceController extends Controller
     public function store(StoreInvoiceRequest $request)
     {
         Log::info("storing new invoice");
-        //create the invoice
+
+        $storage = $this->getStorageByCode($request->storage);
+        Log::info("The invoice belongs to the storage: {$storage->name}");
+
         $manager = $request->storage . " manager";
-        $storage = Storage::firstOrCreate(["code" => $request->storage], [
-            "name" => $request->storage . " name",
-            "code" => $request->storage,
+        //todo manager will be linked by id, maybe the id will be sent with the request body
+
+        $this->deleteInvoiceIfExists($request->id);
+
+        $invoice = Invoice::create([
+            'id' => $request->id,
+            'manager' => $manager,
+            'storage_id' => $storage->id,
+            'pharmacist' => $request->pharmacist,
+            'status' => "Pending",
         ]);
-        Log::info(`the invoice belongs to the storage: {$storage->name}`);
-        $invoice = Invoice::find($request->id);
-        if ($invoice != null) {
-            $oldInvoiceItems = InvoiceItem::where('invoice_id', $invoice->id);
-            foreach ($oldInvoiceItems as $invoiceItem) {
-                $invoiceItem->delete();
-            }
-            Invoice::destroy($invoice->id);
-        }
 
-        $invoice = Invoice::Create(
-            [
-                'id' => $request->id,
-                'manager' => $manager,
-                'storage_id' => $storage->id,
-                'pharmacist' => $request->pharmacist,
-                'status' => "Pending",
-            ]
-        );
-        return response()->json(['message' => "invoice created successfully"]);
-
-        // Collect all product names from the items
+        // Collect all product names from the items and fetch matching package items in one go
         $productNames = collect($request->items)->pluck('name')->unique();
-
-        // Fetch all matching products in one query
         $packageItems = PackageItem::whereIn('name', $productNames)->get()->keyBy('name');
 
+        // Collect errors for products not found
+        $errors = [];
+
         foreach ($request->items as $item) {
-            //todo THIS DOES'T SEEM RIGHT
             $packageItem = $packageItems->get($item['name']);
 
             if (!$packageItem) {
                 Log::error("Product " . $item['name'] . " not found");
-                return response()->json([
-                    'message' => "Product " . $item['name'] . " not found."
-                ], 404);
+                $errors[] = "Product " . $item['name'] . " not found.";
+                continue;
             }
 
-            // Create the items
             $invoiceItem = new InvoiceItem();
-
             $invoiceItem->total_count = $item['totalCount'];
             $invoiceItem->invoice()->associate($invoice);
             $invoiceItem->packageItem()->associate($packageItem);
 
             $invoice->invoiceItems()->save($invoiceItem);
             $packageItem->invoiceItems()->save($invoiceItem);
-
-            return response()->json(['message' => "invoice created successfully"]);
         }
 
+        if (count($errors) > 0) {
+            return response()->json(['message' => implode(', ', $errors)], 404);
+        }
 
-
-        //todo storing files
-        // add file extension and complete the put and get of files
-        // Storage::put('filebase/' . $invoice->id, $request['content']);
-        return response((new InvoiceResource($invoice))->toJson(), 201);
+        return response()->json(['message' => "Invoice created successfully"]);
     }
 
     /**
@@ -113,35 +103,58 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Invoice $invoice)
-    {
-        $data = $request->toArray();
-        $invoice->update($data);
-
-        return new InvoiceResource($invoice);
-    }
-
-    /**
      * mark the current invoice as Done
      */
     public function markInvoiceAsDone(int $invoice)
     {
         $invoice = Invoice::find($invoice);
+
+        if (!$invoice) {
+            return response()->json(['message' => 'Invoice not found.'], 404);
+        }
+
         $invoice->status = "Done";
         $invoice->save();
 
         return new InvoiceResource($invoice);
     }
 
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Invoice $invoice)
     {
-        //todo delete the stored file or move to trash folder
+        if (!$invoice) {
+            return response()->json(['message' => 'Invoice not found.'], 404);
+        }
+
         $invoice->delete();
         return response("", 204);
+    }
+
+
+    protected function getStorageByCode(string $storageCode): Storage
+    {
+        $storage = Storage::where("code", $storageCode)->first();
+
+        if (!$storage) {
+            Log::error("Storage not found: {$storageCode}");
+            return response()->json([
+                'message' => "Storage with code {$storageCode} not found."
+            ], 404);
+        }
+
+        return $storage;
+    }
+
+    protected function deleteInvoiceIfExists(int $invoiceId)
+    {
+        $invoice = Invoice::find($invoiceId);
+
+        if ($invoice) {
+            $invoice->delete();
+            Log::info(`Old invoice has been removed, id: {$invoice->id}`);
+        }
     }
 }
