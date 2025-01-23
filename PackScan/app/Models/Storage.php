@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,12 +9,12 @@ class Storage extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id',
         'name',
-        'code'
+        'code',
     ];
 
-    public function invoices(){
+    public function invoices()
+    {
         return $this->hasMany(Invoice::class);
     }
 }
