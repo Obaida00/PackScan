@@ -19,6 +19,7 @@ class InvoiceResource extends JsonResource
             'id' => $this->id,
             'pharmacist' => $this->pharmacist,
             'manager' => $this->manager,
+            'storage_name' => $this->storage->name,
             'status' => $this->status,
             'items' => $this->convertItems($this->invoiceItems),
             'createdAt' => $this->created_at->format('Y-m-d H:i:s')
@@ -32,12 +33,12 @@ class InvoiceResource extends JsonResource
     {
         $result = [];
 
-        // result should be [packageItemElements, total_count]
+        // result should be [productElements, total_count]
         foreach ($items as $item) {
-            $packageItem = $item->packageItem;
-            $packageItem['totalCount'] = $item['total_count'];
+            $product = $item->product;
+            $product['total_count'] = $item['total_count'];
 
-            $result[] = $packageItem;
+            $result[] = $product;
         }
 
         return $result;

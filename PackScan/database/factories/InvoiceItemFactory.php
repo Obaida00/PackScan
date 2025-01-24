@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Invoice;
-use App\Models\PackageItem;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,7 +20,7 @@ class InvoiceItemFactory extends Factory
     {
         return [
             'invoice_id' => Invoice::factory(),
-            'package_item_id' => PackageItem::factory(),
+            'product_id' => Product::factory(),
             'total_count' => fake()->numberBetween(1, 30)
         ];
     }

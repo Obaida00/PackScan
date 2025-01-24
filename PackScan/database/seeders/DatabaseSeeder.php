@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Invoice;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\InvoiceItem;
-use App\Models\PackageItem;
 use Illuminate\Database\Seeder;
 use App\Models\Storage;
+use App\Models\Invoice;
+use App\Models\Product;
+use App\Models\InvoiceItem;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,41 +15,45 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create Storage with associated invoices and invoice items
+        $this->createStorageWithInvoices([
+            'id' => 0,
+            'name' => 'almousoaa',
+            'code' => 'mo',
+        ], 2, 2);
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $this->createStorageWithInvoices([
+            'id' => 1,
+            'name' => 'advanced',
+            'code' => 'ad',
+        ], 4, 3);
 
-        $invoices_0 = Invoice::factory()
-            ->hasInvoiceItems(20)
-            ->count(2)
-            ->create(["storage_id" => 0]);
+        // Optionally, seed some standalone products for variety
+        Product::factory(10)->create();
+    }
 
+    /**
+     * Create a storage record with associated invoices and invoice items.
+     *
+     * @param array $storageData
+     * @param int $invoiceCount
+     * @param int $invoiceItemsPerInvoice
+     */
+    private function createStorageWithInvoices(array $storageData, int $invoiceCount, int $invoiceItemsPerInvoice): void
+    {
+        $storage = Storage::factory()->create($storageData);
 
-        Storage::factory()
-            ->hasInvoices($invoices_0)
-            ->create([
-                "id" => 0,
-                "name" => "almousoaa",
-                "code" => "mo"
-            ]);
-
-
-        $invoices_1 = Invoice::factory()
-            ->hasInvoiceItems(20)
-            ->count(4)
-            ->create(["storage_id" => 1]);
-            
-        Storage::factory()
-            ->hasInvoices($invoices_1)
-            ->create([
-                "id" => 1,
-                "name" => "advanced",
-                "code" => "ad"
-            ]);
-
-
+        Invoice::factory()
+            ->count($invoiceCount)
+            ->has(
+                InvoiceItem::factory()
+                    ->count($invoiceItemsPerInvoice)
+                    ->state(function (array $attributes, Invoice $invoice) {
+                        return [
+                            'product_id' => Product::factory()->create()->id,
+                        ];
+                    })
+            )
+            ->create(['storage_id' => $storage->id]);
     }
 }

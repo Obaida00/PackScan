@@ -25,9 +25,9 @@ class StoreInvoiceRequest extends FormRequest
         return [
             'id' => ['required', 'integer'],
             'pharmacist' => ['required'],
-            'storage' => ['required', Rule::in(['mo', 'ad'])],
-            'items' => ['required', 'array']
-       ];
+            'storage' => ['required', 'exists:storages,code'],
+            'items' => ['required', 'array'],
+        ];
     }
 
 
@@ -37,6 +37,7 @@ class StoreInvoiceRequest extends FormRequest
             'items.*.name.required' => 'Each item must have a name.',
             'items.*.quantity.required' => 'Each item must have a quantity.',
             'items.*.price.required' => 'Each item must have a price.',
+            'storage.exists' => 'The storage code must exist in our records.',
         ];
     }
 }
