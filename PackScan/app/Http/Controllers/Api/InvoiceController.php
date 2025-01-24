@@ -7,7 +7,7 @@ use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Resources\InvoiceResource;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
-use App\Models\PackageItem;
+use App\Models\Product;
 use App\Models\Storage;
 use App\Services\InvoiceQuery;
 use Illuminate\Http\Request;
@@ -64,15 +64,15 @@ class InvoiceController extends Controller
 
         // Collect all product names from the items and fetch matching package items in one go
         $productNames = collect($request->items)->pluck('name')->unique();
-        $packageItems = PackageItem::whereIn('name', $productNames)->get()->keyBy('name');
+        $products = Product::whereIn('name', $productNames)->get()->keyBy('name');
 
         // Collect errors for products not found
         $errors = [];
 
         foreach ($request->items as $item) {
-            $packageItem = $packageItems->get($item['name']);
+            $product = $products->get($item['name']);
 
-            if (!$packageItem) {
+            if (!$product) {
                 Log::error("Product " . $item['name'] . " not found");
                 $errors[] = "Product " . $item['name'] . " not found.";
                 continue;
@@ -81,10 +81,10 @@ class InvoiceController extends Controller
             $invoiceItem = new InvoiceItem();
             $invoiceItem->total_count = $item['totalCount'];
             $invoiceItem->invoice()->associate($invoice);
-            $invoiceItem->packageItem()->associate($packageItem);
+            $invoiceItem->product()->associate($product);
 
             $invoice->invoiceItems()->save($invoiceItem);
-            $packageItem->invoiceItems()->save($invoiceItem);
+            $product->invoiceItems()->save($invoiceItem);
         }
 
         if (count($errors) > 0) {
@@ -129,6 +129,8 @@ class InvoiceController extends Controller
             return response()->json(['message' => 'Invoice not found.'], 404);
         }
 
+        $invoice->invoiceItems()->delete();
+
         $invoice->delete();
         return response("", 204);
     }
@@ -153,6 +155,8 @@ class InvoiceController extends Controller
         $invoice = Invoice::find($invoiceId);
 
         if ($invoice) {
+            InvoiceItem::where('invoice_id', $invoice->id)->delete();
+
             $invoice->delete();
             Log::info(`Old invoice has been removed, id: {$invoice->id}`);
         }

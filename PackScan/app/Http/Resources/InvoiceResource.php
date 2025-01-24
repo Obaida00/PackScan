@@ -33,12 +33,12 @@ class InvoiceResource extends JsonResource
     {
         $result = [];
 
-        // result should be [packageItemElements, total_count]
+        // result should be [productElements, total_count]
         foreach ($items as $item) {
-            $packageItem = $item->packageItem;
-            $packageItem['totalCount'] = $item['total_count'];
+            $product = $item->product;
+            $product['totalCount'] = $item['total_count'];
 
-            $result[] = $packageItem;
+            $result[] = $product;
         }
 
         return $result;

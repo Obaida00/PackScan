@@ -12,9 +12,10 @@ return new class extends Migration {
     {
         Schema::create('invoice_items', function (Blueprint $table) {
             $table->id();
-            $table->integer("invoice_id");
-            $table->integer("package_item_id");
-            $table->integer("total_count");
+
+            $table->foreignId('invoice_id')->constrained('invoices')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->integer('total_count');
 
             $table->timestamps();
         });
