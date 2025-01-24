@@ -52,7 +52,7 @@ def process_table_to_json(df: pd.DataFrame):
             # Create a product dictionary
             product = {
                 "name": name[::-1],
-                "totalCount": int(row.iloc[10]),
+                "total_count": int(row.iloc[10]),
                 "price": int(float(price)),
             }
 

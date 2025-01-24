@@ -33,7 +33,7 @@ class InvoiceControllerTest extends TestCase
             'items' => [
                 [
                     'name' => $product->name,
-                    'totalCount' => 5
+                    'total_count' => 5
                 ]
             ]
         ];
@@ -69,7 +69,7 @@ class InvoiceControllerTest extends TestCase
             'items' => [
                 [
                     'name' => 'Invalid Product',
-                    'totalCount' => 5
+                    'total_count' => 5
                 ]
             ]
         ];
@@ -181,7 +181,7 @@ class InvoiceControllerTest extends TestCase
             'items' => [
                 [
                     'name' => $newProduct->name,
-                    'totalCount' => 20,
+                    'total_count' => 20,
                     'price' => 100,
                 ],
             ]

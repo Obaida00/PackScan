@@ -79,7 +79,7 @@ class InvoiceController extends Controller
             }
 
             $invoiceItem = new InvoiceItem();
-            $invoiceItem->total_count = $item['totalCount'];
+            $invoiceItem->total_count = $item['total_count'];
             $invoiceItem->invoice()->associate($invoice);
             $invoiceItem->product()->associate($product);
 
