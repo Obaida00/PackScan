@@ -19,7 +19,7 @@ function Packing() {
     if (!loading) {
       var complete = 0;
       items.forEach((item) => {
-        if (item.count == item.totalCount) {
+        if (item.count == item.total_count) {
           complete = complete + 1;
         }
       });
@@ -63,10 +63,10 @@ function Packing() {
     if (item) {
       setItems((prevState) => {
         const updatedItems = [...prevState]; //create a copy
-        var i = updatedItems.indexOf(item); //index of the item that needs updating
+        let i = updatedItems.indexOf(item); //index of the item that needs updating
         updatedItems[i].count += 1; //update index in the copied array
 
-        updatedItems[i] = updateItemState(updatedItems[i], true);
+        updateItemState(updatedItems[i], true);
         return updatedItems;
       });
     }
@@ -97,7 +97,7 @@ function Packing() {
     var newItems = [...items];
     for (var i = 0; i < newItems.length; i++) {
       newItems[i].count = 0;
-      updatedItems[i] = setItemStateNormal(newItems[i]);
+      newItems[i] = setItemStateNormal(newItems[i]);
     }
     setItems(newItems);
   };
@@ -177,20 +177,20 @@ export default Packing;
 
 function updateItemState(item, increasing) {
   //if undershoot
-  if (item.count < item.totalCount) {
+  if (item.count < item.total_count) {
     if (increasing) playItemScanSound();
     return setItemStateNormal(item);
   }
 
   //if completed
-  if (item.count == item.totalCount) {
+  if (item.count == item.total_count) {
     playPackingCompleteSound();
     if (increasing) playItemScanSound();
     return setItemStateComplete(item);
   }
 
   //if overshoot
-  if (item.count > item.totalCount) {
+  if (item.count > item.total_count) {
     if (increasing) playItemOverScanSound();
     return setItemStateOverShoot(item);
   }

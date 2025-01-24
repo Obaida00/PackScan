@@ -22,7 +22,7 @@ function PackingTableRow({ itemObj, decrementFunc }) {
                 data={
                     <ProgressBar
                         currentCount={itemObj.count}
-                        totalCount={itemObj.totalCount}
+                        totalCount={itemObj.total_count}
                         color={itemObj.colorSecond}
                     />
                 }
