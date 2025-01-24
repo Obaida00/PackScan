@@ -5,16 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PackageItem extends Model
+class Product extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        "id",
         "name",
         "barcode",
     ];
 
-    public function invoiceItems(){
+    public function invoiceItems()
+    {
         return $this->hasMany(InvoiceItem::class);
     }
 }

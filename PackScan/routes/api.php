@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\StorageController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
@@ -17,3 +17,5 @@ Route::post('storages', [StorageController::class, 'store']);
 Route::get('storages/{storage}', [StorageController::class, 'show']);
 Route::put('storages/{storage}', [StorageController::class, 'update']);
 Route::delete('storages/{storage}', [StorageController::class, 'destroy']);
+
+Route::apiResource('products', ProductController::class);
