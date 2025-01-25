@@ -68,14 +68,16 @@ def process_table_to_json(df: pd.DataFrame):
     # Iterate through each row in the DataFrame
     for _, row in df.iterrows():
         try:
-            price = str(row.iloc[8]).replace(",", "")
-            name = row.iloc[13]
+            price_per_piece = str(row["يدارفﻹا"]).replace(",", "")
+            total_price = str(row["يلامجﻹا"]).replace(",", "")
+            name = row["فنصلا"]
             name = normalize_arabic_text(name[::-1])
             # Create a product dictionary
             product = {
                 "name": name,
                 "total_count": int(row.iloc[10]),
-                "price": int(float(price)),
+                "price_per_piece": int(float(price_per_piece)),
+                "total_price": int(float(total_price)),
             }
 
             products.append(product)
