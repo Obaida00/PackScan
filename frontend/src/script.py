@@ -61,13 +61,17 @@ def process_table_to_json(df: pd.DataFrame):
 
     Returns:
         str: JSON-formatted string of products
+        int: the total net price for the invoice
     """
     # List to store processed products
     products = []
 
+    net_price = 0
+
     # Iterate through each row in the DataFrame
     for _, row in df.iterrows():
         try:
+            if row.iloc[3] == "يفاصلا": net_price = int(float(str(row["نايبلا"]).replace(",", "")))
             price_per_piece = str(row["يدارفﻹا"]).replace(",", "")
             total_price = str(row["يلامجﻹا"]).replace(",", "")
             name = row["فنصلا"]
@@ -85,7 +89,7 @@ def process_table_to_json(df: pd.DataFrame):
             continue
 
     # Return JSON-formatted output
-    return products
+    return products, net_price
 
 
 def extract_invoice_details(pdf_path):
@@ -173,7 +177,7 @@ def main():
         # Extract invoice details
         details = extract_invoice_details(file_path)
         # Process the table into JSON
-        items = process_table_to_json(table_df) if table_df is not None else []
+        items, net_price = process_table_to_json(table_df) if table_df is not None else []
         # Combine details and items into final JSON
         output = {
             "id": details["id"],
@@ -181,6 +185,7 @@ def main():
             "storage": details["storage"],
             "pharmacist": details["pharmacist"],
             "date": details["date"],
+            "net_price": net_price,
             "items": items,
         }
         # print(decode_unicode(json.dumps(output)))
