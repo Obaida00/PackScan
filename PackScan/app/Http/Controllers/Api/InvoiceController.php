@@ -58,7 +58,10 @@ class InvoiceController extends Controller
             'id' => $request->id,
             'manager' => $manager,
             'storage_id' => $storage->id,
+            'statement' => $request->statement,
             'pharmacist' => $request->pharmacist,
+            'date' => $request->date,
+            'net_price' => $request->net_price,
             'status' => "Pending",
         ]);
 

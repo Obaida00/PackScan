@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->foreignId('invoice_id')->constrained('invoices')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->integer('total_count');
+            $table->integer('unit_price');
+            $table->integer('total_price');
 
             $table->timestamps();
         });

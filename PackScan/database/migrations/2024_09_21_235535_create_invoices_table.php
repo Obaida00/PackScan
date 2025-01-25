@@ -14,7 +14,10 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('storage_id')->constrained('storages')->onDelete('cascade');
             $table->string('manager');
+            $table->string('statement');
             $table->string('pharmacist');
+            $table->string('date');
+            $table->string('net_price');
             $table->string('status');
             $table->timestamps();
         });
