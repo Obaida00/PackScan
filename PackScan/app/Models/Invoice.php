@@ -15,8 +15,11 @@ class Invoice extends Model
         'id',
         'manager',
         'storage_id',
+        'statement',
         'pharmacist',
-        'status'
+        'date',
+        'status',
+        'net_price'
         // todo 'file'
     ];
 

@@ -24,7 +24,10 @@ class StoreInvoiceRequest extends FormRequest
     {
         return [
             'id' => ['required', 'integer'],
-            'pharmacist' => ['required'],
+            'statement' => ['required', 'string'],
+            'pharmacist' => ['required', 'string'],
+            'date' => ['required', 'string'],
+            'net_price' => ['required', 'integer'],
             'storage' => ['required', 'exists:storages,code'],
             'items' => ['required', 'array'],
         ];

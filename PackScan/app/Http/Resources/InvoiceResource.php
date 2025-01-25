@@ -17,10 +17,13 @@ class InvoiceResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'statement' => $this->statement,
             'pharmacist' => $this->pharmacist,
+            'date' => $this->date,
             'manager' => $this->manager,
             'storage_name' => $this->storage->name,
             'status' => $this->status,
+            'net_price' => $this->net_price,
             'items' => $this->convertItems($this->invoiceItems),
             'createdAt' => $this->created_at->format('Y-m-d H:i:s')
         ];
