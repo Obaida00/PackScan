@@ -19,14 +19,14 @@ class InvoiceItemFactory extends Factory
     public function definition(): array
     {
         $total_count = fake()->numberBetween(1, 30);
-        $price_per_piece = fake()->numberBetween(1000, 10000);
-        $total_price = $total_count * $price_per_piece;
-        
+        $unit_price = fake()->numberBetween(1000, 10000);
+        $total_price = $total_count * $unit_price;
+
         return [
             'invoice_id' => Invoice::factory(),
             'product_id' => Product::factory(),
             'total_count' => $total_count,
-            'price_per_piece' => $price_per_piece,
+            'unit_price' => $unit_price,
             'total_price' => $total_price
         ];
     }

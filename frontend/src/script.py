@@ -72,7 +72,7 @@ def process_table_to_json(df: pd.DataFrame):
     for _, row in df.iterrows():
         try:
             if row.iloc[3] == "يفاصلا": net_price = int(float(str(row["نايبلا"]).replace(",", "")))
-            price_per_piece = str(row["يدارفﻹا"]).replace(",", "")
+            unit_price = str(row["يدارفﻹا"]).replace(",", "")
             total_price = str(row["يلامجﻹا"]).replace(",", "")
             name = row["فنصلا"]
             name = normalize_arabic_text(name[::-1])
@@ -80,7 +80,7 @@ def process_table_to_json(df: pd.DataFrame):
             product = {
                 "name": name,
                 "total_count": int(row.iloc[10]),
-                "price_per_piece": int(float(price_per_piece)),
+                "unit_price": int(float(unit_price)),
                 "total_price": int(float(total_price)),
             }
 

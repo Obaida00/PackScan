@@ -9,13 +9,13 @@ class InvoiceItem extends Model
 {
     use HasFactory;
 
-    // i added the price_per_piece here cause i cannot guarantee that it is always gonna be the same as the product price + when the process of feeding the product will start i dont want to add the prices for each product, so keep it simple
+    // i added the unit_price here cause i cannot guarantee that it is always gonna be the same as the product price + when the process of feeding the product will start i dont want to add the prices for each product, so keep it simple
     protected $fillable = [
         "id",
         "invoice_id",
         "product_id",
         "total_count",
-        "price_per_piece",
+        "unit_price",
         "total_price"
         // "price"
     ];
