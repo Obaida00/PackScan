@@ -17,7 +17,8 @@ class PackerFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(), // Random name
+            'id' => $this->faker->unique()->numberBetween(1000, 9999),
+            'name' => $this->faker->name(),
         ];
     }
 }
