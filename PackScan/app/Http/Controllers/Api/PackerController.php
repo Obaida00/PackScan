@@ -38,9 +38,11 @@ class PackerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Packer $packer)
+    public function show(int $id)
     {
-        return response()->json($packer);
+        $packer = Packer::find($id);
+
+        return response()->json($packer ?? []);
     }
 
     /**
