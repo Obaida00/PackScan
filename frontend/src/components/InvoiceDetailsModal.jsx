@@ -7,7 +7,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 
 function InvoiceDetailsModal({ invoice }) {
-  console.log(invoice);
   const [open, setOpen] = useState(false);
 
   const rows = [
