@@ -86,6 +86,21 @@ export async function submitInvoice(id) {
   }
 }
 
+export async function getPackerById(packerId) {
+  try {
+    console.log(packerId);
+
+    if (packerId == null || packerId == "" || packerId == undefined) return;
+    const response = await axios.get(`${BASE_URL}/api/packers/${packerId}`);
+    log.info("fetching packer details", "- status : " + response.status);
+    console.log(response.data);
+
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // Upload a new invoice
 export async function uploadNewInvoice(data) {
   try {
