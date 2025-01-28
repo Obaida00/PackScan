@@ -1,7 +1,7 @@
 import React from "react";
 import StatusBadge from "/src/components/StatusBadge.jsx";
 import TableDataCell from "../TableDataCell.jsx";
-import InvoiceModal from "./LogsInvoiceModal.jsx";
+import InvoiceDetailsModal from "../../InvoiceDetailsModal.jsx";
 
 function LogsTableRow({ i, invoice }) {
   return (
@@ -12,7 +12,7 @@ function LogsTableRow({ i, invoice }) {
         <StatusBadge badgeName={invoice.status} />
       </td>
       <td className="px-6 py-4 text-right">
-        <InvoiceModal key={i} invoice={invoice} />
+        <InvoiceDetailsModal key={i} invoice={invoice} />
       </td>
     </tr>
   );

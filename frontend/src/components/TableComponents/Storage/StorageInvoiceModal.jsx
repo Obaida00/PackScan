@@ -127,7 +127,7 @@ function StorageInvoiceModal({ invoice }) {
           <div className="p-2">
             <table className="table-auto text-start w-full">
               <tbody>
-                <tr>
+                <tr className="border-b-2 border-slate-50">
                   <td className="py-2 pr-20 font-medium text-gray-500">
                     Manager
                   </td>
@@ -135,7 +135,7 @@ function StorageInvoiceModal({ invoice }) {
                     {invoice.manager}
                   </td>
                 </tr>
-                <tr>
+                <tr className="border-b-2 border-slate-50">
                   <td className="py-2 pr-20 font-medium text-gray-500">
                     Pharmacist
                   </td>
@@ -143,7 +143,7 @@ function StorageInvoiceModal({ invoice }) {
                     {invoice.pharmacist}
                   </td>
                 </tr>
-                <tr>
+                <tr className="border-b-2 border-slate-50">
                   <td className="py-2 pr-20 font-medium text-gray-500">
                     Status
                   </td>
