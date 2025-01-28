@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\InvoiceController;
+use App\Http\Controllers\Api\PackerController;
 use App\Http\Controllers\Api\StorageController;
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -19,3 +20,4 @@ Route::put('storages/{storage}', [StorageController::class, 'update']);
 Route::delete('storages/{storage}', [StorageController::class, 'destroy']);
 
 Route::apiResource('products', ProductController::class);
+Route::apiResource('packers', PackerController::class);

@@ -29,6 +29,7 @@ class InvoiceController extends Controller
 
         if (!empty($queryItems)) {
             $invoices = Invoice::where($queryItems)
+                ->with('packer')
                 ->orderBy('id', 'desc');
         } else {
             $invoices = Invoice::orderBy('id', 'desc');
@@ -106,16 +107,22 @@ class InvoiceController extends Controller
     }
 
     /**
-     * mark the current invoice as Done
+     * Mark the current invoice as Done and associate it with a packer.
      */
-    public function markInvoiceAsDone(int $invoice)
+    public function markInvoiceAsDone(Request $request, int $id)
     {
-        $invoice = Invoice::find($invoice);
+        $invoice = Invoice::find($id);
 
         if (!$invoice) {
             return response()->json(['message' => 'Invoice not found.'], 404);
         }
 
+        $request->validate([
+            'packer_id' => 'required|exists:packers,id',
+        ]);
+
+        // Associate the invoice with the packer
+        $invoice->packer_id = $request->packer_id;
         $invoice->status = "Done";
         $invoice->save();
 

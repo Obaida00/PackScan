@@ -15,7 +15,7 @@ function StorageTable({ data }) {
       </thead>
       <tbody>
         {data.length > 0 ? (
-          data.map((obj, key) => <TableRow key={key} i={key} invoice={obj} openModal={data.length == 1}/>)
+          data.map((obj, key) => <TableRow key={key} i={key} invoice={obj} />)
         ) : (
           <TableEmptyRow />
         )}

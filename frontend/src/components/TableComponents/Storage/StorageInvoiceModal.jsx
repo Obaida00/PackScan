@@ -1,86 +1,183 @@
 import * as React from "react";
-import Popup from "reactjs-popup";
 import "/src/assets/css/modal.css";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import { useState } from "react";
+import { useEffect } from "react";
 
-function IndexInvoiceModal({ invoice, openModal }) {
+function StorageInvoiceModal({ invoice }) {
+  const [open, setOpen] = useState(false);
+  const [packerName, setPackerName] = useState("");
+  const [packerFieldError, setPackerFieldError] = useState(false);
+  const nav = useNavigate();
+
+  useEffect(() => {
+    setPackerById("");
+    setPackerFieldError(false);
+  }, [open]);
+
+  const setPackerById = async (id) => {
+    if (
+      id === null ||
+      id === undefined ||
+      id.toString().trim() === "" ||
+      !/^-?\d{4,}$/.test(id)
+    ) {
+      setPackerName("");
+      return;
+    }
+
+    let packer = await ipcRenderer.invoke("fetch-packer", id);
+    if (packer.length == 0) {
+      setPackerName("");
+      return;
+    }
+    setPackerName(packer.name);
+    setPackerFieldError(false);
+  };
+
+  const submitForm = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const formJson = Object.fromEntries(formData.entries());
+    const id = formJson.id;
+    setPackerById(id);
+
+    if (packerName != "") {
+      handleClose();
+      nav(`/storage/almousoaa/${invoice.id}`, {
+        state: { packerId: id },
+      });
+    } else {
+      setPackerFieldError(true);
+    }
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setPackerById(0);
+    setOpen(false);
+  };
+
   return (
-    <Popup
-      defaultOpen={openModal}
-      closeOnEscape={true}
-      closeOnDocumentClick={true}
-      trigger={
+    <>
+      <Button
+        disableRipple
+        className="hover:bg-transparent w-fit h-full"
+        onClick={handleClickOpen}
+      >
         <svg
           xmlns="http://wwz.w3.org/2000/svg"
           height="24px"
           viewBox="0 -960 960 960"
           width="24px"
           fill="gray"
-          className="inline-flex justify-end cursor-pointer me-10"
+          className=""
         >
           <path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
         </svg>
-      }
-      modal
-    >
-      {(close) => (
-        <div className="flex items-center justify-center">
-          <div className="modal bg-slate-50 rounded-3xl overflow-hidden">
-            <div className="flex items-center justify-between p-4 md:p-5 border-b bg-slate-100">
-              <h3 className="text-3xl font-mono font-semibold text-gray-900 pl-5">
-                {invoice.id}
-              </h3>
-              <button
-                onClick={close}
-                type="button"
-                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center transition-colors duration-300"
-              >
-                <svg
-                  className="w-3 h-3"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 14 14"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div className="item"> {invoice.manager} </div>
-            <div className="item"> {invoice.pharmacist} </div>
-            <div className="item bg-slate-300 font-bold tracking-wider">
-              {" "}
-              {invoice.status}{" "}
-            </div>
-
-            <div className="flex justify-end p-4 md:p-5 border-b bg-slate-100">
-              {" "}
-              <Link to={`/storage/almousoaa/${invoice.id}`}>
-                <div className="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-2 focus:outline-none focus:ring-green-300 font-semibold rounded-xl text-sm px-4 py-2 text-center dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800 flex items-center transition-all duration-75 group/start">
-                  <p>Start Packing</p>
-                  &nbsp;
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="20px"
-                    viewBox="0 -960 960 960"
-                    className="fill-green-700 group-hover/start:fill-white transition-color duration-75"
-                  >
-                    <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z" />
-                  </svg>
-                </div>
-              </Link>
-            </div>
+      </Button>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          component: "form",
+          onSubmit: submitForm,
+        }}
+        className="text-center"
+      >
+        <DialogTitle className="flex align-middle justify-between p-3 bg-slate-200">
+          <div className="text-3xl font-mono font-semibold text-gray-800">
+            -{invoice.id}-
           </div>
-        </div>
-      )}
-    </Popup>
+          <button
+            onClick={handleClose}
+            type="button"
+            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm inline-flex justify-center items-center transition-colors duration-300 w-[24px]"
+          >
+            <svg
+              className="w-3 h-3"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 14"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+              />
+            </svg>
+          </button>
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            paddingBottom: "0px",
+          }}
+        >
+          <div className="p-2">
+            <table className="table-auto text-start w-full">
+              <tbody>
+                <tr>
+                  <td className="py-2 pr-20 font-medium text-gray-500">
+                    Manager
+                  </td>
+                  <td className="py-2 pr-20 font-semibold text-xl text-slate-900">
+                    {invoice.manager}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-20 font-medium text-gray-500">
+                    Pharmacist
+                  </td>
+                  <td className="py-2 pr-20 font-semibold text-xl text-slate-900">
+                    {invoice.pharmacist}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-2 pr-20 font-medium text-gray-500">
+                    Status
+                  </td>
+                  <td className="py-2 pr-20 font-semibold text-xl text-slate-900">
+                    {invoice.status}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="flex min-h-24">
+            <TextField
+              autoFocus
+              required
+              error={packerFieldError}
+              helperText={packerFieldError ? "This ID is not valid" : ""}
+              size="small"
+              margin="dense"
+              id="name"
+              name="id"
+              label="Your Packer ID"
+              variant="standard"
+              onChange={(e) => setPackerById(e.target.value)}
+            />
+            <div className="self-center py-3 ps-14">{packerName}</div>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit">start Packing</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 
-export default IndexInvoiceModal;
+export default StorageInvoiceModal;

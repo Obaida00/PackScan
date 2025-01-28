@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import PackingTable from "../components/TableComponents/Packing/PackingTable.jsx";
 import SearchBox from "../components/SearchBox.jsx";
 import BackButton from "../components/BackButton.jsx";
@@ -10,7 +10,13 @@ function Packing() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [canSubmit, setCanSubmit] = useState(false);
+  const { state } = useLocation();
+  const { packerId } = state || {};
 
+  if (!packerId) {
+    return <div>Error: Missing required Packer ID</div>;
+  }
+  
   useEffect(() => {
     getItems();
   }, []);
@@ -87,7 +93,7 @@ function Packing() {
   };
 
   const submit = () => {
-    ipcRenderer.invoke("submit-order", id).then(async () => {
+    ipcRenderer.invoke("submit-order", id, packerId).then(async () => {
       playCanSubmitSound();
       await ipcRenderer.invoke("go-back");
     });

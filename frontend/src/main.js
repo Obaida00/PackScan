@@ -86,8 +86,11 @@ ipcMain.handle("search-storage-orders", async (event, storageCode, input) => {
 ipcMain.handle("fetch-order", async (event, id) => {
   return await axiosClient.getInvoiceById(id);
 });
-ipcMain.handle("submit-order", async (event, id) => {
-  return await axiosClient.submitInvoice(id);
+ipcMain.handle("fetch-packer", async (event, id) => {
+  return await axiosClient.getPackerById(id);
+});
+ipcMain.handle("submit-order", async (event, invoiceId, packerId) => {
+  return await axiosClient.submitInvoice(invoiceId, packerId);
 });
 
 ipcMain.handle("go-back", async (event) => {

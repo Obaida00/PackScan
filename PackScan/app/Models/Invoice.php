@@ -32,4 +32,9 @@ class Invoice extends Model
     {
         return $this->belongsTo(Storage::class);
     }
+    
+    public function packer() : BelongsTo
+    {
+        return $this->belongsTo(Packer::class);
+    }
 }

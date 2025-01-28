@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('storage_id')->constrained('storages')->onDelete('cascade');
+            $table->foreignId('packer_id')->nullable()->constrained('packers')->onDelete('set null');
             $table->string('manager');
             $table->string('statement');
             $table->string('pharmacist');

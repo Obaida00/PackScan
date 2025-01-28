@@ -9,6 +9,31 @@ import StorageIndex from "./views/StorageIndex.jsx";
 import Logs from "./views/Logs.jsx";
 import Packing from "./views/Packing.jsx";
 import "./index.css";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+import { createTheme, ThemeProvider } from "@mui/material";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#1976d2",
+    },
+    secondary: {
+      main: "#dc004e",
+    },
+  },
+  components: {
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          borderRadius: "16px",
+        },
+      },
+    },
+  },
+});
 
 const root = createRoot(document.getElementById("root"));
 root.render(
@@ -19,38 +44,40 @@ root.render(
   //   <RouterProvider router={router} />
   // </StrictMode>
 
-    // <div className="min-h-screen max-h-full bg-gray-800">
-      <Router>
-        <Routes>
-          <Route path="/" element={<DefaultLayout />}>
-            <Route index element={<Navigator />} />
-            <Route path="/monitor" element={<Index />} />
-            <Route path="/storage" element={<StorageSelector />} />
-            <Route
-              path="/storage/almousoaa"
-              element={<StorageIndex storageIndex={0} />}
-            />
-            <Route
-              path="/storage/advanced"
-              element={<StorageIndex storageIndex={1} />}
-            />
-            <Route
-              path="/storage/almousoaa/logs"
-              element={<Logs storageIndex={0} />}
-            />
-            <Route
-              path="/storage/advanced/logs"
-              element={<Logs storageIndex={1} />}
-            />
-            <Route
-              path="/storage/almousoaa/:id"
-              element={<Packing storageIndex={0} />}
-            />
-            <Route
-              path="/storage/advanced/:id"
-              element={<Packing storageIndex={1} />}
-            />
-          </Route>
-        </Routes>
-      </Router>
+  // <div className="min-h-screen max-h-full bg-gray-800">
+  <ThemeProvider theme={theme}>
+    <Router>
+      <Routes>
+        <Route path="/" element={<DefaultLayout />}>
+          <Route index element={<Navigator />} />
+          <Route path="/monitor" element={<Index />} />
+          <Route path="/storage" element={<StorageSelector />} />
+          <Route
+            path="/storage/almousoaa"
+            element={<StorageIndex storageIndex={0} />}
+          />
+          <Route
+            path="/storage/advanced"
+            element={<StorageIndex storageIndex={1} />}
+          />
+          <Route
+            path="/storage/almousoaa/logs"
+            element={<Logs storageIndex={0} />}
+          />
+          <Route
+            path="/storage/advanced/logs"
+            element={<Logs storageIndex={1} />}
+          />
+          <Route
+            path="/storage/almousoaa/:id"
+            element={<Packing />}
+          />
+          <Route
+            path="/storage/advanced/:id"
+            element={<Packing storageIndex={1} />}
+          />
+        </Route>
+      </Routes>
+    </Router>
+  </ThemeProvider>
 );

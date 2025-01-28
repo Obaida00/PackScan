@@ -21,7 +21,7 @@ function StatusBadge({ badgeName}) {
   return (
     <div className="inline-flex justify-center align-middle">
       <span
-        className="align-middle text-xs font-medium me-2 px-4 py-1 rounded-full"
+        className="align-middle text-xs font-medium px-4 py-1 rounded-full"
         style={badgeStyle}
       >
         {badgeName}

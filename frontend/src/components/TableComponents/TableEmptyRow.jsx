@@ -6,6 +6,7 @@ function TableEmptyRow() {
     <tr className=" border-b bg-gray-800 border-gray-700 hover:bg-gray-600 transition ease-in-out text-center">
       <TableDataCell data="No Content" />
       <TableDataCell data="" />
+      <TableDataCell data="" />
     </tr>
   );
 }

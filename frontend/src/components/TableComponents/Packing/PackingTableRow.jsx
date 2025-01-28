@@ -15,9 +15,9 @@ function PackingTableRow({ itemObj, decrementFunc }) {
     return (
         <tr
             style={background}
-            className="border-b border-gray-700 hover:bg-gray-600 transition ease-in-out text-center"
+            className="group border-0 text-center"
         >
-            <TableDataCell data={itemObj.name} />
+            <TableDataCell data={`${itemObj.name} , ${itemObj.id}`} />
             <TableDataCell
                 data={
                     <ProgressBar

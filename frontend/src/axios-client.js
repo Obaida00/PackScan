@@ -15,7 +15,7 @@ export async function fetchAllInvoices(pageNumber = 1) {
     log.info(
       "fetching invoices",
       "- status : " + response.status,
-      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+      "- data : " + JSON.stringify(response.data)
     );
     return response.data;
   } catch (error) {
@@ -32,7 +32,7 @@ export async function getStorageInvoices(pageNumber, storageCode) {
     log.info(
       "get storage invoice",
       "- status : " + response.status,
-      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+      "- data : " + JSON.stringify(response.data)
     );
     return response.data;
   } catch (error) {
@@ -49,7 +49,7 @@ export async function getBySearchStorageInvoices(storageCode, input) {
     log.info(
       "search storage invoices",
       "- status : " + response.status,
-      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+      "- data : " + JSON.stringify(response.data)
     );
     return response.data;
   } catch (error) {
@@ -64,7 +64,7 @@ export async function getInvoiceById(id) {
     log.info(
       "get invoice by id",
       "- status : " + response.status,
-      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+      "- data : " + JSON.stringify(response.data)
     );
     return response.data;
   } catch (error) {
@@ -73,14 +73,41 @@ export async function getInvoiceById(id) {
 }
 
 // Submit an invoice
-export async function submitInvoice(id) {
+export async function submitInvoice(invoiceId, packerId) {
   try {
-    const response = await axios.post(`${BASE_URL}/api/invoices/${id}/done`);
+    let data = JSON.stringify({
+      packer_id: packerId,
+    });
+    
+    let header = {
+      headers: { "Content-Type": "application/json" },
+    };
+
+    const response = await axios.post(
+      `${BASE_URL}/api/invoices/${invoiceId}/done`,
+      data,
+      header
+    );
     log.info(
       "submit invoice",
       "- status : " + response.status,
-      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+      "- data : " + JSON.stringify(response.data)
     );
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getPackerById(packerId) {
+  try {
+    console.log(packerId);
+
+    if (packerId == null || packerId == "" || packerId == undefined) return;
+    const response = await axios.get(`${BASE_URL}/api/packers/${packerId}`);
+    log.info("fetching packer details", "- status : " + response.status);
+    console.log(response.data);
+
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -95,7 +122,7 @@ export async function uploadNewInvoice(data) {
     log.info(
       "uploading invoice",
       "- status : " + response.status,
-      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+      "- data : " + JSON.stringify(response.data)
     );
   } catch (error) {
     throw error;
