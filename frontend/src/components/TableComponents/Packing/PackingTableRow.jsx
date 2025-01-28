@@ -17,7 +17,7 @@ function PackingTableRow({ itemObj, decrementFunc }) {
             style={background}
             className="group border-0 text-center"
         >
-            <TableDataCell data={`${itemObj.name} , ${itemObj.id}`} />
+            <TableDataCell data={itemObj.name} />
             <TableDataCell
                 data={
                     <ProgressBar
