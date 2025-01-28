@@ -7,6 +7,7 @@ use App\Models\Storage;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\InvoiceItem;
+use App\Models\Packer;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,6 +16,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        Packer::factory()->count(10)->create();
+
         // Create Storage with associated invoices and invoice items
         $this->createStorageWithInvoices([
             'id' => 0,
