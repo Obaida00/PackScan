@@ -73,9 +73,21 @@ export async function getInvoiceById(id) {
 }
 
 // Submit an invoice
-export async function submitInvoice(id) {
+export async function submitInvoice(invoiceId, packerId) {
   try {
-    const response = await axios.post(`${BASE_URL}/api/invoices/${id}/done`);
+    let data = JSON.stringify({
+      packer_id: packerId,
+    });
+    
+    let header = {
+      headers: { "Content-Type": "application/json" },
+    };
+
+    const response = await axios.post(
+      `${BASE_URL}/api/invoices/${invoiceId}/done`,
+      data,
+      header
+    );
     log.info(
       "submit invoice",
       "- status : " + response.status,
