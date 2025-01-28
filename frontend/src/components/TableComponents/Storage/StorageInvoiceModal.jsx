@@ -7,8 +7,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 function StorageInvoiceModal({ invoice }) {
   const [open, setOpen] = useState(false);
@@ -33,7 +32,7 @@ function StorageInvoiceModal({ invoice }) {
     }
 
     let packer = await ipcRenderer.invoke("fetch-packer", id);
-    if (packer.length == 0) {
+    if (packer.length === 0) {
       setPackerName("");
       return;
     }
@@ -48,7 +47,7 @@ function StorageInvoiceModal({ invoice }) {
     const id = formJson.id;
     setPackerById(id);
 
-    if (packerName != "") {
+    if (packerName !== "") {
       handleClose();
       nav(`/storage/almousoaa/${invoice.id}`, {
         state: { packerId: id },
@@ -151,29 +150,37 @@ function StorageInvoiceModal({ invoice }) {
                     {invoice.status}
                   </td>
                 </tr>
+                <tr className="border-b-2 border-slate-50">
+                  <td className="py-2 pr-20 font-medium text-gray-500">
+                    Packer
+                  </td>
+                  <td className="flex items-center py-2 gap-2 text-xl text-slate-900">
+                    <div className="w-[90px]">
+                      <TextField
+                        autoFocus
+                        required
+                        error={packerFieldError}
+                        helperText={packerFieldError ? "ID is not valid" : ""}
+                        size="small"
+                        margin="none"
+                        id="name"
+                        name="id"
+                        placeholder="Your ID"
+                        variant="outlined"
+                        onChange={(e) => setPackerById(e.target.value)}
+                      />
+                    </div>
+                    <div className="w-[120px] overflow-auto text-ellipsis text-nowrap font-medium text-lg text-slate-800">
+                      {packerName}
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
-
-          <div className="flex min-h-24">
-            <TextField
-              autoFocus
-              required
-              error={packerFieldError}
-              helperText={packerFieldError ? "This ID is not valid" : ""}
-              size="small"
-              margin="dense"
-              id="name"
-              name="id"
-              label="Your Packer ID"
-              variant="standard"
-              onChange={(e) => setPackerById(e.target.value)}
-            />
-            <div className="self-center py-3 ps-14">{packerName}</div>
-          </div>
         </DialogContent>
         <DialogActions>
-          <Button type="submit">start Packing</Button>
+          <Button type="submit">Start Packing</Button>
         </DialogActions>
       </Dialog>
     </>
