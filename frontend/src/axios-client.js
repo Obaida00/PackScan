@@ -15,7 +15,7 @@ export async function fetchAllInvoices(pageNumber = 1) {
     log.info(
       "fetching invoices",
       "- status : " + response.status,
-      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+      "- data : " + JSON.stringify(response.data)
     );
     return response.data;
   } catch (error) {
@@ -32,7 +32,7 @@ export async function getStorageInvoices(pageNumber, storageCode) {
     log.info(
       "get storage invoice",
       "- status : " + response.status,
-      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+      "- data : " + JSON.stringify(response.data)
     );
     return response.data;
   } catch (error) {
@@ -49,7 +49,7 @@ export async function getBySearchStorageInvoices(storageCode, input) {
     log.info(
       "search storage invoices",
       "- status : " + response.status,
-      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+      "- data : " + JSON.stringify(response.data)
     );
     return response.data;
   } catch (error) {
@@ -64,7 +64,7 @@ export async function getInvoiceById(id) {
     log.info(
       "get invoice by id",
       "- status : " + response.status,
-      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+      "- data : " + JSON.stringify(response.data)
     );
     return response.data;
   } catch (error) {
@@ -79,7 +79,7 @@ export async function submitInvoice(id) {
     log.info(
       "submit invoice",
       "- status : " + response.status,
-      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+      "- data : " + JSON.stringify(response.data)
     );
   } catch (error) {
     throw error;
@@ -95,7 +95,7 @@ export async function uploadNewInvoice(data) {
     log.info(
       "uploading invoice",
       "- status : " + response.status,
-      "- data : " + JSON.stringify(response.data) // Pretty-printing the data
+      "- data : " + JSON.stringify(response.data)
     );
   } catch (error) {
     throw error;
