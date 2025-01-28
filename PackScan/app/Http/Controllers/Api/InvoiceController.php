@@ -29,6 +29,7 @@ class InvoiceController extends Controller
 
         if (!empty($queryItems)) {
             $invoices = Invoice::where($queryItems)
+                ->with('packer')
                 ->orderBy('id', 'desc');
         } else {
             $invoices = Invoice::orderBy('id', 'desc');
