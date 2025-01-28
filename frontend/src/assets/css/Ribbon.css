@@ -8,7 +8,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotate(0deg);
+    transform: translate(-20em, -50%) rotate(0deg);
     background: #640a0a;
     color: white;
     font-size: 0.75rem;
