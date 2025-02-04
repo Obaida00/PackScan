@@ -4,9 +4,12 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import { TextField } from "@mui/material";
 
 function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
   const [open, setOpen] = useState(false);
+  const [numberOfPackages, setNumberOfPackages] = useState(null);
+  const [packageNumberFieldError, setPackageNumberFieldError] = useState(false);
 
   const rows = [
     { label: "Statement", value: invoice.statement },
@@ -18,6 +21,15 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
     { label: "Storage", value: invoice.storage_name },
     { label: "Current Packer Id", value: packerId },
   ];
+
+  const submit = () => {
+    if (numberOfPackages === null || numberOfPackages <= 0) {
+      console.log("invalid number of packages");
+      setPackageNumberFieldError(true);
+      return;
+    }
+    action(numberOfPackages);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -81,27 +93,48 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
           </button>
         </DialogTitle>
         <DialogContent>
-          <div className="p-2">
-            <table className="table-auto text-start w-full">
-              <tbody>
-                {rows.map((row, index) => (
-                  <tr key={index} className="border-b-2 border-slate-50">
-                    <td className="py-2 font-medium text-gray-500 ">
-                      {row.label}
-                    </td>
-                    <td className="py-2 font-semibold text-xl text-slate-900">
-                      {row.value}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <table className="table-auto text-start w-full">
+            <tbody>
+              {rows.map((row, index) => (
+                <tr key={index} className="border-b-2 border-slate-50">
+                  <td className="py-1 w-48 font-medium text-sm text-gray-500">
+                    {row.label}
+                  </td>
+                  <td className="py-1 w-[300px] font-semibold text-lg text-slate-900">
+                    {row.value}
+                  </td>
+                </tr>
+              ))}
+              <tr>
+                <td className="py-2 w-48 font-medium text-gray-500">
+                  Number of packages
+                </td>
+                <td className="w-64 py-2 text-xl text-slate-900">
+                  <TextField
+                    autoFocus
+                    required
+                    size="small"
+                    margin="none"
+                    placeholder="Number of Packages"
+                    error={packageNumberFieldError}
+                    id="name"
+                    name="id"
+                    variant="outlined"
+                    type="number"
+                    onKeyDown={(e) =>
+                      e.key === "Enter" ? submit() : null
+                    }
+                    onChange={(e) => setNumberOfPackages(e.target.value)}
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </DialogContent>
         <DialogActions>
           <button
             className="text-slate-100 border border-slate-400 bg-green-600 hover:bg-green-700 focus:ring-2 focus:outline-none focus:ring-slate-300 font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-200"
-            onClick={action}
+            onClick={() => submit()}
           >
             <p>Submit Invoice</p>
             &nbsp;

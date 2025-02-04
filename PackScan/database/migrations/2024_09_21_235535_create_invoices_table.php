@@ -19,7 +19,8 @@ return new class extends Migration {
             $table->string('pharmacist');
             $table->string('date');
             $table->string('net_price');
-            $table->string('status');
+            $table->enum('status', ['Pending', 'In Progress', 'Done']);
+            $table->integer('number_of_packages')->nullable();
             $table->timestamps();
         });
     }
