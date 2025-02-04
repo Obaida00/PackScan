@@ -12,7 +12,6 @@ const os = require("os");
 log.transports.file.level = "info";
 log.transports.file.file = __dirname + "/log/log";
 
-
 const execFile = util.promisify(child_process.execFile);
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -77,9 +76,12 @@ app.on("window-all-closed", () => {
 ipcMain.handle("fetch-orders", async (event, pageNumber) => {
   return await axiosClient.fetchAllInvoices(pageNumber);
 });
-ipcMain.handle("fetch-storage-orders", async (event, pageNumber, storageCode) => {
-  return await axiosClient.getStorageInvoices(pageNumber, storageCode);
-});
+ipcMain.handle(
+  "fetch-storage-orders",
+  async (event, pageNumber, storageCode) => {
+    return await axiosClient.getStorageInvoices(pageNumber, storageCode);
+  }
+);
 ipcMain.handle("search-storage-orders", async (event, storageCode, input) => {
   return await axiosClient.getBySearchStorageInvoices(storageCode, input);
 });
@@ -89,9 +91,18 @@ ipcMain.handle("fetch-order", async (event, id) => {
 ipcMain.handle("fetch-packer", async (event, id) => {
   return await axiosClient.getPackerById(id);
 });
-ipcMain.handle("submit-order", async (event, {invoiceId, packerId, numberOfPackages}) => {
-  return await axiosClient.submitInvoice(invoiceId, packerId, numberOfPackages);
-});
+ipcMain.handle(
+  "submit-order",
+  async (event, { invoiceId, packerId, numberOfPackages }) => {
+    var data = await axiosClient.submitInvoice(
+      invoiceId,
+      packerId,
+      numberOfPackages
+    );
+    await generateStickerForInvoice(data.data);
+    return;
+  }
+);
 
 ipcMain.handle("go-back", async (event) => {
   if (mainWindow.webContents.navigationHistory.canGoBack()) {
@@ -145,7 +156,10 @@ async function executePythonScript(file_path) {
 
       // Extract the script if it doesn't exist
       if (!fs.existsSync(pythonScriptPath)) {
-        const asarScriptPath = path.join(app.getAppPath(), ".webpack\\main\\process_invoice_pdf.py");
+        const asarScriptPath = path.join(
+          app.getAppPath(),
+          ".webpack\\main\\process_invoice_pdf.py"
+        );
         fs.copyFileSync(asarScriptPath, pythonScriptPath);
         log.info(`Python script extracted to: ${pythonScriptPath}`);
       }
@@ -154,13 +168,57 @@ async function executePythonScript(file_path) {
       pythonScriptPath = path.join(__dirname, "process_invoice_pdf.py");
     }
 
-  // Execute the Python script
-      log.info("python script path:", pythonScriptPath);
+    // Execute the Python script
+    log.info("python script path:", pythonScriptPath);
 
     const { stdout, stderr } = await execFile("python", [
       pythonScriptPath,
       file_path,
     ]).catch(() => log.info("error occured with execFile"));
+
+    if (stderr) {
+      console.error(`Python script error: ${stderr}`);
+      return;
+    }
+    log.info("python output => ", stdout);
+    return stdout;
+  } catch (error) {
+    log.info(error);
+  }
+}
+
+async function generateStickerForInvoice(invoice) {
+  log.info("python generating sticker");
+
+  try {
+    let pythonScriptPath;
+
+    if (app.isPackaged) {
+      // In production, extract the Python script to a temp directory
+      const tempDir = os.tmpdir();
+      pythonScriptPath = path.join(tempDir, "generate_barcode.py");
+
+      // Extract the script if it doesn't exist
+      if (!fs.existsSync(pythonScriptPath)) {
+        const asarScriptPath = path.join(
+          app.getAppPath(),
+          ".webpack\\main\\generate_barcode.py"
+        );
+        fs.copyFileSync(asarScriptPath, pythonScriptPath);
+        log.info(`Python script extracted to: ${pythonScriptPath}`);
+      }
+    } else {
+      // In development, use the original script path
+      pythonScriptPath = path.join(__dirname, "generate_barcode.py");
+    }
+
+    // Execute the Python script
+    log.info("python script path:", pythonScriptPath);
+
+    const { stdout, stderr } = await execFile("python", [
+      pythonScriptPath,
+      invoice.id,
+    ]).catch((e) => log.info("error occured with execFile: ", e));
 
     if (stderr) {
       console.error(`Python script error: ${stderr}`);
