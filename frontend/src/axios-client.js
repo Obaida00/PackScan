@@ -73,10 +73,11 @@ export async function getInvoiceById(id) {
 }
 
 // Submit an invoice
-export async function submitInvoice(invoiceId, packerId) {
+export async function submitInvoice(invoiceId, packerId, numberOfPackages) {
   try {
     let data = JSON.stringify({
       packer_id: packerId,
+      number_of_packages: numberOfPackages,
     });
     
     let header = {
