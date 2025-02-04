@@ -13,12 +13,13 @@ function InvoiceDetailsModal({ invoice }) {
     { label: "Statement", value: invoice.statement },
     { label: "Pharmacist", value: invoice.pharmacist },
     { label: "Manager", value: invoice.manager },
-    { label: "Packer", value: invoice.packer_name ?? "-----------" },
     { label: "Created At", value: invoice.created_at },
     { label: "Date Of Delivery", value: invoice.date },
     { label: "Net Price", value: invoice.net_price },
     { label: "Storage", value: invoice.storage_name },
     { label: "Status", value: invoice.status },
+    { label: "Packer", value: invoice.packer_name ?? "-----------" },
+    { label: "Number Of Packages", value: invoice.number_of_packages ?? "-----------" },
   ];
 
   const handleClickOpen = () => {
