@@ -94,6 +94,7 @@ export async function submitInvoice(invoiceId, packerId, numberOfPackages) {
       "- status : " + response.status,
       "- data : " + JSON.stringify(response.data)
     );
+    return response.data;
   } catch (error) {
     throw error;
   }
