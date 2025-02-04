@@ -141,17 +141,17 @@ async function executePythonScript(file_path) {
     if (app.isPackaged) {
       // In production, extract the Python script to a temp directory
       const tempDir = os.tmpdir();
-      pythonScriptPath = path.join(tempDir, "process-invoice-pdf.py");
+      pythonScriptPath = path.join(tempDir, "process_invoice_pdf.py");
 
       // Extract the script if it doesn't exist
       if (!fs.existsSync(pythonScriptPath)) {
-        const asarScriptPath = path.join(app.getAppPath(), ".webpack\\main\\process-invoice-pdf.py");
+        const asarScriptPath = path.join(app.getAppPath(), ".webpack\\main\\process_invoice_pdf.py");
         fs.copyFileSync(asarScriptPath, pythonScriptPath);
         log.info(`Python script extracted to: ${pythonScriptPath}`);
       }
     } else {
       // In development, use the original script path
-      pythonScriptPath = path.join(__dirname, "process-invoice-pdf.py");
+      pythonScriptPath = path.join(__dirname, "process_invoice_pdf.py");
     }
 
   // Execute the Python script
