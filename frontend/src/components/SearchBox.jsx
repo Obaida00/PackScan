@@ -1,38 +1,54 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState, useRef } from "react";
 
-function SearchBox({ action }) {
-  const [search, setSearch] = useState("");
+function SearchBox({ action, eraseOnPaste }) {
+  const [search, _setSearch] = useState("");
+  const inputRef = useRef(null);
 
+  const setSearch = (value) => {
+    _setSearch(value);
+    if (value.length !== 0) {
+      setTimeout(() => action(value), 0);
+    }
+  };
+
+  // if the barcode reader relys on pasting which i think it does, then ur good to delete this, and it should be done so the value cannot be typed, its only available through the clipboard
   const handleInputChange = (event) => {
     setSearch(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handlePaste = (event) => {
     event.preventDefault();
-    setSearch(event.target[0].value);
-    getSearchResults(search);
+    const pastedText = event.clipboardData.getData("Text");
+
+    if (eraseOnPaste) {
+      setSearch(pastedText);
+      setTimeout(() => {
+        inputRef.current.select();
+      }, 0);
+    } else {
+      setSearch((prev) => prev + pastedText);
+    }
   };
 
-  useEffect(() => {
-    getSearchResults(search);
-  }, [search]);
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-  const getSearchResults = (search) => {
-    if (search.length == 0) return;
-    action(search);
+    setSearch(event.target[0].value);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex items-center max-w-md mx-auto bg-white rounded-xl ">
+      <div className="flex items-center max-w-md mx-auto bg-white rounded-xl">
         <div className="w-full">
           <input
+            ref={inputRef}
             type="search"
             name="searchBox"
             className="w-full px-4 py-1 text-gray-800 rounded-full outline-none focus:ring-0 border-none"
             placeholder="search"
             value={search}
+            onPaste={handlePaste}
             onChange={handleInputChange}
           />
         </div>
@@ -40,7 +56,7 @@ function SearchBox({ action }) {
           <button
             type="submit"
             className="flex place-items-center bg-slate-800 justify-center w-12 h-12 text-white rounded-r-lg cursor-pointer"
-            disabled={search.length == 0}
+            disabled={search.length === 0}
           >
             <svg
               className="w-5 h-5"

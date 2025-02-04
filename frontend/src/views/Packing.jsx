@@ -128,7 +128,7 @@ function Packing() {
         </div>
 
         {/* search */}
-        <SearchBox action={barcode} />
+        <SearchBox action={barcode} eraseOnPaste={true} />
 
         <div className="flex justify-center">
           <div className="w-[80vw] my-4 overflow-x-auto shadow-gray-950 shadow-md rounded-xl">

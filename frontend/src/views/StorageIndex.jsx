@@ -67,7 +67,7 @@ function StorageIndex({ storageIndex }) {
         </div>
 
         {/* search */}
-        <SearchBox action={searchAction} />
+        <SearchBox action={searchAction} eraseOnPaste={false} />
 
         {/* table */}
         <div className="flex justify-center">
