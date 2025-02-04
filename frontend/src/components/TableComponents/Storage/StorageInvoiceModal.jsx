@@ -15,6 +15,15 @@ function StorageInvoiceModal({ invoice }) {
   const [packerFieldError, setPackerFieldError] = useState(false);
   const nav = useNavigate();
 
+  const rows = [
+    { label: "Statement", value: invoice.statement },
+    { label: "Pharmacist", value: invoice.pharmacist },
+    { label: "Manager", value: invoice.manager },
+    { label: "Created At", value: invoice.created_at },
+    { label: "Date Of Delivery", value: invoice.date },
+    { label: "Net Price", value: invoice.net_price },
+  ];
+
   useEffect(() => {
     setPackerById("");
     setPackerFieldError(false);
@@ -92,6 +101,7 @@ function StorageInvoiceModal({ invoice }) {
           onSubmit: submitForm,
         }}
         className="text-center"
+        fullWidth
       >
         <DialogTitle className="flex align-middle justify-between p-3 bg-slate-200">
           <div className="text-3xl font-mono font-semibold text-gray-800">
@@ -118,60 +128,49 @@ function StorageInvoiceModal({ invoice }) {
             </svg>
           </button>
         </DialogTitle>
-        <DialogContent
-          sx={{
-            paddingBottom: "0px",
-          }}
-        >
+        <DialogContent>
           <div className="p-2">
             <table className="table-auto text-start w-full">
               <tbody>
+                {rows.map((row, index) => (
+                  <tr key={index} className="border-b-2 border-slate-50">
+                    <td className="py-1 w-48 font-medium text-sm text-gray-500">
+                      {row.label}
+                    </td>
+                    <td className="py-1 w-[300px] font-semibold text-lg text-slate-900">
+                      {row.value}
+                    </td>
+                  </tr>
+                ))}
                 <tr className="border-b-2 border-slate-50">
-                  <td className="py-2 pr-20 font-medium text-gray-500">
-                    Manager
-                  </td>
-                  <td className="py-2 pr-20 font-semibold text-xl text-slate-900">
-                    {invoice.manager}
-                  </td>
-                </tr>
-                <tr className="border-b-2 border-slate-50">
-                  <td className="py-2 pr-20 font-medium text-gray-500">
-                    Pharmacist
-                  </td>
-                  <td className="py-2 pr-20 font-semibold text-xl text-slate-900">
-                    {invoice.pharmacist}
-                  </td>
-                </tr>
-                <tr className="border-b-2 border-slate-50">
-                  <td className="py-2 pr-20 font-medium text-gray-500">
-                    Status
-                  </td>
-                  <td className="py-2 pr-20 font-semibold text-xl text-slate-900">
-                    {invoice.status}
-                  </td>
-                </tr>
-                <tr className="border-b-2 border-slate-50">
-                  <td className="py-2 pr-20 font-medium text-gray-500">
+                  <td className="py-2 w-48 font-medium text-gray-500">
                     Packer
                   </td>
-                  <td className="flex items-center py-2 gap-2 text-xl text-slate-900">
-                    <div className="w-[90px]">
-                      <TextField
-                        autoFocus
-                        required
-                        error={packerFieldError}
-                        helperText={packerFieldError ? "ID is not valid" : ""}
-                        size="small"
-                        margin="none"
-                        id="name"
-                        name="id"
-                        placeholder="Your ID"
-                        variant="outlined"
-                        onChange={(e) => setPackerById(e.target.value)}
-                      />
-                    </div>
-                    <div className="w-[120px] overflow-auto text-ellipsis text-nowrap font-medium text-lg text-slate-800">
-                      {packerName}
+                  <td className="w-64 py-2 text-xl text-slate-900">
+                    <div className="flex gap-2 items-center ">
+                      <div className="w-[100px]">
+                        <TextField
+                          autoFocus
+                          required
+                          error={packerFieldError}
+                          size="small"
+                          margin="none"
+                          id="name"
+                          name="id"
+                          placeholder="Your ID"
+                          variant="outlined"
+                          onChange={(e) => setPackerById(e.target.value)}
+                        />
+                      </div>
+                      <div
+                        className={`w-[200px] overflow-hidden text-ellipsis whitespace-nowrap font-medium ${
+                          packerFieldError
+                            ? "text-red-700 text-xs opacity-80"
+                            : "text-slate-800 text-lg"
+                        }`}
+                      >
+                        {packerFieldError ? "ID is not valid" : packerName}
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -180,7 +179,21 @@ function StorageInvoiceModal({ invoice }) {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button type="submit">Start Packing</Button>
+          <button
+            className="text-slate-100 border border-slate-400 bg-green-600 hover:bg-green-700 focus:ring-2 focus:outline-none focus:ring-slate-300  font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-200"
+            type="submit"
+          >
+            <p>Start Packing</p>
+            &nbsp;
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="20px"
+              viewBox="0 -960 960 960"
+              className="fill-slate-200"
+            >
+              <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z" />
+            </svg>
+          </button>
         </DialogActions>
       </Dialog>
     </>
