@@ -15,10 +15,6 @@ function Packing() {
   const { state } = useLocation();
   const { packerId } = state || {};
 
-  if (!packerId) {
-    return <div>Error: Missing required Packer ID</div>;
-  }
-  
   useEffect(() => {
     getItems();
   }, []);
@@ -117,6 +113,16 @@ function Packing() {
     //if alert submit then clear and go back
     //if not cancel
   };
+
+  if (!packerId) {
+    return (
+      <>
+        <div>Error: Missing required Packer ID</div>
+        <Link to={"/"}>home</Link>
+      </>
+    );
+  }
+
   return (
     <>
       <div>
