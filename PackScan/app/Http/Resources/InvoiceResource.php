@@ -24,7 +24,9 @@ class InvoiceResource extends JsonResource
             'storage_name' => $this->storage->name,
             'status' => $this->status,
             'net_price' => number_format((int)$this->net_price, 0, '.', ','),
+            'packer_id' => $this->whenloaded('packer', $this->packer?->id),
             'packer_name' => $this->whenloaded('packer', $this->packer?->name),
+            'number_of_packages' => $this->number_of_packages,
             'items' => $this->convertItems($this->invoiceItems),
             'created_at' => $this->created_at->format('Y-m-d - H:i:s')
         ];
