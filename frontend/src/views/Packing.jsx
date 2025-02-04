@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import PackingTable from "../components/TableComponents/Packing/PackingTable.jsx";
 import SearchBox from "../components/SearchBox.jsx";
 import BackButton from "../components/BackButton.jsx";
@@ -92,11 +92,17 @@ function Packing() {
     }
   };
 
-  const submit = () => {
-    ipcRenderer.invoke("submit-order", id, packerId).then(async () => {
-      playCanSubmitSound();
-      await ipcRenderer.invoke("go-back");
-    });
+  const submit = (numberOfPackages) => {
+    ipcRenderer
+      .invoke("submit-order", {
+        invoiceId: id,
+        packerId: packerId,
+        numberOfPackages: numberOfPackages,
+      })
+      .then(async () => {
+        playCanSubmitSound();
+        await ipcRenderer.invoke("go-back");
+      });
   };
 
   const reset = () => {
@@ -161,7 +167,12 @@ function Packing() {
                 </button>
               </div>
             </div>
-            <SubmitInvoiceButton packerId={packerId} invoice={invoice} action={submit} disabled={!canSubmit}></SubmitInvoiceButton>
+            <SubmitInvoiceButton
+              packerId={packerId}
+              invoice={invoice}
+              action={submit}
+              disabled={!canSubmit}
+            ></SubmitInvoiceButton>
           </div>
         </div>
       </div>

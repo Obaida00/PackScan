@@ -18,12 +18,13 @@ function StorageIndex({ storageIndex }) {
   const fetchOrders = async (storageCode, input) => {
     setLoading(true);
     try {
+      const safeInput = String(input);
       const data = await ipcRenderer.invoke(
         "search-storage-orders",
         storageCode,
-        input
+        safeInput
       );
-      setOrders(data.data);
+      setOrders(data?.data || []);
     } catch (e) {
       throw e;
     } finally {

@@ -119,10 +119,11 @@ class InvoiceController extends Controller
 
         $request->validate([
             'packer_id' => 'required|exists:packers,id',
+            'number_of_packages' => 'required|integer|gt:0'
         ]);
 
-        // Associate the invoice with the packer
         $invoice->packer_id = $request->packer_id;
+        $invoice->number_of_packages = $request->number_of_packages;
         $invoice->status = "Done";
         $invoice->save();
 

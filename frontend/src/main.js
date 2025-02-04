@@ -89,8 +89,8 @@ ipcMain.handle("fetch-order", async (event, id) => {
 ipcMain.handle("fetch-packer", async (event, id) => {
   return await axiosClient.getPackerById(id);
 });
-ipcMain.handle("submit-order", async (event, invoiceId, packerId) => {
-  return await axiosClient.submitInvoice(invoiceId, packerId);
+ipcMain.handle("submit-order", async (event, {invoiceId, packerId, numberOfPackages}) => {
+  return await axiosClient.submitInvoice(invoiceId, packerId, numberOfPackages);
 });
 
 ipcMain.handle("go-back", async (event) => {
