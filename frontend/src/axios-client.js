@@ -24,11 +24,13 @@ export async function fetchAllInvoices(pageNumber = 1) {
 }
 
 // Get storage invoices
-export async function getStorageInvoices(pageNumber, storageCode) {
+export async function getStorageInvoices(pageNumber, storageCode, isImportant) {
   try {
-    const response = await axios.get(
-      `${BASE_URL}/api/invoices?page=${pageNumber}&st[eq]=${storageCode}`
-    );
+    let url = `${BASE_URL}/api/invoices?page=${pageNumber}&st[eq]=${storageCode}&${
+      isImportant && "imp[eq]=1"
+    }`;
+    const response = await axios.get(url);
+
     log.info(
       "get storage invoice",
       "- status : " + response.status,
@@ -79,7 +81,7 @@ export async function submitInvoice(invoiceId, packerId, numberOfPackages) {
       packer_id: packerId,
       number_of_packages: numberOfPackages,
     });
-    
+
     let header = {
       headers: { "Content-Type": "application/json" },
     };
