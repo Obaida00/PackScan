@@ -4,19 +4,46 @@ import StorageTable from "../components/TableComponents/Storage/StorageTable.jsx
 import SearchBox from "../components/SearchBox.jsx";
 import { Link } from "react-router-dom";
 import BackButton from "../components/BackButton.jsx";
+import { useEffect } from "react";
+import { Divider } from "@mui/material";
 
 function StorageIndex({ storageIndex }) {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [importantOrders, setImportantOrders] = useState([]);
+  const [loadingSearchResult, setLoadingSearchResult] = useState(false);
+  const [loadingImportantData, setLoadingImportantData] = useState(false);
 
   const storageCode = storageIndex == 0 ? "mo" : "ad";
   const storageName = storageIndex == 0 ? "almousoaa" : "advanced";
 
+  useEffect(() => {
+    fetchImportantData(storageCode);
+  }, []);
+
+  const fetchImportantData = async (storageCode) => {
+    setLoadingImportantData(true);
+    try {
+      const data = await ipcRenderer.invoke(
+        "fetch-storage-orders",
+        1,
+        storageCode,
+        true
+      );
+
+      setImportantOrders(data?.data || []);
+    } catch (e) {
+      throw e;
+    } finally {
+      setLoadingImportantData(false);
+    }
+  };
+
   const searchAction = (input) => {
     fetchOrders(storageCode, input);
   };
+
   const fetchOrders = async (storageCode, input) => {
-    setLoading(true);
+    setLoadingSearchResult(true);
     try {
       const safeInput = String(input);
       const data = await ipcRenderer.invoke(
@@ -28,7 +55,7 @@ function StorageIndex({ storageIndex }) {
     } catch (e) {
       throw e;
     } finally {
-      setLoading(false);
+      setLoadingSearchResult(false);
     }
   };
 
@@ -71,14 +98,39 @@ function StorageIndex({ storageIndex }) {
         <SearchBox action={searchAction} eraseOnPaste={false} />
 
         {/* table */}
-        <div className="flex justify-center">
-          <div className="w-[80vw] my-4 overflow-x-auto shadow-gray-950 shadow-md rounded-xl">
-            {loading ? (
-              <h1 className="py-3 text-center font-cocon text-xl text-slate-950">
-                Loading...
-              </h1>
-            ) : (
-              <StorageTable data={orders} />
+        <div className="flex justify-center ">
+          <div className="my-2">
+            <div className="w-[80vw] my-4 overflow-x-auto shadow-gray-950 shadow-md rounded-xl">
+              {loadingSearchResult ? (
+                <h1 className="py-3 text-center font-cocon text-xl text-slate-950">
+                  Loading...
+                </h1>
+              ) : (
+                <StorageTable data={orders} />
+              )}
+            </div>
+            <Divider color="#1f2937" />
+
+            {!loadingImportantData && importantOrders.length > 0 && (
+              <div className="my-4">
+                <div className="flex items-center gap-5">
+                  <span className="text-slate-50 text-xl font-sans font-medium">
+                    Important Orders
+                  </span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24px"
+                    viewBox="0 -960 960 900"
+                    width="24px"
+                    fill="#e8eaed"
+                  >
+                    <path d="M600-160H160q-25 0-36-22t4-42l192-256-192-256q-15-20-4-42t36-22h440q19 0 36 8.5t28 23.5l180 240q16 21 16 48t-16 48L664-192q-11 15-28 23.5t-36 8.5Zm-360-80h360l180-240-180-240H240l144 192q16 21 16 48t-16 48L240-240Zm270-240Z" />
+                  </svg>
+                </div>
+                <div className="w-[80vw] my-4 overflow-x-auto shadow-gray-950 shadow-md rounded-xl">
+                  <StorageTable data={importantOrders} />
+                </div>
+              </div>
             )}
           </div>
         </div>
