@@ -23,6 +23,7 @@ class InvoiceResource extends JsonResource
             'manager' => $this->manager,
             'storage_name' => $this->storage->name,
             'status' => $this->status,
+            'is_important' => $this->is_important,
             'net_price' => number_format((int)$this->net_price, 0, '.', ','),
             'packer_id' => $this->whenloaded('packer', $this->packer?->id),
             'packer_name' => $this->whenloaded('packer', $this->packer?->name),

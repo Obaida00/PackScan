@@ -8,11 +8,13 @@ class InvoiceQuery
 {
     protected $safeParams = [
         'id' => ['li'],
-        'st' => ['eq']
+        'st' => ['eq'],
+        'imp' => ['eq']
     ];
 
     protected $columnMap = [
-        'st' => 'storage_id'
+        'st' => 'storage_id',
+        'imp' => 'is_important'
     ];
 
     protected $operatorMap = [
@@ -25,7 +27,7 @@ class InvoiceQuery
         'ad' => '1'
     ];
 
-    public function transform(Request $request) : array
+    public function transform(Request $request): array
     {
         $queryResult = [];
 
@@ -50,7 +52,6 @@ class InvoiceQuery
                     $this->operatorMap[$operator],
                     $value
                 ];
-
             }
         }
 
