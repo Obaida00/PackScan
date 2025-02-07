@@ -5,6 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { TextField } from "@mui/material";
+import { useEffect } from "react";
 
 function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
   const [open, setOpen] = useState(false);
@@ -21,6 +22,10 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
     { label: "Storage", value: invoice.storage_name },
     { label: "Current Packer Id", value: packerId },
   ];
+
+  useEffect(() => {
+    setNumberOfPackages(invoice.number_of_packages);
+  }, [invoice]);
 
   const submit = () => {
     if (numberOfPackages === null || numberOfPackages <= 0) {
@@ -115,15 +120,14 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
                     required
                     size="small"
                     margin="none"
+                    defaultValue={invoice.number_of_packages}
                     placeholder="Number of Packages"
                     error={packageNumberFieldError}
                     id="name"
                     name="id"
                     variant="outlined"
                     type="number"
-                    onKeyDown={(e) =>
-                      e.key === "Enter" ? submit() : null
-                    }
+                    onKeyDown={(e) => e.key === "Enter" && submit()}
                     onChange={(e) => setNumberOfPackages(e.target.value)}
                   />
                 </td>
