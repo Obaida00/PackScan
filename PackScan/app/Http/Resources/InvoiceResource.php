@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\InvoiceItem;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -28,6 +29,7 @@ class InvoiceResource extends JsonResource
             'packer_id' => $this->whenloaded('packer', $this->packer?->id),
             'packer_name' => $this->whenloaded('packer', $this->packer?->name),
             'number_of_packages' => $this->number_of_packages,
+            'done_at' => $this->done_at ? Carbon::parse($this->done_at)->format('Y-m-d - H:i:s') : null,
             'items' => $this->convertItems($this->invoiceItems),
             'created_at' => $this->created_at->format('Y-m-d - H:i:s')
         ];

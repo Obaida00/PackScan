@@ -73,7 +73,7 @@ class InvoiceController extends Controller
                 'pharmacist' => $request->pharmacist,
                 'date' => $request->date,
                 'net_price' => $request->net_price,
-                'status'      => "Pending",
+                'status' => "Pending",
             ]);
         }
 
@@ -171,6 +171,7 @@ class InvoiceController extends Controller
         $invoice->number_of_packages = $request->number_of_packages;
         $invoice->status = "Done";
         $invoice->is_important = false;
+        $invoice->done_at = now();
         $invoice->save();
 
         foreach ($invoice->invoiceItems as $invoiceItem) {
