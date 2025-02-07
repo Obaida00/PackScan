@@ -53,49 +53,94 @@ class InvoiceController extends Controller
         $manager = $request->storage . " manager";
         //todo manager will be linked by id, maybe the id will be sent with the request body
 
-        $this->deleteInvoiceIfExists($request->id);
+        $invoice = Invoice::find($request->id);
+        if ($invoice) {
+            $invoice->manager = $manager;
+            $invoice->storage_id = $storage->id;
+            $invoice->statement = $request->statement;
+            $invoice->pharmacist = $request->pharmacist;
+            $invoice->date = $request->date;
+            $invoice->net_price = $request->net_price;
+            $invoice->status = "Pending";
+            $invoice->is_important = true;
+            $invoice->save();
+        } else {
+            $invoice = Invoice::create([
+                'id' => $request->id,
+                'manager' => $manager,
+                'storage_id' => $storage->id,
+                'statement' => $request->statement,
+                'pharmacist' => $request->pharmacist,
+                'date' => $request->date,
+                'net_price' => $request->net_price,
+                'status'      => "Pending",
+            ]);
+        }
 
-        $invoice = Invoice::create([
-            'id' => $request->id,
-            'manager' => $manager,
-            'storage_id' => $storage->id,
-            'statement' => $request->statement,
-            'pharmacist' => $request->pharmacist,
-            'date' => $request->date,
-            'net_price' => $request->net_price,
-            'status' => "Pending",
-        ]);
+        // --- Invoice Items Processing ---
 
-        // Collect all product names from the items and fetch matching package items in one go
-        $productNames = collect($request->items)->pluck('name')->unique();
-        $products = Product::whereIn('name', $productNames)->get()->keyBy('name');
+        $newItems = $request->items;
+
+        // Get unique product names from the request.
+        $newItemNames = collect($newItems)->pluck('name')->unique();
+
+        // Fetch all products matching the names.
+        $products = Product::whereIn('name', $newItemNames)->get()->keyBy('name');
 
         // Collect errors for products not found
         $errors = [];
 
-        foreach ($request->items as $item) {
-            $product = $products->get($item['name']);
+        // Get the existing invoice items
+        $existingItems = $invoice->invoiceItems()->with('product')->get();
 
+        // Key the existing items by product name.
+        $existingItemsByProduct = $existingItems->keyBy(function ($item) {
+            return $item->product->name;
+        });
+
+        // Process each new item from the request.
+        foreach ($newItems as $item) {
+            $product = $products->get($item['name']);
             if (!$product) {
                 Log::error("Product " . $item['name'] . " not found");
                 $errors[] = "Product " . $item['name'] . " not found.";
                 continue;
             }
 
-            $invoiceItem = new InvoiceItem();
-            $invoiceItem->total_count = $item['total_count'];
-            $invoiceItem->invoice()->associate($invoice);
-            $invoiceItem->product()->associate($product);
+            // If an invoice item for this product already exists, update it.
+            if ($existingItemsByProduct->has($product->name)) {
+                $invoiceItem = $existingItemsByProduct->get($product->name);
+                $invoiceItem->total_count = $item['total_count'];
+                $invoiceItem->save();
 
-            $invoice->invoiceItems()->save($invoiceItem);
-            $product->invoiceItems()->save($invoiceItem);
+                // Remove this item from the collection so that remaining ones are those
+                // that are not present in the new request.
+                $existingItemsByProduct->forget($product->name);
+            } else {
+                $invoiceItem = new InvoiceItem([
+                    "total_count" => $item['total_count'],
+                    "unit_price" => $item['unit_price'],
+                    "total_price" => $item['total_price'],
+                    'current_count' => 0
+                ]);
+                $invoiceItem->invoice()->associate($invoice);
+                $invoiceItem->product()->associate($product);
+                $invoiceItem->save();
+            }
+        }
+
+        // For any remaining existing invoice items (i.e. those not included in the new request),
+        // update their total_count to zero while preserving the current_count.
+        foreach ($existingItemsByProduct as $invoiceItem) {
+            $invoiceItem->total_count = 0;
+            $invoiceItem->save();
         }
 
         if (count($errors) > 0) {
             return response()->json(['message' => implode(', ', $errors)], 404);
         }
 
-        return response()->json(['message' => "Invoice created successfully"]);
+        return response()->json(['message' => "Invoice created/updated successfully"]);
     }
 
     /**
@@ -125,7 +170,17 @@ class InvoiceController extends Controller
         $invoice->packer_id = $request->packer_id;
         $invoice->number_of_packages = $request->number_of_packages;
         $invoice->status = "Done";
+        $invoice->is_important = false;
         $invoice->save();
+
+        foreach ($invoice->invoiceItems as $invoiceItem) {
+            if ($invoiceItem->total_count == 0) {
+                $invoiceItem->delete();
+            } else {
+                $invoiceItem->current_count = $invoiceItem->total_count;
+                $invoiceItem->save();
+            }
+        }
 
         return new InvoiceResource($invoice);
     }
@@ -159,17 +214,5 @@ class InvoiceController extends Controller
         }
 
         return $storage;
-    }
-
-    protected function deleteInvoiceIfExists(int $invoiceId)
-    {
-        $invoice = Invoice::find($invoiceId);
-
-        if ($invoice) {
-            InvoiceItem::where('invoice_id', $invoice->id)->delete();
-
-            $invoice->delete();
-            Log::info(`Old invoice has been removed, id: {$invoice->id}`);
-        }
     }
 }

@@ -44,6 +44,7 @@ class InvoiceResource extends JsonResource
         foreach ($items as $item) {
             $product = $item->product;
             $product['total_count'] = $item['total_count'];
+            $product['current_count'] = $item['current_count'];
 
             $result[] = $product;
         }
