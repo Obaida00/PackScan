@@ -26,9 +26,9 @@ export async function fetchAllInvoices(pageNumber = 1) {
 // Get storage invoices
 export async function getStorageInvoices(pageNumber, storageCode, isImportant) {
   try {
-    let url = `${BASE_URL}/api/invoices?page=${pageNumber}&st[eq]=${storageCode}&${
-      isImportant && "imp[eq]=1"
-    }`;
+    let url = `${BASE_URL}/api/invoices?page=${pageNumber}&st[eq]=${storageCode}`;
+    if(isImportant) url += "&imp[eq]=1";
+
     const response = await axios.get(url);
 
     log.info(
