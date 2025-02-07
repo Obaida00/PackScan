@@ -129,17 +129,25 @@ function Packing() {
   return (
     <>
       <div>
-        {/* Back Button */}
-        <div className="flex justify-center py-4">
-          <div className="min-h-[5vh] w-[90vw] flex justify-start">
-            <BackButton />
+        <div className="flex justify-between w-full px-5 py-4">
+          {/* Back Button */}
+          <div className="flex justify-center">
+            <div className="min-h-[5vh] w-full flex justify-start">
+              <BackButton />
+            </div>
+          </div>
+          {/* Logs */}
+          <div className="flex justify-center px-4">
+            <div className="w-full self-center font-sans text-xl text-slate-300">
+              {invoice.id && `- ${invoice.id} -`}
+            </div>
           </div>
         </div>
 
         {/* search */}
         <SearchBox action={barcode} eraseOnPaste={true} />
 
-        <div className="flex justify-center">
+        <div className="flex justify-center my-2">
           <div className="w-[80vw] my-4 overflow-x-auto shadow-gray-950 shadow-md rounded-xl">
             {loading ? (
               <h1 className="py-3 text-center font-cocon text-xl text-slate-950">
