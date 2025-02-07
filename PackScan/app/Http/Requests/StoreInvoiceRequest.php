@@ -29,7 +29,7 @@ class StoreInvoiceRequest extends FormRequest
             'date' => ['required', 'string'],
             'net_price' => ['required', 'integer'],
             'storage' => ['required', 'exists:storages,code'],
-            'items' => ['required', 'array'],
+            'items' => ['sometimes', 'array'],
         ];
     }
 
