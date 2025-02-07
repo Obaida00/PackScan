@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
+
             $table->foreignId('storage_id')->constrained('storages')->onDelete('cascade');
             $table->foreignId('packer_id')->nullable()->constrained('packers')->onDelete('set null');
             $table->string('manager');
@@ -21,6 +22,9 @@ return new class extends Migration {
             $table->string('net_price');
             $table->enum('status', ['Pending', 'In Progress', 'Done']);
             $table->integer('number_of_packages')->nullable();
+            $table->boolean('is_important')->default(false);
+
+            $table->timestamp('done_at')->nullable();
             $table->timestamps();
         });
     }

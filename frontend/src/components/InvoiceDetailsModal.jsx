@@ -20,6 +20,7 @@ function InvoiceDetailsModal({ invoice }) {
     { label: "Status", value: invoice.status },
     { label: "Packer", value: invoice.packer_name ?? "-----------" },
     { label: "Number Of Packages", value: invoice.number_of_packages ?? "-----------" },
+    { label: "Done At", value: invoice.done_at ?? "-----------" },
   ];
 
   const handleClickOpen = () => {

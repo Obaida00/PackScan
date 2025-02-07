@@ -78,8 +78,12 @@ ipcMain.handle("fetch-orders", async (event, pageNumber) => {
 });
 ipcMain.handle(
   "fetch-storage-orders",
-  async (event, pageNumber, storageCode) => {
-    return await axiosClient.getStorageInvoices(pageNumber, storageCode);
+  async (event, pageNumber, storageCode, isImportant = false) => {
+    return await axiosClient.getStorageInvoices(
+      pageNumber,
+      storageCode,
+      isImportant
+    );
   }
 );
 ipcMain.handle("search-storage-orders", async (event, storageCode, input) => {
@@ -174,7 +178,7 @@ async function executePythonScript(file_path) {
     const { stdout, stderr } = await execFile("python", [
       pythonScriptPath,
       file_path,
-    ]).catch(() => log.info("error occured with execFile"));
+    ]).catch((e) => log.info("error occured with execFile: ", e));
 
     if (stderr) {
       console.error(`Python script error: ${stderr}`);

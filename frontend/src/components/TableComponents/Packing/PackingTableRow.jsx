@@ -10,7 +10,7 @@ function PackingTableRow({ itemObj, decrementFunc }) {
 
     useEffect(() => {
         setBackground({ background: itemObj.colorMain });
-    }, [itemObj.count]);
+    }, [itemObj.current_count]);
 
     return (
         <tr
@@ -21,7 +21,7 @@ function PackingTableRow({ itemObj, decrementFunc }) {
             <TableDataCell
                 data={
                     <ProgressBar
-                        currentCount={itemObj.count}
+                        currentCount={itemObj.current_count}
                         totalCount={itemObj.total_count}
                         color={itemObj.colorSecond}
                     />

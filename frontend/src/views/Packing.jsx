@@ -23,7 +23,7 @@ function Packing() {
     if (!loading) {
       var complete = 0;
       items.forEach((item) => {
-        if (item.count == item.total_count) {
+        if (item.current_count == item.total_count) {
           complete = complete + 1;
         }
       });
@@ -43,19 +43,13 @@ function Packing() {
       const data = await ipcRenderer.invoke("fetch-order", id);
 
       setInvoice(data.data);
-
-      //adding a current counter set to 0 to each item
-      var items = data.data.items.map((item) => {
-        return {
-          ...item,
-          count: 0,
-          //progress bar colors
-          colorMain: "#1f2937",
-          colorSecond: "#1c64f2",
-        };
-      });
+      var items = data.data.items;
 
       //update items state
+      items.forEach((item) => {
+        updateItemState(item);
+      });
+
       setItems(items);
     } catch (e) {
       throw e;
@@ -70,7 +64,7 @@ function Packing() {
       setItems((prevState) => {
         const updatedItems = [...prevState]; //create a copy
         let i = updatedItems.indexOf(item); //index of the item that needs updating
-        updatedItems[i].count += 1; //update index in the copied array
+        updatedItems[i].current_count += 1; //update index in the copied array
 
         updateItemState(updatedItems[i], true);
         return updatedItems;
@@ -84,9 +78,12 @@ function Packing() {
       setItems((prevState) => {
         const updatedItems = [...prevState]; //create a copy
         var i = updatedItems.indexOf(item); //index of the item that needs updating
-        updatedItems[i].count = Math.max(updatedItems[i].count - 1, 0); //update index in the copied array
+        updatedItems[i].current_count = Math.max(
+          updatedItems[i].current_count - 1,
+          0
+        ); //update index in the copied array
 
-        updatedItems[i] = updateItemState(updatedItems[i], false);
+        updateItemState(updatedItems[i], false);
         return updatedItems;
       });
     }
@@ -108,7 +105,7 @@ function Packing() {
   const reset = () => {
     var newItems = [...items];
     for (var i = 0; i < newItems.length; i++) {
-      newItems[i].count = 0;
+      newItems[i].current_count = 0;
       newItems[i] = setItemStateNormal(newItems[i]);
     }
     setItems(newItems);
@@ -132,17 +129,25 @@ function Packing() {
   return (
     <>
       <div>
-        {/* Back Button */}
-        <div className="flex justify-center py-4">
-          <div className="min-h-[5vh] w-[90vw] flex justify-start">
-            <BackButton />
+        <div className="flex justify-between w-full px-5 py-4">
+          {/* Back Button */}
+          <div className="flex justify-center">
+            <div className="min-h-[5vh] w-full flex justify-start">
+              <BackButton />
+            </div>
+          </div>
+          {/* Logs */}
+          <div className="flex justify-center px-4">
+            <div className="w-full self-center font-sans text-xl text-slate-300">
+              {invoice.id && `- ${invoice.id} -`}
+            </div>
           </div>
         </div>
 
         {/* search */}
         <SearchBox action={barcode} eraseOnPaste={true} />
 
-        <div className="flex justify-center">
+        <div className="flex justify-center my-2">
           <div className="w-[80vw] my-4 overflow-x-auto shadow-gray-950 shadow-md rounded-xl">
             {loading ? (
               <h1 className="py-3 text-center font-cocon text-xl text-slate-950">
@@ -184,20 +189,20 @@ export default Packing;
 
 function updateItemState(item, increasing) {
   //if undershoot
-  if (item.count < item.total_count) {
+  if (item.current_count < item.total_count) {
     if (increasing) playItemScanSound();
     return setItemStateNormal(item);
   }
 
   //if completed
-  if (item.count == item.total_count) {
+  if (item.current_count == item.total_count) {
     playPackingCompleteSound();
     if (increasing) playItemScanSound();
     return setItemStateComplete(item);
   }
 
   //if overshoot
-  if (item.count > item.total_count) {
+  if (item.current_count > item.total_count) {
     if (increasing) playItemOverScanSound();
     return setItemStateOverShoot(item);
   }
