@@ -1,27 +1,30 @@
-import sys
+import os
 import barcode
 from barcode.writer import ImageWriter
 
-def generate_barcode(invoice_id):
+
+def generate_barcode(id):
     """
     Generates a barcode image for the given invoice ID.
     Returns the barcode instance.
     """
-    code128 = barcode.get_barcode_class('code128')
-    barcode_instance = code128(invoice_id, writer=ImageWriter())
-    return barcode_instance
+    try:
+        invoice_id = str(id)
+        code128 = barcode.get_barcode_class("code128")
+        barcode_instance = code128(invoice_id, writer=ImageWriter())
 
-def main():    
-    if len(sys.argv) < 2:
-        print("Please provide the invoice id as an argument.")
-        sys.exit(1)
-        
-    invoice_id = sys.argv[1]
-    
-    barcode_instance = generate_barcode(invoice_id)
-    image_path = f"./barcodes/barcode_{invoice_id}"
-    barcode_instance.save(image_path)
-    print(f"Barcode saved as {image_path}.png")
-    
-if __name__ == "__main__":
-    main()
+        options = {
+            "module_width": 1,
+            "module_height": 15.0,
+            "font_size": 12,
+            "text_distance": 5,
+            "quiet_zone": 10,
+        }
+        image_path = f"./barcodes/barcode_{invoice_id}"
+        image_path = os.path.abspath(image_path)
+        barcode_instance.save(f"{image_path}", options)
+        print(f'Barcode saved as "{image_path}.png"')
+        return image_path + ".png"
+    except Exception as e:
+        print(f"Error while generating the barcode for invoice : {id}")
+        raise e
