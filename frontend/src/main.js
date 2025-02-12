@@ -195,33 +195,14 @@ async function generateStickerForInvoice(invoice) {
   log.info("python generating sticker");
 
   try {
-    let pythonScriptPath;
+    let generateStickerScriptPath = getGenerateStickerScriptPath();
 
-    if (app.isPackaged) {
-      // In production, extract the Python script to a temp directory
-      const tempDir = os.tmpdir();
-      pythonScriptPath = path.join(tempDir, "generate_barcode.py");
-
-      // Extract the script if it doesn't exist
-      if (!fs.existsSync(pythonScriptPath)) {
-        const asarScriptPath = path.join(
-          app.getAppPath(),
-          ".webpack\\main\\generate_barcode.py"
-        );
-        fs.copyFileSync(asarScriptPath, pythonScriptPath);
-        log.info(`Python script extracted to: ${pythonScriptPath}`);
-      }
-    } else {
-      // In development, use the original script path
-      pythonScriptPath = path.join(__dirname, "generate_barcode.py");
-    }
+    let data = JSON.stringify(invoice).toString();
 
     // Execute the Python script
-    log.info("python script path:", pythonScriptPath);
-
     const { stdout, stderr } = await execFile("python", [
-      pythonScriptPath,
-      invoice.id,
+      generateStickerScriptPath,
+      data,
     ]).catch((e) => log.info("error occured with execFile: ", e));
 
     if (stderr) {
@@ -232,5 +213,58 @@ async function generateStickerForInvoice(invoice) {
     return stdout;
   } catch (error) {
     log.info(error);
+  }
+}
+
+function getGenerateStickerScriptPath() {
+  try {
+    let generateStickerScriptPath;
+
+    if (app.isPackaged) {
+      // In production, extract the Python script to a temp directory
+      const tempDir = os.tmpdir();
+      // Extract the scripts if they doesn't exist
+
+      // generate_sticker.py
+      generateStickerScriptPath = path.join(tempDir, "generate_sticker.py");
+      if (!fs.existsSync(generateStickerScriptPath)) {
+        const asarScriptPath = path.join(
+          app.getAppPath(),
+          ".webpack\\main\\generate_sticker.py"
+        );
+        fs.copyFileSync(asarScriptPath, generateStickerScriptPath);
+        log.info(`Python script extracted to: ${generateStickerScriptPath}`);
+      }
+
+      let generateBarcodeScriptPath = path.join(tempDir, "generate_barcode.py");
+      // generate_barcode.py
+      if (!fs.existsSync(generateBarcodeScriptPath)) {
+        const asarScriptPath = path.join(
+          app.getAppPath(),
+          ".webpack\\main\\generate_barcode.py"
+        );
+        fs.copyFileSync(asarScriptPath, generateBarcodeScriptPath);
+        log.info(`Python script extracted to: ${generateBarcodeScriptPath}`);
+      }
+
+      //print_html.py
+      let printHtmlScriptPath = path.join(tempDir, "print_html.py");
+      if (!fs.existsSync(printHtmlScriptPath)) {
+        const asarScriptPath = path.join(
+          app.getAppPath(),
+          ".webpack\\main\\print_html.py"
+        );
+        fs.copyFileSync(asarScriptPath, printHtmlScriptPath);
+        log.info(`Python script extracted to: ${printHtmlScriptPath}`);
+      }
+    } else {
+      // In development, use the original script path
+      generateStickerScriptPath = path.join(__dirname, "generate_sticker.py");
+    }
+
+    log.info("python script path:", generateStickerScriptPath);
+    return generateStickerScriptPath;
+  } catch (error) {
+    log.error(error);
   }
 }

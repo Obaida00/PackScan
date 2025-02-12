@@ -166,7 +166,7 @@ def main():
     # Check if file path is provided as a command-line argument
     if len(sys.argv) < 2:
         print("Please provide the PDF file path as an argument.")
-        sys.exit(1)
+        return
 
     # Get the file path from command-line arguments
     file_path = sys.argv[1]

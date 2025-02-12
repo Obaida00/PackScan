@@ -89,3 +89,7 @@ typings/
 
 # Electron-Forge
 out/
+
+barcode_*.png
+invoice_sticker_[0-9]*.html
+out.pdf
