@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('/invoices', InvoiceController::class);
 Route::post("/invoices/{id}/done", [InvoiceController::class, 'markInvoiceAsDone']);
+Route::post("/invoices/{id}/sent", [InvoiceController::class, 'markInvoiceAsSent']);
 
 Route::get('storages', [StorageController::class, 'index']);
 Route::post('storages', [StorageController::class, 'store']);
