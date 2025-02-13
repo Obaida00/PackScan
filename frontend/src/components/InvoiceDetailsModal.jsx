@@ -21,6 +21,7 @@ function InvoiceDetailsModal({ invoice }) {
     { label: "Packer", value: invoice.packer_name ?? "-----------" },
     { label: "Number Of Packages", value: invoice.number_of_packages ?? "-----------" },
     { label: "Done At", value: invoice.done_at ?? "-----------" },
+    { label: "Sent At", value: invoice.sent_at ?? "-----------" },
   ];
 
   const handleClickOpen = () => {
@@ -81,10 +82,10 @@ function InvoiceDetailsModal({ invoice }) {
               <tbody>
                 {rows.map((row, index) => (
                   <tr key={index} className="border-b-2 border-slate-50">
-                    <td className="py-2 font-medium text-gray-500 ">
+                    <td className="py-1 font-medium text-gray-500">
                       {row.label}
                     </td>
-                    <td className="py-2 font-semibold text-xl text-slate-900">
+                    <td className="py-1 font-semibold text-xl text-slate-900">
                       {row.value}
                     </td>
                   </tr>
