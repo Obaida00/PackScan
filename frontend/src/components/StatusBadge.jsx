@@ -6,12 +6,14 @@ function StatusBadge({ badgeName}) {
 
   
   useEffect(() => {
-    if (badgeName == "Done") {
-      setbadgeStyle({ color: "#166534", backgroundColor: "#86efac" });
-    } else if (badgeName == "Pending") {
-      setbadgeStyle({ color: "#fef9c3", backgroundColor: "#ca8a04" });
+    if (badgeName == "Pending") {
+      setbadgeStyle({ color: "#fff", backgroundColor: "#747474" });
     } else if (badgeName == "In Progress") {
+      setbadgeStyle({ color: "#fffde7", backgroundColor: "#cc8b00" });
+    } else if (badgeName == "Done") {
       setbadgeStyle({ color: "#dbeafe", backgroundColor: "#1e40af" });
+    } else if (badgeName == "Sent") {
+      setbadgeStyle({ color: "#166534", backgroundColor: "#86efac" });
     } else {
       throw TypeError("badgeName not matching!!!" + badgeName);
     }

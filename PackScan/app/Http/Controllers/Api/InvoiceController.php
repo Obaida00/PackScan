@@ -186,6 +186,24 @@ class InvoiceController extends Controller
         return new InvoiceResource($invoice);
     }
 
+    /**
+     * Mark the current invoice as Sent.
+     */
+    public function markInvoiceAsSent(Request $request, int $id)
+    {
+        $invoice = Invoice::find($id);
+
+        if (!$invoice) {
+            return response()->json(['message' => 'Invoice not found.'], 404);
+        }
+
+        $invoice->status = "Sent";
+        $invoice->sent_at = now();
+        $invoice->save();
+        
+        return new InvoiceResource($invoice);
+    }
+
 
     /**
      * Remove the specified resource from storage.
