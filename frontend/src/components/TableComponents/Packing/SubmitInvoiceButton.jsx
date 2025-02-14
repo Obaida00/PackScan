@@ -33,6 +33,7 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
       setPackageNumberFieldError(true);
       return;
     }
+    handleClose();
     action(numberOfPackages);
   };
 
@@ -127,7 +128,7 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
                     name="id"
                     variant="outlined"
                     type="number"
-                    onKeyDown={(e) => e.key === "Enter" && submit()}
+                    onKeyUp={(e) => e.key === "Enter" && submit()}
                     onChange={(e) => setNumberOfPackages(e.target.value)}
                   />
                 </td>
