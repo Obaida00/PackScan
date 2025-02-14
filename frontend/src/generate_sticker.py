@@ -11,9 +11,7 @@ def fill_template(invoice, barcode_image_path) -> str:
     returns the created file path
     """
 
-    template_path = os.path.abspath(
-        "./src/assets/html/invoice_sticker_template.html"
-    )
+    template_path = os.path.abspath("./src/assets/html/invoice_sticker_template.html")
     template_dir = os.path.dirname(template_path)
     try:
         barcode_image_rpath = os.path.relpath(
@@ -67,7 +65,12 @@ def generate_sticker(invoice) -> str:
     """
     try:
         invoice_id = invoice.get("id")
+
+        print("progress: 40%", flush=True)
+
         barcode_path = generate_barcode.generate_barcode(invoice_id)
+
+        print("progress: 60%", flush=True)
 
         html_path = fill_template(invoice, barcode_path)
         return html_path
@@ -99,6 +102,8 @@ def main():
     invoice_json = sys.argv[1]
 
     invoice = get_invoice_data(invoice_json)
+
+    print("progress: 20%", flush=True)
 
     sticker_html_path = generate_sticker(invoice)
 

@@ -36,10 +36,14 @@ def print_html(html_path):
             },
         )
 
+        print("progress: 80%", flush=True)
+
         output_path = "./src/assets/html/out.pdf"
         output_path = os.path.abspath(output_path)
         with open(output_path, "wb") as f:
             f.write(base64.b64decode(pdf["data"]))
+
+        print("progress: 100%", flush=True)
 
         print("output saved to ", output_path)
         driver.quit()
