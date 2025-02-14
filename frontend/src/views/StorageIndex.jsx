@@ -14,7 +14,7 @@ function StorageIndex({ storageIndex }) {
   const [loadingImportantData, setLoadingImportantData] = useState(false);
 
   const storageCode = storageIndex == 0 ? "mo" : "ad";
-  const storageName = storageIndex == 0 ? "almousoaa" : "advanced";
+  const storageName = storageIndex == 0 ? "Almousoaa" : "Advanced";
 
   useEffect(() => {
     fetchImportantData(storageCode);
@@ -64,9 +64,14 @@ function StorageIndex({ storageIndex }) {
       <div>
         <div className="flex justify-between w-full px-5 py-4">
           {/* Back Button */}
-          <div className="flex justify-center]">
+          <div className="flex justify-center">
             <div className="min-h-[5vh] w-full flex justify-start">
               <BackButton />
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <div className="h-full w-full flex justify-center text-center font-sans text-slate-300 text-xl">
+              - {storageName} -
             </div>
           </div>
           {/* Logs */}
