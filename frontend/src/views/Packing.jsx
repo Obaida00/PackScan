@@ -5,15 +5,22 @@ import PackingTable from "../components/TableComponents/Packing/PackingTable.jsx
 import SearchBox from "../components/SearchBox.jsx";
 import BackButton from "../components/BackButton.jsx";
 import SubmitInvoiceButton from "../components/TableComponents/Packing/SubmitInvoiceButton.jsx";
+import "../assets/css/loader.css";
 
 function Packing() {
   const { id } = useParams();
   const [items, setItems] = useState([]);
   const [invoice, setInvoice] = useState({});
   const [loading, setLoading] = useState(true);
+  const [progressLoading, setProgressLoading] = useState(false);
+  const [progress, setprogress] = useState(1);
   const [canSubmit, setCanSubmit] = useState(false);
   const { state } = useLocation();
   const { packerId } = state || {};
+
+  ipcRenderer.on("sticker-generating-progress", (event, progress) => {
+    setprogress(progress);
+  });
 
   useEffect(() => {
     getItems();
@@ -90,6 +97,7 @@ function Packing() {
   };
 
   const submit = (numberOfPackages) => {
+    setProgressLoading(true);
     ipcRenderer
       .invoke("submit-order", {
         invoiceId: id,
@@ -98,6 +106,7 @@ function Packing() {
       })
       .then(async () => {
         playCanSubmitSound();
+        setProgressLoading(false);
         await ipcRenderer.invoke("go-back");
       });
   };
@@ -128,6 +137,19 @@ function Packing() {
 
   return (
     <>
+      {progressLoading && (
+        <div className="fixed bg-[#00000090] w-full h-full z-10 flex justify-center items-center">
+          <div className="pb-32">
+            <div
+              className="loader"
+              style={{ backgroundSize: `${progress}% 3px` }}
+            ></div>
+            <div className="text-slate-100 text-xl font-sans text-center">
+              {progress}%
+            </div>
+          </div>
+        </div>
+      )}
       <div>
         <div className="flex justify-between w-full px-5 py-4">
           {/* Back Button */}

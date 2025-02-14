@@ -194,26 +194,52 @@ async function executePythonScript(file_path) {
 async function generateStickerForInvoice(invoice) {
   log.info("python generating sticker");
 
-  try {
-    let generateStickerScriptPath = getGenerateStickerScriptPath();
+  let generateStickerScriptPath = getGenerateStickerScriptPath();
 
-    let data = JSON.stringify(invoice).toString();
+  let data = JSON.stringify(invoice).toString();
 
-    // Execute the Python script
-    const { stdout, stderr } = await execFile("python", [
+  // Execute the Python script
+  return new Promise((resolve, reject) => {
+    const pythonProcess = child_process.spawn("python", [
+      "-u",
       generateStickerScriptPath,
       data,
-    ]).catch((e) => log.info("error occured with execFile: ", e));
+    ]);
+    let fullOutput = "";
 
-    if (stderr) {
-      console.error(`Python script error: ${stderr}`);
-      return;
-    }
-    log.info("python output => ", stdout);
-    return stdout;
-  } catch (error) {
-    log.info(error);
-  }
+    pythonProcess.stdout.on("data", (data) => {
+      const output = data.toString();
+      fullOutput += output;
+      log.info("python stdout:", output);
+
+      const progressMatch = output.match(/progress:\s*(\d+)%/i);
+      if (progressMatch && progressMatch[1]) {
+        const progress = parseInt(progressMatch[1], 10);
+        if (mainWindow && mainWindow.webContents) {
+          mainWindow.webContents.send("sticker-generating-progress", progress);
+        }
+      }
+    });
+
+    pythonProcess.stderr.on("data", (data) => {
+      const errorMsg = data.toString();
+      log.error("python stderr:", errorMsg);
+    });
+
+    pythonProcess.on("error", (error) => {
+      log.error("python process error:", error);
+      reject(error);
+    });
+
+    pythonProcess.on("close", (code) => {
+      log.info("python process closed with code", code);
+      if (code === 0) {
+        resolve(fullOutput);
+      } else {
+        reject(new Error("python process exited with code " + code));
+      }
+    });
+  });
 }
 
 function getGenerateStickerScriptPath() {
