@@ -1,13 +1,13 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
-import Index from "./views/Index.jsx";
-import DefaultLayout from "./components/Layout/DefaultLayout.jsx";
-import Navigator from "./views/Navigator.jsx";
-import StorageSelector from "./views/StorageSelector.jsx";
-import StorageIndex from "./views/StorageIndex.jsx";
-import Logs from "./views/Logs.jsx";
-import Packing from "./views/Packing.jsx";
+import Index from "./views/Index/Index.jsx";
+import DefaultLayout from "./views/Layout/DefaultLayout.jsx";
+import Navigator from "./views/Navigator/Navigator.jsx";
+import StorageSelector from "./views/StorageSelector/StorageSelector.jsx";
+import StorageIndex from "./views/StorageIndex/StorageIndex.jsx";
+import StorageLog from "./views/StorageLog/StorageLog.jsx";
+import Packing from "./views/Packing/Packing.jsx";
 import "./index.css";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -62,11 +62,11 @@ root.render(
           />
           <Route
             path="/storage/almousoaa/logs"
-            element={<Logs storageIndex={0} />}
+            element={<StorageLog storageIndex={0} />}
           />
           <Route
             path="/storage/advanced/logs"
-            element={<Logs storageIndex={1} />}
+            element={<StorageLog storageIndex={1} />}
           />
           <Route
             path="/storage/almousoaa/:id"
