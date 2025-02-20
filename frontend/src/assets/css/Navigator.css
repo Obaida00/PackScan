@@ -1,3 +1,0 @@
-.menu-item {
-  @apply flex place-items-center gap-2 m-2 p-4 transform hover:scale-110 duration-300 transition-all;
-}
