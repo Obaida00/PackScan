@@ -41,6 +41,7 @@ function Packing() {
         invoiceId: id,
         packerId: packerId,
         numberOfPackages: numberOfPackages,
+        manually: false
       })
       .then(async () => {
         playCanSubmitSound();
