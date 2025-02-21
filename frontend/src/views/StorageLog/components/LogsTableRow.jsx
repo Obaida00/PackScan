@@ -13,10 +13,12 @@ function LogsTableRow({ i, invoice, reloadInvoices }) {
         <StatusBadge badgeName={invoice.status} />
       </td>
       <td className="px-6 py-4 text-right">
-        <ManualSubmitModal
-          invoiceId={invoice?.id}
-          afterSubmit={reloadInvoices}
-        />
+        {invoice.status === "Pending" && (
+          <ManualSubmitModal
+            invoiceId={invoice?.id}
+            afterSubmit={reloadInvoices}
+          />
+        )}
         <InvoiceDetailsModal key={i} invoice={invoice} />
       </td>
     </tr>
