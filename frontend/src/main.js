@@ -217,7 +217,7 @@ async function generateStickerForInvoice(invoice) {
       if (progressMatch && progressMatch[1]) {
         const progress = parseInt(progressMatch[1], 10);
         if (mainWindow && mainWindow.webContents) {
-          mainWindow.webContents.send("sticker-generating-progress", progress);
+          mainWindow.webContents.send("loading-progress", progress);
         }
       }
     });
