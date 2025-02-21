@@ -2,8 +2,9 @@ import React from "react";
 import StatusBadge from "../../../shared/components/StatusBadge.jsx";
 import TableDataCell from "../../../shared/components/TableComponents/TableDataCell.jsx";
 import InvoiceDetailsModal from "../../../shared/components/InvoiceDetailsModal.jsx";
+import ManualSubmitModal from "./ManualSubmitModal.jsx";
 
-function LogsTableRow({ i, invoice }) {
+function LogsTableRow({ i, invoice, reloadInvoices }) {
   return (
     <tr className=" border-b bg-gray-800 border-gray-700 hover:bg-gray-600 transition ease-in-out text-center">
       <TableDataCell key={i} data={invoice.id} />
@@ -12,6 +13,12 @@ function LogsTableRow({ i, invoice }) {
         <StatusBadge badgeName={invoice.status} />
       </td>
       <td className="px-6 py-4 text-right">
+        {invoice.status === "Pending" && (
+          <ManualSubmitModal
+            invoiceId={invoice?.id}
+            afterSubmit={reloadInvoices}
+          />
+        )}
         <InvoiceDetailsModal key={i} invoice={invoice} />
       </td>
     </tr>

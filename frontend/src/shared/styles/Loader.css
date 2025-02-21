@@ -6,6 +6,7 @@
     font-size: 30px;
     padding-bottom: 8px;
     background: linear-gradient(currentColor 0 0) 0 100% / var(--progress, 0%) 3px no-repeat;
+    z-index: 10;
   }
   
   .loader:before {

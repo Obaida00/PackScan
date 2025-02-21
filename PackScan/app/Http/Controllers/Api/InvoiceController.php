@@ -7,6 +7,7 @@ use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Resources\InvoiceResource;
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use App\Models\Packer;
 use App\Models\Product;
 use App\Models\Storage;
 use App\Services\InvoiceQuery;
@@ -164,13 +165,24 @@ class InvoiceController extends Controller
 
         $request->validate([
             'packer_id' => 'required|exists:packers,id',
-            'number_of_packages' => 'required|integer|gt:0'
+            'number_of_packages' => 'required|integer|gt:0',
+            'mode' => 'required|in:M,A'
         ]);
+
+        $packer = Packer::find($request->packer_id);
+        if ($packer == null) {
+            return response()->json(['message' => 'Packer not found.'], 404);
+        }
+
+        if ($request->mode == 'M' && !$packer->can_manually_submit) {
+            return response()->json(['message' => 'Packer Cannot Manually Submit Invoices.'], 403);
+        }
 
         $invoice->packer_id = $request->packer_id;
         $invoice->number_of_packages = $request->number_of_packages;
         $invoice->status = "Done";
         $invoice->is_important = false;
+        $invoice->submittion_mode = $request->mode;
         $invoice->done_at = now();
         $invoice->save();
 
@@ -200,7 +212,7 @@ class InvoiceController extends Controller
         $invoice->status = "Sent";
         $invoice->sent_at = now();
         $invoice->save();
-        
+
         return new InvoiceResource($invoice);
     }
 

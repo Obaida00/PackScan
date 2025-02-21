@@ -97,11 +97,12 @@ ipcMain.handle("fetch-packer", async (event, id) => {
 });
 ipcMain.handle(
   "submit-order",
-  async (event, { invoiceId, packerId, numberOfPackages }) => {
+  async (event, { invoiceId, packerId, numberOfPackages, manually = true }) => {
     var data = await axiosClient.submitInvoice(
       invoiceId,
       packerId,
-      numberOfPackages
+      numberOfPackages,
+      manually
     );
     await generateStickerForInvoice(data.data);
     return;
@@ -216,7 +217,7 @@ async function generateStickerForInvoice(invoice) {
       if (progressMatch && progressMatch[1]) {
         const progress = parseInt(progressMatch[1], 10);
         if (mainWindow && mainWindow.webContents) {
-          mainWindow.webContents.send("sticker-generating-progress", progress);
+          mainWindow.webContents.send("loading-progress", progress);
         }
       }
     });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import PackingTable from "./components/PackingTable.jsx";
 import SearchBox from "../../shared/components/SearchBox.jsx";
@@ -7,6 +7,7 @@ import SubmitInvoiceButton from "./components/SubmitInvoiceButton.jsx";
 import "../../shared/styles/Loader.css";
 import { usePacking } from "../../shared/hooks/usePacking.jsx";
 import { useSFX } from "../../shared/hooks/useSFX.jsx";
+import { useLoadingContext } from "../../shared/contexts/LoadingContext.jsx";
 
 function Packing() {
   const { id } = useParams();
@@ -23,19 +24,8 @@ function Packing() {
     decrementItem,
   } = usePacking(id);
 
-  const [progressLoading, setProgressLoading] = useState(false);
-  const [progress, setProgress] = useState(1);
-
-  useEffect(() => {
-    const progressListener = (event, prog) => setProgress(prog);
-    ipcRenderer.on("sticker-generating-progress", progressListener);
-    return () => {
-      ipcRenderer.removeListener(
-        "sticker-generating-progress",
-        progressListener
-      );
-    };
-  }, []);
+  const { setProgressLoading } =
+    useLoadingContext();
 
   const { playCanSubmitSound } = useSFX();
 
@@ -51,6 +41,7 @@ function Packing() {
         invoiceId: id,
         packerId: packerId,
         numberOfPackages: numberOfPackages,
+        manually: false
       })
       .then(async () => {
         playCanSubmitSound();
@@ -74,19 +65,6 @@ function Packing() {
 
   return (
     <>
-      {progressLoading && (
-        <div className="fixed bg-[#00000090] w-full h-full z-10 flex justify-center items-center">
-          <div className="pb-32">
-            <div
-              className="loader"
-              style={{ backgroundSize: `${progress}% 3px` }}
-            ></div>
-            <div className="text-slate-100 text-xl font-sans text-center">
-              {progress}%
-            </div>
-          </div>
-        </div>
-      )}
       <div>
         <div className="flex justify-between w-full px-5 py-4">
           <div className="flex justify-center">

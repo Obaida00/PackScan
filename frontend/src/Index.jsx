@@ -14,6 +14,8 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { createTheme, ThemeProvider } from "@mui/material";
+import { LoadingProvider } from "./shared/contexts/LoadingContext.jsx";
+import LoadingOverlay from "./shared/components/LoadingOverlay.jsx";
 
 const theme = createTheme({
   palette: {
@@ -46,38 +48,38 @@ root.render(
 
   // <div className="min-h-screen max-h-full bg-gray-800">
   <ThemeProvider theme={theme}>
-    <Router>
-      <Routes>
-        <Route path="/" element={<DefaultLayout />}>
-          <Route index element={<Navigator />} />
-          <Route path="/monitor" element={<Index />} />
-          <Route path="/storage" element={<StorageSelector />} />
-          <Route
-            path="/storage/almousoaa"
-            element={<StorageIndex storageIndex={0} />}
-          />
-          <Route
-            path="/storage/advanced"
-            element={<StorageIndex storageIndex={1} />}
-          />
-          <Route
-            path="/storage/almousoaa/logs"
-            element={<StorageLog storageIndex={0} />}
-          />
-          <Route
-            path="/storage/advanced/logs"
-            element={<StorageLog storageIndex={1} />}
-          />
-          <Route
-            path="/storage/almousoaa/:id"
-            element={<Packing />}
-          />
-          <Route
-            path="/storage/advanced/:id"
-            element={<Packing storageIndex={1} />}
-          />
-        </Route>
-      </Routes>
-    </Router>
+    <LoadingProvider>
+      <LoadingOverlay></LoadingOverlay>
+      <Router>
+        <Routes>
+          <Route path="/" element={<DefaultLayout />}>
+            <Route index element={<Navigator />} />
+            <Route path="/monitor" element={<Index />} />
+            <Route path="/storage" element={<StorageSelector />} />
+            <Route
+              path="/storage/almousoaa"
+              element={<StorageIndex storageIndex={0} />}
+            />
+            <Route
+              path="/storage/advanced"
+              element={<StorageIndex storageIndex={1} />}
+            />
+            <Route
+              path="/storage/almousoaa/logs"
+              element={<StorageLog storageIndex={0} />}
+            />
+            <Route
+              path="/storage/advanced/logs"
+              element={<StorageLog storageIndex={1} />}
+            />
+            <Route path="/storage/almousoaa/:id" element={<Packing />} />
+            <Route
+              path="/storage/advanced/:id"
+              element={<Packing storageIndex={1} />}
+            />
+          </Route>
+        </Routes>
+      </Router>
+    </LoadingProvider>
   </ThemeProvider>
 );

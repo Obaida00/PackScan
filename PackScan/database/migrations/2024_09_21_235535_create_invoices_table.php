@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->string('net_price');
             $table->enum('status', ['Pending', 'In Progress', 'Done', 'Sent']);
             $table->integer('number_of_packages')->nullable();
+            $table->enum('submittion_mode', ['M', 'A'])->nullable();
             $table->boolean('is_important')->default(false);
 
             $table->timestamp('done_at')->nullable();

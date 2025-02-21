@@ -19,6 +19,7 @@ class PackerFactory extends Factory
         return [
             'id' => $this->faker->unique()->numberBetween(1000, 9999),
             'name' => $this->faker->name(),
+            'can_manually_submit' => $this->faker->boolean(30),
         ];
     }
 }

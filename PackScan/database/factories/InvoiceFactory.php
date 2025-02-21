@@ -19,9 +19,9 @@ class InvoiceFactory extends Factory
     {
         $done_at = $sent_at = null;
         $status = $this->faker->randomElement(['Pending', 'In Progress', 'Done', 'Sent']);
-        if($status == 'Done' || $status == 'Sent'){
+        if ($status == 'Done' || $status == 'Sent') {
             $done_at = $this->faker->dateTimeBetween('+10 minutes', '+4 hours');
-            if($status == 'Sent'){
+            if ($status == 'Sent') {
                 $sent_at = $this->faker->dateTimeBetween('+1 hours', '+4 hours');
             }
         }
@@ -37,7 +37,8 @@ class InvoiceFactory extends Factory
             'storage_id' => Storage::inRandomOrder()->first()->id,
             'is_important' => $this->faker->randomElement([true, false]),
             'done_at' => $done_at,
-            'sent_at' => $sent_at
+            'sent_at' => $sent_at,
+            'submittion_mode' => $this->faker->randomElement(['M', 'A'])
         ];
     }
 }
