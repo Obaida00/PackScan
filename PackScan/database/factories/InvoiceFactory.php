@@ -38,7 +38,7 @@ class InvoiceFactory extends Factory
             'is_important' => $this->faker->randomElement([true, false]),
             'done_at' => $done_at,
             'sent_at' => $sent_at,
-            'submittion_mode' => $this->faker->randomElement(['manual', 'auto'])
+            'submittion_mode' => $this->faker->randomElement(['M', 'A'])
         ];
     }
 }
