@@ -6,6 +6,7 @@ import BackButton from "../../shared/components/BackButton.jsx";
 import SubmitInvoiceButton from "./components/SubmitInvoiceButton.jsx";
 import "../../shared/styles/Loader.css";
 import { usePacking } from "../../shared/hooks/usePacking.jsx";
+import { useSFX } from "../../shared/hooks/useSFX.jsx";
 
 function Packing() {
   const { id } = useParams();
@@ -36,6 +37,8 @@ function Packing() {
     };
   }, []);
 
+  const { playCanSubmitSound } = useSFX();
+
   const handleBarcode = (input) => {
     const numericBarcode = Number(input);
     incrementItem(numericBarcode);
@@ -50,7 +53,7 @@ function Packing() {
         numberOfPackages: numberOfPackages,
       })
       .then(async () => {
-        ipcRenderer.invoke("play-sound", "complete2");
+        playCanSubmitSound();
         setProgressLoading(false);
         await ipcRenderer.invoke("go-back");
       });
