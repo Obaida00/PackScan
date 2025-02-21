@@ -21,7 +21,7 @@ function ManualSubmitModal({ invoiceId }) {
   const [packageNumberFieldError, setPackageNumberFieldError] = useState(false);
   const { playCanSubmitSound } = useSFX();
 
-  const { progressLoading, setProgressLoading, progress } = useLoadingContext();
+  const { setProgressLoading } = useLoadingContext();
 
   const onInputChange = (e) => {
     setMetaData({ ...metaData, [e.target.name]: e.target.value });
