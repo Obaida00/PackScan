@@ -115,14 +115,29 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
         className="hover:bg-transparent w-fit h-full"
         onClick={handleClickOpen}
       >
+        
         <svg
-          xmlns="http://wwz.w3.org/2000/svg"
-          height="24px"
-          viewBox="0 -960 960 960"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 14 14"
           width="24px"
           fill="gray"
         >
-          <path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
+          <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+          <g
+            id="SVGRepo_tracerCarrier"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          ></g>
+          <g id="SVGRepo_iconCarrier">
+            <path d="M7 14A7 7 0 1 1 7 0a7 7 0 0 1 0 14z"></path>
+            <path
+              d="M7 13A6 6 0 1 0 7 1a6 6 0 0 0 0 12z"
+              fill="#FFF"
+              fillRule="nonzero"
+              style={{fill: "var(--svg-status-bg, #1f2937)"}}
+            ></path>
+            <path d="M6.415 7.04L4.579 5.203a.295.295 0 0 1 .004-.416l.349-.349a.29.29 0 0 1 .416-.004l2.214 2.214a.289.289 0 0 1 .019.021l.132.133c.11.11.108.291 0 .398L5.341 9.573a.282.282 0 0 1-.398 0l-.331-.331a.285.285 0 0 1 0-.399L6.415 7.04zm2.54 0L7.119 5.203a.295.295 0 0 1 .004-.416l.349-.349a.29.29 0 0 1 .416-.004l2.214 2.214a.289.289 0 0 1 .019.021l.132.133c.11.11.108.291 0 .398L7.881 9.573a.282.282 0 0 1-.398 0l-.331-.331a.285.285 0 0 1 0-.399L8.955 7.04z"></path>
+          </g>
         </svg>
       </Button>
       <Dialog
