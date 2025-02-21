@@ -2,6 +2,7 @@ import React from "react";
 import StatusBadge from "../../../shared/components/StatusBadge.jsx";
 import TableDataCell from "../../../shared/components/TableComponents/TableDataCell.jsx";
 import InvoiceDetailsModal from "../../../shared/components/InvoiceDetailsModal.jsx";
+import ManualSubmitModal from "./ManualSubmitModal.jsx";
 
 function LogsTableRow({ i, invoice }) {
   return (
@@ -13,6 +14,7 @@ function LogsTableRow({ i, invoice }) {
       </td>
       <td className="px-6 py-4 text-right">
         <InvoiceDetailsModal key={i} invoice={invoice} />
+      <ManualSubmitModal invoiceId={invoice?.id} />
       </td>
     </tr>
   );
