@@ -31,6 +31,7 @@ class InvoiceResource extends JsonResource
             'number_of_packages' => $this->number_of_packages,
             'done_at' => $this->done_at ? Carbon::parse($this->done_at)->format('Y-m-d - H:i:s') : null,
             'sent_at' => $this->sent_at ? Carbon::parse($this->sent_at)->format('Y-m-d - H:i:s') : null,
+            'submittion_mode' => $this->submittion_mode,
             'items' => $this->convertItems($this->invoiceItems),
             'created_at' => $this->created_at->format('Y-m-d - H:i:s')
         ];

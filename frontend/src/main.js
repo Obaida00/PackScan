@@ -97,11 +97,12 @@ ipcMain.handle("fetch-packer", async (event, id) => {
 });
 ipcMain.handle(
   "submit-order",
-  async (event, { invoiceId, packerId, numberOfPackages }) => {
+  async (event, { invoiceId, packerId, numberOfPackages, manually = true }) => {
     var data = await axiosClient.submitInvoice(
       invoiceId,
       packerId,
-      numberOfPackages
+      numberOfPackages,
+      manually
     );
     await generateStickerForInvoice(data.data);
     return;

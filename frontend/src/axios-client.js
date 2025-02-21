@@ -27,7 +27,7 @@ export async function fetchAllInvoices(pageNumber = 1) {
 export async function getStorageInvoices(pageNumber, storageCode, isImportant) {
   try {
     let url = `${BASE_URL}/api/invoices?page=${pageNumber}&st[eq]=${storageCode}`;
-    if(isImportant) url += "&imp[eq]=1";
+    if (isImportant) url += "&imp[eq]=1";
 
     const response = await axios.get(url);
 
@@ -75,11 +75,17 @@ export async function getInvoiceById(id) {
 }
 
 // Submit an invoice
-export async function submitInvoice(invoiceId, packerId, numberOfPackages) {
+export async function submitInvoice(
+  invoiceId,
+  packerId,
+  numberOfPackages,
+  manually
+) {
   try {
     let data = JSON.stringify({
       packer_id: packerId,
       number_of_packages: numberOfPackages,
+      mode: manually ? "M" : "A",
     });
 
     let header = {
