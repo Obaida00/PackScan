@@ -65,7 +65,8 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
     setPackerFieldError(false);
   };
 
-  const submit = () => {
+  const submit = (e) => {
+    e.preventDefault();
     let err = false;
     if (metaData.numberOfPackages === null || metaData.numberOfPackages <= 0) {
       console.log("invalid number of packages");
@@ -131,7 +132,7 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
           component: "form",
           onSubmit: submit,
         }}
-        onKeyUp={(e) => e.key === "Enter" && submit()}
+        onKeyUp={(e) => e.key === "Enter" && submit(e)}
       >
         <DialogTitle>Submit Package</DialogTitle>
         <DialogContent>

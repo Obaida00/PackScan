@@ -26,7 +26,8 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
     setNumberOfPackages(invoice.number_of_packages);
   }, [invoice]);
 
-  const submit = () => {
+  const submit = (e) => {
+    e.preventDefault();
     if (numberOfPackages === null || numberOfPackages <= 0) {
       console.log("invalid number of packages");
       setPackageNumberFieldError(true);
@@ -127,7 +128,7 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
                     name="id"
                     variant="outlined"
                     type="number"
-                    onKeyUp={(e) => e.key === "Enter" && submit()}
+                    onKeyUp={(e) => e.key === "Enter" && submit(e)}
                     onChange={(e) => setNumberOfPackages(e.target.value)}
                   />
                 </td>
@@ -138,7 +139,7 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
         <DialogActions>
           <button
             className="text-slate-100 border border-slate-400 bg-green-600 hover:bg-green-700 focus:ring-2 focus:outline-none focus:ring-slate-300 font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-200"
-            onClick={() => submit()}
+            onClick={submit}
           >
             <p>Submit Invoice</p>
             &nbsp;
