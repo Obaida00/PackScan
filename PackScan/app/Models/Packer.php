@@ -12,6 +12,7 @@ class Packer extends Model
     protected $fillable = [
         'id',
         'name',
+        'can_manually_submit'
     ];
 
     

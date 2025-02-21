@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('name');
+            $table->boolean('can_manually_submit');
             
             $table->timestamps();
         });
