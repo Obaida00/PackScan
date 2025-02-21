@@ -6,7 +6,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useSFX } from "../../../shared/hooks/useSFX.jsx";
-import "../../../shared/styles/Loader.css"
+import { useLoadingContext } from "../../../shared/contexts/LoadingContext.jsx";
+import "../../../shared/styles/Loader.css";
 
 function ManualSubmitModal({ invoiceId }) {
   const [metaData, setMetaData] = useState({
@@ -19,19 +20,8 @@ function ManualSubmitModal({ invoiceId }) {
   const [packerFieldError, setPackerFieldError] = useState(false);
   const [packageNumberFieldError, setPackageNumberFieldError] = useState(false);
   const { playCanSubmitSound } = useSFX();
-  const [progressLoading, setProgressLoading] = useState(false);
-  const [progress, setProgress] = useState(1);
 
-  useEffect(() => {
-    const progressListener = (event, prog) => setProgress(prog);
-    ipcRenderer.on("sticker-generating-progress", progressListener);
-    return () => {
-      ipcRenderer.removeListener(
-        "sticker-generating-progress",
-        progressListener
-      );
-    };
-  }, []);
+  const { progressLoading, setProgressLoading, progress } = useLoadingContext();
 
   const onInputChange = (e) => {
     setMetaData({ ...metaData, [e.target.name]: e.target.value });
@@ -118,19 +108,6 @@ function ManualSubmitModal({ invoiceId }) {
 
   return (
     <>
-      {progressLoading && (
-        <div className="fixed bg-[#00000090] w-full h-full z-10 flex justify-center items-center">
-          <div className="pb-32">
-            <div
-              className="loader"
-              style={{ backgroundSize: `${progress}% 3px` }}
-            ></div>
-            <div className="text-slate-100 text-xl font-sans text-center">
-              {progress}%
-            </div>
-          </div>
-        </div>
-      )}
       <Button
         disableRipple
         className="hover:bg-transparent w-fit h-full"
@@ -181,7 +158,7 @@ function ManualSubmitModal({ invoiceId }) {
               <tr className="border-b-2 border-slate-50">
                 <td className="py-2 w-48 font-medium text-gray-500">Packer</td>
                 <td className="w-64 py-2 text-xl text-slate-900">
-                  <div className="flex gap-2 items-center ">
+                  <div className="flex gap-2 items-center">
                     <div className="w-[100px]">
                       <TextField
                         autoFocus
