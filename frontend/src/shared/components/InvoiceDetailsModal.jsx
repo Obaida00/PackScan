@@ -22,6 +22,7 @@ function InvoiceDetailsModal({ invoice }) {
     { label: "Number Of Packages", value: invoice.number_of_packages ?? "-----------" },
     { label: "Done At", value: invoice.done_at ?? "-----------" },
     { label: "Sent At", value: invoice.sent_at ?? "-----------" },
+    { label: "Submittion Mode", value: invoice.submittion_mode ?? "-----------" },
   ];
 
   const handleClickOpen = () => {
