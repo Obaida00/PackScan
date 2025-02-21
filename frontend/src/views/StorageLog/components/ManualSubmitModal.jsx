@@ -9,7 +9,7 @@ import { useSFX } from "../../../shared/hooks/useSFX.jsx";
 import { useLoadingContext } from "../../../shared/contexts/LoadingContext.jsx";
 import "../../../shared/styles/Loader.css";
 
-function ManualSubmitModal({ invoiceId }) {
+function ManualSubmitModal({ invoiceId, afterSubmit }) {
   const [metaData, setMetaData] = useState({
     packerId: null,
     numberOfPackages: null,
@@ -103,6 +103,7 @@ function ManualSubmitModal({ invoiceId }) {
       .then(async () => {
         playCanSubmitSound();
         setProgressLoading(false);
+        afterSubmit();
       });
   };
 

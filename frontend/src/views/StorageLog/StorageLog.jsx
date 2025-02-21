@@ -49,7 +49,7 @@ function StorageLog({ storageIndex }) {
                 Loading...
               </h1>
             ) : (
-              <LogsTable data={orders} minId={minId} maxId={maxId} />
+              <LogsTable data={orders} minId={minId} maxId={maxId} reloadInvoices={getOrders}/>
             )}
           </div>
         </div>

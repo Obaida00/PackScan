@@ -1,10 +1,10 @@
 import * as React from "react";
 import TableHeader from "../../../shared/components/TableComponents/TableHeader.jsx";
-import TableRow from "./LogsTableRow.jsx";
+import LogsTableRow from "./LogsTableRow.jsx";
 import LogsTableRowForMissingInvoices from "./LogsTableRowForMissingInvoices.jsx";
 
-function LogsTable({ data, minId, maxId }) {
-  // Step 1: Create a full range of IDs for the current page
+function LogsTable({ data, minId, maxId, reloadInvoices }) {
+  // Create a full range of IDs for the current page
   const fullData = Array.from({ length: maxId - minId + 1 }, (_, i) => {
     const id = maxId - i;
     return data.find((obj) => obj.id === id) || { missing: id }; // Use null for missing IDs
@@ -24,7 +24,7 @@ function LogsTable({ data, minId, maxId }) {
           obj["missing"] !== undefined ? (
             <LogsTableRowForMissingInvoices key={key} id={obj["missing"]} />
           ) : (
-            <TableRow key={key} i={key} invoice={obj} />
+            <LogsTableRow key={key} i={key} invoice={obj} reloadInvoices={reloadInvoices} />
           )
         )}
       </tbody>
