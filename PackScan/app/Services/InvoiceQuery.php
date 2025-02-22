@@ -9,7 +9,9 @@ class InvoiceQuery
     protected $safeParams = [
         'id' => ['li'],
         'st' => ['eq'],
-        'imp' => ['eq']
+        'imp' => ['eq'],
+        'status' => ['eq'],
+        'creation_date' => ['eq']
     ];
 
     protected $columnMap = [
