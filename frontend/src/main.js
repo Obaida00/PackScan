@@ -79,18 +79,11 @@ ipcMain.handle("fetch-storages", async (event) => {
 ipcMain.handle("fetch-orders", async (event, filters) => {
   return await axiosClient.fetchAllInvoices(filters);
 });
-ipcMain.handle(
-  "fetch-storage-orders",
-  async (event, pageNumber, storageCode, isImportant = false) => {
-    return await axiosClient.getStorageInvoices(
-      pageNumber,
-      storageCode,
-      isImportant
-    );
-  }
-);
-ipcMain.handle("search-storage-orders", async (event, storageCode, input) => {
-  return await axiosClient.getBySearchStorageInvoices(storageCode, input);
+ipcMain.handle("fetch-storage-orders", async (event, filters) => {
+  return await axiosClient.getStorageInvoices(filters);
+});
+ipcMain.handle("search-storage-orders", async (event, filters) => {
+  return await axiosClient.getBySearchStorageInvoices(filters);
 });
 ipcMain.handle("fetch-order", async (event, id) => {
   return await axiosClient.getInvoiceById(id);

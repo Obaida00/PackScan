@@ -25,11 +25,12 @@ export async function fetchStorages(filters = {}) {
 export async function fetchAllInvoices(filters = {}) {
   try {
     let filteredFilters = {
-      'id[li]': `${filters.invoiceId}%`,
-      'st[eq]': filters.storage,
-      'status[eq]': filters.status,
-      'creation_date[eq]': filters.date,
-      'page': filters.pageNumber,
+      "id[li]": `${filters.invoiceId}%`,
+      "st[eq]": filters.storage,
+      "status[eq]": filters.status,
+      "creation_date[eq]": filters.date,
+      page: filters.pageNumber,
+      // todo add "imp[eq]"
     };
     const params = new URLSearchParams(filteredFilters);
     const response = await axios.get(
@@ -47,12 +48,20 @@ export async function fetchAllInvoices(filters = {}) {
 }
 
 // Get storage invoices
-export async function getStorageInvoices(pageNumber, storageCode, isImportant) {
+export async function getStorageInvoices(filters = {}) {
   try {
-    let url = `${BASE_URL}/api/invoices?page=${pageNumber}&st[eq]=${storageCode}`;
-    if (isImportant) url += "&imp[eq]=1";
-
-    const response = await axios.get(url);
+    let filteredFilters = {
+      "id[li]": `${filters.invoiceId}%`,
+      "st[eq]": filters.storage,
+      "status[eq]": filters.status,
+      "creation_date[eq]": filters.date,
+      page: filters.pageNumber,
+      // todo add "imp[eq]"
+    };
+    const params = new URLSearchParams(filteredFilters);
+    const response = await axios.get(
+      `${BASE_URL}/api/invoices?${params.toString()}`
+    );
 
     log.info(
       "get storage invoice",
@@ -65,11 +74,21 @@ export async function getStorageInvoices(pageNumber, storageCode, isImportant) {
   }
 }
 
+// todo i think this is useless now after filter implementation but think about it
 // Search storage invoices
-export async function getBySearchStorageInvoices(storageCode, input) {
+export async function getBySearchStorageInvoices(filters = {}) {
   try {
+    let filteredFilters = {
+      "id[li]": `${filters.invoiceId}%`,
+      "st[eq]": filters.storage,
+      "status[eq]": filters.status,
+      "creation_date[eq]": filters.date,
+      page: filters.pageNumber,
+      // todo add "imp[eq]"
+    };
+    const params = new URLSearchParams(filteredFilters);
     const response = await axios.get(
-      `${BASE_URL}/api/invoices?st[eq]=${storageCode}&id[li]=${input}%`
+      `${BASE_URL}/api/invoices?${params.toString()}`
     );
     log.info(
       "search storage invoices",

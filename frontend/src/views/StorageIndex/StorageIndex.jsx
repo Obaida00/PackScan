@@ -22,13 +22,14 @@ function StorageIndex({ storageIndex }) {
   const fetchImportantData = async (storageCode) => {
     setLoadingImportantData(true);
     try {
-      const data = await ipcRenderer.invoke(
-        "fetch-storage-orders",
-        1,
-        storageCode,
-        true
-      );
-
+      // todo
+      // const data = await ipcRenderer.invoke(
+      //   "fetch-storage-orders",
+      //   1,
+      //   storageCode,
+      //   true
+      // );
+      const data = {};
       setImportantOrders(data?.data || []);
     } catch (e) {
       throw e;
@@ -44,12 +45,15 @@ function StorageIndex({ storageIndex }) {
   const fetchOrders = async (storageCode, input) => {
     setLoadingSearchResult(true);
     try {
-      const safeInput = String(input);
-      const data = await ipcRenderer.invoke(
-        "search-storage-orders",
-        storageCode,
-        safeInput
-      );
+      const filters = {
+        invoiceId: String(input),
+        storage: storageCode,
+        status: "",
+        date: "",
+        // todo add imp[eq]=0
+      };
+      const data = await ipcRenderer.invoke("search-storage-orders", filters);
+
       setOrders(data?.data || []);
     } catch (e) {
       throw e;
