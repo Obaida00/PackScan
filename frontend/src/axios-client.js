@@ -6,11 +6,34 @@ log.transports.file.file = __dirname + "/log/log";
 
 const BASE_URL = process.env.API_BASE_URL || "http://127.0.0.1:8000";
 
-// Fetch all invoices
-export async function fetchAllInvoices(pageNumber = 1) {
+// Fetch all storages
+export async function fetchStorages(filters = {}) {
   try {
+    const response = await axios.get(`${BASE_URL}/api/storages`);
+    log.info(
+      "fetching storages",
+      "- status : " + response.status,
+      "- data : " + JSON.stringify(response.data)
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Fetch all invoices
+export async function fetchAllInvoices(filters = {}) {
+  try {
+    let filteredFilters = {
+      'id[li]': `${filters.invoiceId}%`,
+      'st[eq]': filters.storage,
+      'status[eq]': filters.status,
+      'creation_date[eq]': filters.date,
+      'page': filters.pageNumber,
+    };
+    const params = new URLSearchParams(filteredFilters);
     const response = await axios.get(
-      `${BASE_URL}/api/invoices?page=${pageNumber}`
+      `${BASE_URL}/api/invoices?${params.toString()}`
     );
     log.info(
       "fetching invoices",
