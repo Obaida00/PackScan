@@ -22,7 +22,7 @@ function StorageLog({ storageIndex }) {
   const getOrders = async (page = 1) => {
     setLoading(true);
     try {
-      const data = await ipcRenderer.invoke("fetch-storage-orders", _filters);
+      const data = await ipcRenderer.invoke("fetch-orders", _filters);
       setOrders(data.data);
       setPagingMeta(data.meta);
     } catch (e) {

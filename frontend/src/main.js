@@ -77,13 +77,7 @@ ipcMain.handle("fetch-storages", async (event) => {
   return await axiosClient.fetchStorages();
 });
 ipcMain.handle("fetch-orders", async (event, filters) => {
-  return await axiosClient.fetchAllInvoices(filters);
-});
-ipcMain.handle("fetch-storage-orders", async (event, filters) => {
-  return await axiosClient.getStorageInvoices(filters);
-});
-ipcMain.handle("search-storage-orders", async (event, filters) => {
-  return await axiosClient.getBySearchStorageInvoices(filters);
+  return await axiosClient.fetchInvoices(filters);
 });
 ipcMain.handle("fetch-order", async (event, id) => {
   return await axiosClient.getInvoiceById(id);

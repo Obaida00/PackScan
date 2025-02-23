@@ -7,7 +7,7 @@ log.transports.file.file = __dirname + "/log/log";
 const BASE_URL = process.env.API_BASE_URL || "http://127.0.0.1:8000";
 
 // Fetch all storages
-export async function fetchStorages(filters = {}) {
+export async function fetchStorages() {
   try {
     const response = await axios.get(`${BASE_URL}/api/storages`);
     log.info(
@@ -22,7 +22,7 @@ export async function fetchStorages(filters = {}) {
 }
 
 // Fetch all invoices
-export async function fetchAllInvoices(filters = {}) {
+export async function fetchInvoices(filters = {}) {
   try {
     let filteredFilters = {
       "id[li]": `${filters.invoiceId}%`,
@@ -30,68 +30,18 @@ export async function fetchAllInvoices(filters = {}) {
       "status[eq]": filters.status,
       "creation_date[eq]": filters.date,
       page: filters.pageNumber,
-      // todo add "imp[eq]"
     };
+    if (filters.isImportant !== undefined)
+      filteredFilters["imp[eq]"] = filters.isImportant ? 1 : 0;
+    if (filters.isMissing !== undefined)
+      filteredFilters["missing[eq]"] = filters.isMissing ? 1 : 0;
+
     const params = new URLSearchParams(filteredFilters);
     const response = await axios.get(
       `${BASE_URL}/api/invoices?${params.toString()}`
     );
     log.info(
       "fetching invoices",
-      "- status : " + response.status,
-      "- data : " + JSON.stringify(response.data)
-    );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-// Get storage invoices
-export async function getStorageInvoices(filters = {}) {
-  try {
-    let filteredFilters = {
-      "id[li]": `${filters.invoiceId}%`,
-      "st[eq]": filters.storage,
-      "status[eq]": filters.status,
-      "creation_date[eq]": filters.date,
-      page: filters.pageNumber,
-      // todo add "imp[eq]"
-    };
-    const params = new URLSearchParams(filteredFilters);
-    const response = await axios.get(
-      `${BASE_URL}/api/invoices?${params.toString()}`
-    );
-
-    log.info(
-      "get storage invoice",
-      "- status : " + response.status,
-      "- data : " + JSON.stringify(response.data)
-    );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-}
-
-// todo i think this is useless now after filter implementation but think about it
-// Search storage invoices
-export async function getBySearchStorageInvoices(filters = {}) {
-  try {
-    let filteredFilters = {
-      "id[li]": `${filters.invoiceId}%`,
-      "st[eq]": filters.storage,
-      "status[eq]": filters.status,
-      "creation_date[eq]": filters.date,
-      page: filters.pageNumber,
-      // todo add "imp[eq]"
-    };
-    const params = new URLSearchParams(filteredFilters);
-    const response = await axios.get(
-      `${BASE_URL}/api/invoices?${params.toString()}`
-    );
-    log.info(
-      "search storage invoices",
       "- status : " + response.status,
       "- data : " + JSON.stringify(response.data)
     );

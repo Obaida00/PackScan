@@ -40,8 +40,15 @@ function StorageLogsInvoiceFilter({ onChange }) {
   };
 
   useEffect(() => {
-    onChange(filters);
-  }, [filters, onChange]);
+    const filterObj = { ...filters };
+    if (filterObj.isImportant === false) {
+      delete filterObj.isImportant;
+    }
+    if (filterObj.isMissing === false) {
+      delete filterObj.isMissing;
+    }
+    onChange(filterObj);
+  }, [filters]);
 
   const whiteStyles = {
     "& .MuiOutlinedInput-root": {

@@ -52,7 +52,7 @@ function StorageIndex({ storageIndex }) {
         date: "",
         // todo add imp[eq]=0
       };
-      const data = await ipcRenderer.invoke("search-storage-orders", filters);
+      const data = await ipcRenderer.invoke("fetch-orders", filters);
 
       setOrders(data?.data || []);
     } catch (e) {

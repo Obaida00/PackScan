@@ -64,8 +64,15 @@ function IndexInvoiceFilters({ onChange }) {
   }, []);
 
   useEffect(() => {
-    onChange(filters);
-  }, [filters, onChange]);
+    const filterObj = { ...filters };
+    if (filterObj.isImportant === false) {
+      delete filterObj.isImportant;
+    }
+    if (filterObj.isMissing === false) {
+      delete filterObj.isMissing;
+    }
+    onChange(filterObj);
+  }, [filters]);
 
   const whiteStyles = {
     "& .MuiOutlinedInput-root": {
@@ -103,7 +110,7 @@ function IndexInvoiceFilters({ onChange }) {
             control={
               <Checkbox
                 name="isMissing"
-                checked={filters.isMissing}
+                checked={!!filters.isMissing}
                 size="small"
                 onChange={(e) =>
                   updateFilterValue("isMissing", e.target.checked)
@@ -123,7 +130,7 @@ function IndexInvoiceFilters({ onChange }) {
             control={
               <Checkbox
                 name="isImportant"
-                checked={filters.isImportant}
+                checked={!!filters.isImportant}
                 size="small"
                 onChange={(e) =>
                   updateFilterValue("isImportant", e.target.checked)
