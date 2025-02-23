@@ -4,7 +4,7 @@ import { Pagination } from "flowbite-react";
 import IndexTable from "./components/IndexTable.jsx";
 import BackButton from "../../shared/components/BackButton.jsx";
 import ReloadButton from "../../shared/components/ReloadButton.jsx";
-import InvoiceFilter from "../../shared/components/InvoiceFilter.jsx";
+import IndexInvoiceFilter from "./components/IndexInvoiceFilter.jsx";
 
 function Index() {
   const [orders, setOrders] = useState([]);
@@ -49,7 +49,7 @@ function Index() {
             <ReloadButton callback={getOrders} />
           </div>
           <div className="w-[85vw]">
-            <InvoiceFilter onChange={handleFilterChange} />
+            <IndexInvoiceFilter onChange={handleFilterChange} />
           </div>
         </div>
         <div className="flex justify-center">

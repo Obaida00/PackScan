@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { TextField, MenuItem } from "@mui/material";
-import SearchBox from "./SearchBox.jsx";
+import SearchBox from "../../../shared/components/SearchBox.jsx";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
@@ -15,7 +15,7 @@ const statusOptions = [
   { label: "Sent", value: "Sent" },
 ];
 
-function InvoiceFilters({ onChange }) {
+function IndexInvoiceFilters({ onChange }) {
   const [filters, setFilters] = useState({
     invoiceId: "",
     storage: "",
@@ -156,4 +156,4 @@ function InvoiceFilters({ onChange }) {
   );
 }
 
-export default InvoiceFilters;
+export default IndexInvoiceFilters;
