@@ -22,14 +22,16 @@ function StorageIndex({ storageIndex }) {
   const fetchImportantData = async (storageCode) => {
     setLoadingImportantData(true);
     try {
-      // todo
-      // const data = await ipcRenderer.invoke(
-      //   "fetch-storage-orders",
-      //   1,
-      //   storageCode,
-      //   true
-      // );
-      const data = {};
+      const filters = {
+        invoiceId: "",
+        storage: storageCode,
+        status: "",
+        date: "",
+        isImportant: true,
+        isMissing: false,
+        pageNumber: 1
+      };
+      const data = await ipcRenderer.invoke("fetch-orders", filters);
       setImportantOrders(data?.data || []);
     } catch (e) {
       throw e;
@@ -39,10 +41,10 @@ function StorageIndex({ storageIndex }) {
   };
 
   const searchAction = (input) => {
-    fetchOrders(storageCode, input);
+    fetchOrders(input);
   };
 
-  const fetchOrders = async (storageCode, input) => {
+  const fetchOrders = async (input) => {
     setLoadingSearchResult(true);
     try {
       const filters = {
@@ -50,7 +52,8 @@ function StorageIndex({ storageIndex }) {
         storage: storageCode,
         status: "",
         date: "",
-        // todo add imp[eq]=0
+        isImportant: false,
+        isMissing: false,
       };
       const data = await ipcRenderer.invoke("fetch-orders", filters);
 
