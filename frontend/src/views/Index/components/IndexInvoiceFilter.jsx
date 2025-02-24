@@ -64,14 +64,7 @@ function IndexInvoiceFilters({ onChange }) {
   }, []);
 
   useEffect(() => {
-    const filterObj = { ...filters };
-    if (filterObj.isImportant === false) {
-      delete filterObj.isImportant;
-    }
-    if (filterObj.isMissing === false) {
-      delete filterObj.isMissing;
-    }
-    onChange(filterObj);
+    onChange(cleanFilters(filterObj));
   }, [filters]);
 
   const whiteStyles = {
@@ -204,5 +197,16 @@ function IndexInvoiceFilters({ onChange }) {
     </div>
   );
 }
+
+const cleanFilters = (filters) => {
+  const cleaned = { ...filters };
+  if (!cleaned.isImportant) {
+    delete cleaned.isImportant;
+  }
+  if (!cleaned.isMissing) {
+    delete cleaned.isMissing;
+  }
+  return cleaned;
+};
 
 export default IndexInvoiceFilters;
