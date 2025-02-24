@@ -43,6 +43,7 @@ export async function fetchInvoices(filters = {}) {
     log.info(
       "fetching invoices",
       "- status : " + response.status,
+      "- url : " + `${BASE_URL}/api/invoices?${params.toString()}`,
       "- data : " + JSON.stringify(response.data)
     );
     return response.data;
