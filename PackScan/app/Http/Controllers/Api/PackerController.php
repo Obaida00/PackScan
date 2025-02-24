@@ -25,15 +25,15 @@ class PackerController extends Controller
         $request->validate([
             'id' => 'required|integer',
             'name' => 'required|string|max:255',
-            'canManuallySubmit' => 'required|boolean',
-            'canSubmitEditedInvoices' => 'required|boolean'
+            'can_manually_submit' => 'required|boolean',
+            'can_submit_important_invoices' => 'required|boolean'
         ]);
 
         $packer = Packer::create([
             'id' => $request->id,
             'name' => $request->name,
-            'can_manually_submit' => $request->canManuallySubmit,
-            'can_submit_edited_invoices' => $request->canSubmitEditedInvoices
+            'can_manually_submit' => $request->can_manually_submit,
+            'can_submit_important_invoices' => $request->can_submit_important_invoices
         ]);
 
         return response()->json($packer, 201);
@@ -57,14 +57,14 @@ class PackerController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'canManuallySubmit' => 'required|boolean',
-            'canSubmitEditedInvoices' => 'required|boolean'
+            'can_manually_submit' => 'required|boolean',
+            'can_submit_important_invoices' => 'required|boolean'
         ]);
 
         $packer->update([
             'name' => $request->name,
-            'can_manually_submit' => $request->canManuallySubmit,
-            'can_submit_edited_invoices' => $request->canSubmitEditedInvoices
+            'can_manually_submit' => $request->can_manually_submit,
+            'can_submit_important_invoices' => $request->can_submit_important_invoices
         ]);
 
         return response()->json($packer);

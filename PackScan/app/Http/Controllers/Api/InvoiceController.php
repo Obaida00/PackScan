@@ -174,7 +174,7 @@ class InvoiceController extends Controller
             return response()->json(['message' => 'Packer not found.'], 404);
         }
 
-        if ($invoice->is_important && !$packer->can_submit_edited_invoices) {
+        if ($invoice->is_important && !$packer->can_submit_important_invoices) {
             return response()->json(['message' => 'Packer Cannot Submit Edited Invoices.'], 403);
         }
 

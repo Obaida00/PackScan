@@ -13,7 +13,7 @@ class Packer extends Model
         'id',
         'name',
         'can_manually_submit',
-        'can_submit_edited_invoices'
+        'can_submit_important_invoices'
     ];
 
 
