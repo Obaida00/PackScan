@@ -1,5 +1,7 @@
 import * as React from "react";
 import StorageTable from "./components/StorageTable.jsx";
+import StorageTableRow from "./components/StorageTableRow.jsx";
+import ImportantStorageTableRow from "./components/ImportantStorageTableRow.jsx";
 import SearchBox from "../../shared/components/SearchBox.jsx";
 import BackButton from "../../shared/components/BackButton.jsx";
 import { Link } from "react-router-dom";
@@ -29,7 +31,7 @@ function StorageIndex({ storageIndex }) {
         date: "",
         isImportant: true,
         isMissing: false,
-        pageNumber: 1
+        pageNumber: 1,
       };
       const data = await ipcRenderer.invoke("fetch-orders", filters);
       setImportantOrders(data?.data || []);
@@ -115,7 +117,7 @@ function StorageIndex({ storageIndex }) {
                   Loading...
                 </h1>
               ) : (
-                <StorageTable data={orders} />
+                <StorageTable data={orders} RowComponent={StorageTableRow} />
               )}
             </div>
             <Divider color="#1f2937" />
@@ -137,7 +139,10 @@ function StorageIndex({ storageIndex }) {
                   </svg>
                 </div>
                 <div className="w-[80vw] my-4 overflow-x-auto shadow-gray-950 shadow-md rounded-xl">
-                  <StorageTable data={importantOrders} />
+                  <StorageTable
+                    data={importantOrders}
+                    RowComponent={ImportantStorageTableRow}
+                  />
                 </div>
               </div>
             )}

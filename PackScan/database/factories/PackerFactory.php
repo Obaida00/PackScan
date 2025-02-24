@@ -20,6 +20,7 @@ class PackerFactory extends Factory
             'id' => $this->faker->unique()->numberBetween(1000, 9999),
             'name' => $this->faker->name(),
             'can_manually_submit' => $this->faker->boolean(30),
+            'can_submit_important_invoices' => $this->faker->boolean(50)
         ];
     }
 }
