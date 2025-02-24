@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Pagination } from "flowbite-react";
 import IndexTable from "./components/IndexTable.jsx";
 import BackButton from "../../shared/components/BackButton.jsx";
@@ -12,29 +12,38 @@ function Index() {
   const [pagingMeta, setPagingMeta] = useState();
   const [filters, setFilters] = useState({});
 
+  const getOrders = useCallback(
+    async (page = 1) => {
+      setLoading(true);
+      try {
+        const newFilters = { ...filters, pageNumber: page };
+        const data = await ipcRenderer.invoke("fetch-orders", newFilters);
+        setOrders(data.data);
+        setPagingMeta(data.meta);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [filters]
+  );
+
   useEffect(() => {
     getOrders();
-  }, [filters]);
+  }, [getOrders]);
 
-  const getOrders = async (page = 1) => {
-    setLoading(true);
-    try {
-      const newFilters = { ...filters, pageNumber: page };
-      const data = await ipcRenderer.invoke("fetch-orders", newFilters);
-      setOrders(data.data);
-      setPagingMeta(data.meta);
-    } catch (e) {
-      throw e;
-    } finally {
-      setLoading(false);
-    }
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      getOrders();
+    }, 10000);
+    return () => clearInterval(intervalId);
+  }, [getOrders]);
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
   };
 
-  const handleFilterChange = (filters) => {
-    setFilters(filters);
-  };
-
-  // Compute min and max IDs for the current page.
   const minId =
     orders.length > 0 ? Math.min(...orders.map((obj) => obj.id)) : 0;
   const maxId =

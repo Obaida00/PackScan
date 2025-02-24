@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Pagination } from "flowbite-react";
 import LogsTable from "./components/LogsTable.jsx";
 import BackButton from "../../shared/components/BackButton.jsx";
@@ -12,31 +12,44 @@ function StorageLog({ storageIndex }) {
   const [pagingMeta, setPagingMeta] = useState();
   const [filters, setFilters] = useState({});
 
-  const storageCode = storageIndex == 0 ? "mo" : "ad";
-  const _filters = { ...filters, storage: storageCode };
+  const storageCode = storageIndex === 0 ? "mo" : "ad";
+
+  const getOrders = useCallback(
+    async (page = 1) => {
+      setLoading(true);
+      try {
+        const combinedFilters = {
+          ...filters,
+          storage: storageCode,
+          pageNumber: page,
+        };
+        const data = await ipcRenderer.invoke("fetch-orders", combinedFilters);
+        setOrders(data.data);
+        setPagingMeta(data.meta);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [filters, storageCode]
+  );
 
   useEffect(() => {
     getOrders();
-  }, [filters]);
+  }, [getOrders]);
 
-  const getOrders = async (page = 1) => {
-    setLoading(true);
-    try {
-      const data = await ipcRenderer.invoke("fetch-orders", _filters);
-      setOrders(data.data);
-      setPagingMeta(data.meta);
-    } catch (e) {
-      throw e;
-    } finally {
-      setLoading(false);
-    }
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      getOrders();
+    }, 10000);
+    return () => clearInterval(intervalId);
+  }, [getOrders]);
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
   };
 
-  const handleFilterChange = (filters) => {
-    setFilters(filters);
-  };
-
-  // Compute min and max IDs for the current page
   const minId =
     orders.length > 0 ? Math.min(...orders.map((obj) => obj.id)) : 0;
   const maxId =
@@ -73,7 +86,7 @@ function StorageLog({ storageIndex }) {
 
         {/* Pagination Navigators */}
         <div className="flex justify-center pb-10">
-          {!loading && (
+          {!loading && pagingMeta && (
             <Pagination
               className="w-fit"
               currentPage={pagingMeta.current_page}
