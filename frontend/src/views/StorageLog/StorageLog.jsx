@@ -4,24 +4,27 @@ import { Pagination } from "flowbite-react";
 import LogsTable from "./components/LogsTable.jsx";
 import BackButton from "../../shared/components/BackButton.jsx";
 import ReloadButton from "../../shared/components/ReloadButton.jsx";
+import StorageLogsInvoiceFilter from "./components/StorageLogsInvoiceFilter.jsx";
 
 function StorageLog({ storageIndex }) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagingMeta, setPagingMeta] = useState();
+  const [filters, setFilters] = useState({});
 
   const storageCode = storageIndex == 0 ? "mo" : "ad";
+  const _filters = { ...filters, storage: storageCode };
 
   useEffect(() => {
     getOrders();
-  }, []);
+  }, [filters]);
 
   const getOrders = async (page = 1) => {
     setLoading(true);
     try {
-      const data = await ipcRenderer.invoke("fetch-storage-orders", page, storageCode);
+      const data = await ipcRenderer.invoke("fetch-orders", _filters);
       setOrders(data.data);
-      setPagingMeta(data.meta);     
+      setPagingMeta(data.meta);
     } catch (e) {
       throw e;
     } finally {
@@ -29,17 +32,26 @@ function StorageLog({ storageIndex }) {
     }
   };
 
+  const handleFilterChange = (filters) => {
+    setFilters(filters);
+  };
+
   // Compute min and max IDs for the current page
-  const minId = orders.length > 0 ? Math.min(...orders.map((obj) => obj.id)) : 0;
-  const maxId = orders.length > 0 ? Math.max(...orders.map((obj) => obj.id)) : 0;
+  const minId =
+    orders.length > 0 ? Math.min(...orders.map((obj) => obj.id)) : 0;
+  const maxId =
+    orders.length > 0 ? Math.max(...orders.map((obj) => obj.id)) : 0;
 
   return (
     <>
       <div>
-        <div className="flex justify-center pt-2">
-          <div className="min-h-[5vh] w-[90vw] inline-flex gap-5">
+        <div className="flex flex-col items-center pt-2 gap-4">
+          <div className="min-h-[5vh] w-[90vw] flex gap-5">
             <BackButton />
             <ReloadButton callback={getOrders} />
+          </div>
+          <div className="w-[85vw]">
+            <StorageLogsInvoiceFilter onChange={handleFilterChange} />
           </div>
         </div>
         <div className="flex justify-center">
@@ -49,7 +61,12 @@ function StorageLog({ storageIndex }) {
                 Loading...
               </h1>
             ) : (
-              <LogsTable data={orders} minId={minId} maxId={maxId} reloadInvoices={getOrders}/>
+              <LogsTable
+                data={orders}
+                minId={minId}
+                maxId={maxId}
+                reloadInvoices={getOrders}
+              />
             )}
           </div>
         </div>

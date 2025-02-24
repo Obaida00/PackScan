@@ -73,21 +73,11 @@ app.on("window-all-closed", () => {
 // code. You can also put them in separate files and import them here.
 
 // renderer process event listeners for axios callouts
-ipcMain.handle("fetch-orders", async (event, pageNumber) => {
-  return await axiosClient.fetchAllInvoices(pageNumber);
+ipcMain.handle("fetch-storages", async (event) => {
+  return await axiosClient.fetchStorages();
 });
-ipcMain.handle(
-  "fetch-storage-orders",
-  async (event, pageNumber, storageCode, isImportant = false) => {
-    return await axiosClient.getStorageInvoices(
-      pageNumber,
-      storageCode,
-      isImportant
-    );
-  }
-);
-ipcMain.handle("search-storage-orders", async (event, storageCode, input) => {
-  return await axiosClient.getBySearchStorageInvoices(storageCode, input);
+ipcMain.handle("fetch-orders", async (event, filters) => {
+  return await axiosClient.fetchInvoices(filters);
 });
 ipcMain.handle("fetch-order", async (event, id) => {
   return await axiosClient.getInvoiceById(id);
