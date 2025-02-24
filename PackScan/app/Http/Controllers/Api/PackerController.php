@@ -25,11 +25,15 @@ class PackerController extends Controller
         $request->validate([
             'id' => 'required|integer',
             'name' => 'required|string|max:255',
+            'canManuallySubmit' => 'required|boolean',
+            'canSubmitEditedInvoices' => 'required|boolean'
         ]);
 
         $packer = Packer::create([
             'id' => $request->id,
             'name' => $request->name,
+            'can_manually_submit' => $request->canManuallySubmit,
+            'can_submit_edited_invoices' => $request->canSubmitEditedInvoices
         ]);
 
         return response()->json($packer, 201);
@@ -50,12 +54,17 @@ class PackerController extends Controller
      */
     public function update(Request $request, Packer $packer)
     {
+
         $request->validate([
             'name' => 'required|string|max:255',
+            'canManuallySubmit' => 'required|boolean',
+            'canSubmitEditedInvoices' => 'required|boolean'
         ]);
 
         $packer->update([
             'name' => $request->name,
+            'can_manually_submit' => $request->canManuallySubmit,
+            'can_submit_edited_invoices' => $request->canSubmitEditedInvoices
         ]);
 
         return response()->json($packer);
