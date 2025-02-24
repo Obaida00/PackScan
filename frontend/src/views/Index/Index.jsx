@@ -16,6 +16,13 @@ function Index() {
     getOrders();
   }, [filters]);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      getOrders();
+    }, 20000);
+    return () => clearInterval(intervalId);
+  }, [getOrders]);
+
   const getOrders = async (page = 1) => {
     setLoading(true);
     try {
