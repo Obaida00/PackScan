@@ -64,7 +64,7 @@ function IndexInvoiceFilters({ onChange }) {
   }, []);
 
   useEffect(() => {
-    onChange(cleanFilters(filterObj));
+    onChange(cleanFilters(filters));
   }, [filters]);
 
   const whiteStyles = {
