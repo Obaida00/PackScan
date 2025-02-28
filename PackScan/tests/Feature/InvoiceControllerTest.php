@@ -6,6 +6,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Storage;
 use App\Models\Product;
+use App\Models\Packer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -27,13 +28,18 @@ class InvoiceControllerTest extends TestCase
 
         // Prepare the request payload
         $data = [
-            'id' => 1,
-            'pharmacist' => 'John Doe',
-            'storage' => 'mo', // We assume this refers to the 'code'
-            'items' => [
+            'invoice_id'    => 1,
+            'pharmacist'    => 'John Doe',
+            'storage'       => 'mo',
+            'statement'     => 'Test statement',
+            'date'          => '2025-03-01',
+            'net_price'     => 1000,
+            'items'         => [
                 [
-                    'name' => $product->name,
-                    'total_count' => 5
+                    'name'         => $product->name,
+                    'total_count'  => 5,
+                    'unit_price'   => 10,
+                    'total_price'  => 50,
                 ]
             ]
         ];
@@ -43,17 +49,22 @@ class InvoiceControllerTest extends TestCase
 
         // Check the response status and content
         $response->assertStatus(200);
-        $response->assertJson(['message' => 'Invoice created successfully']);
+        $response->assertJson(['message' => 'Invoice created/updated successfully']);
 
         // Assert that the invoice and the associated invoice item exist in the database
         $this->assertDatabaseHas('invoices', [
-            'id' => 1,
-            'manager' => 'mo manager', // Depending on your logic
+            'invoice_id' => 1,
+            'manager'    => 'mo manager',
             'storage_id' => $storage->id,
         ]);
 
+        $invoice = Invoice::where('invoice_id', 1)
+            ->where('storage_id', $storage->id)
+            ->first();
+        $this->assertNotNull($invoice);
+
         $this->assertDatabaseHas('invoice_items', [
-            'invoice_id' => 1,
+            'invoice_id'  => $invoice->id,
             'total_count' => 5,
         ]);
     }
@@ -63,13 +74,18 @@ class InvoiceControllerTest extends TestCase
     {
         // Prepare the request payload with an invalid storage code
         $data = [
-            'id' => 1,
-            'pharmacist' => 'John Doe',
-            'storage' => 'invalid_storage', // Non-existent storage
-            'items' => [
+            'invoice_id'    => 1,
+            'pharmacist'    => 'John Doe',
+            'storage'       => 'invalid_storage', // Non-existent storage
+            'statement'     => 'Test statement',
+            'date'          => '2025-03-01',
+            'net_price'     => 1000,
+            'items'         => [
                 [
-                    'name' => 'Invalid Product',
-                    'total_count' => 5
+                    'name'         => 'Invalid Product',
+                    'total_count'  => 5,
+                    'unit_price'   => 10,
+                    'total_price'  => 50,
                 ]
             ]
         ];
@@ -86,18 +102,38 @@ class InvoiceControllerTest extends TestCase
     public function it_can_mark_invoice_as_done()
     {
         // Create a storage and invoice
-        $storage = Storage::factory()->create();
-        $invoice = Invoice::factory()->create([
-            'storage_id' => $storage->id,
-            'status' => 'Pending',
+        $storage = Storage::factory()->create([
+            'code' => 'mo'
         ]);
 
-        // Send PUT request to mark the invoice as 'Done'
-        $response = $this->postJson("/api/invoices/{$invoice->id}/done");
+        // Create a packer who can submit invoices.
+        $packer = Packer::factory()->create();
+
+        $invoice = Invoice::factory()->create([
+            'invoice_id' => 100,
+            'storage_id' => $storage->id,
+            'status'     => 'Pending',
+        ]);
+
+        $data = [
+            'packer_id'         => $packer->id,
+            'number_of_packages' => 5,
+            'mode'              => 'A'
+        ];
+
+        // Send POST request to mark the invoice as 'Done'
+        $response = $this->postJson("/api/invoices/{$invoice->id}/done", $data);
 
         // Check if the invoice status has been updated
         $response->assertStatus(200);
         $response->assertJson(['data' => ['status' => 'Done']]);
+
+        // Assert that the invoice status has been updated in the database.
+        $this->assertDatabaseHas('invoices', [
+            'invoice_id' => 100,
+            'storage_id' => $storage->id,
+            'status'     => 'Done',
+        ]);
     }
 
     /** @test */
@@ -111,18 +147,23 @@ class InvoiceControllerTest extends TestCase
 
         // Create an Invoice and associate it with the created Storage
         $invoice = Invoice::create([
-            'id' => 123,
-            'manager' => 'Manager Name',
-            'storage_id' => $storage->id, // Use the created Storage's id
+            'invoice_id' => 123,
+            'manager'    => 'Manager Name',
+            'storage_id' => $storage->id,
             'pharmacist' => 'Pharmacist Name',
-            'status' => 'Pending',
+            'status'     => 'Pending',
+            'statement'  => 'Test statement',
+            'date'       => '2025-03-01',
+            'net_price'  => 1000
         ]);
 
         // Create an InvoiceItem and associate it with the Product and the Invoice
-        $invoiceItem = InvoiceItem::create([
+        InvoiceItem::create([
             'total_count' => 10,
-            'invoice_id' => $invoice->id,
-            'product_id' => $product->id,
+            'invoice_id'  => $invoice->id,
+            'product_id'  => $product->id,
+            'unit_price'  => 10,
+            'total_price' => 100,
         ]);
 
         // Reload the invoice to check relationships
@@ -141,48 +182,50 @@ class InvoiceControllerTest extends TestCase
 
         // Create a storage record
         $storage = Storage::factory()->create([
-            'name'=> 'almousoaa',
-            'code'=> 'mo',
+            'name' => 'almousoaa',
+            'code' => 'mo',
         ]);
 
         // Create an initial invoice (this invoice will be replaced later)
         $invoice = Invoice::create([
-            'id' => 123,
-            'manager' => 'mo manager',
+            'invoice_id' => 123,
+            'manager'    => 'mo manager',
             'storage_id' => $storage->id,
             'pharmacist' => 'Pharmacist Name',
-            'status' => 'Pending',
+            'status'     => 'Pending',
+            'statement'  => 'Initial statement',
+            'date'       => '2025-03-01',
+            'net_price'  => 1000,
         ]);
 
         // Create an InvoiceItem for the initial invoice
         InvoiceItem::create([
             'total_count' => 10,
-            'invoice_id' => $invoice->id,
-            'product_id' => $product->id,
+            'invoice_id'  => $invoice->id,
+            'product_id'  => $product->id,
+            'unit_price'  => 10,
+            'total_price' => 100,
         ]);
 
         // Assert the initial invoice exists and has the product
-        $this->assertDatabaseHas('invoices', ['id' => $invoice->id]);
+        $this->assertDatabaseHas('invoices', ['invoice_id' => 123, 'manager' => 'mo manager']);
         $this->assertCount(1, $invoice->invoiceItems);
 
         // Now, prepare new invoice data to replace the old one (same ID)
         $newProduct = Product::factory()->create();
-        $anotherStorage = Storage::factory()->create([
-            'name'=> 'advanced',
-            'code'=> 'ad',
-        ]);
-
         $newInvoiceData = [
-            'id' => 123, // Same ID, indicating a replacement
-            'manager' => 'ad manager',
-            'storage' => $anotherStorage->code,
+            'invoice_id' => 123, // Same ID, indicating a replacement
+            'storage'    => $storage->code, // same storage code
             'pharmacist' => 'New Pharmacist Name',
-            'status' => 'Done',
-            'items' => [
+            'statement'  => 'Updated statement',
+            'date'       => '2025-04-01',
+            'net_price'  => 1000,
+            'items'      => [
                 [
-                    'name' => $newProduct->name,
-                    'total_count' => 20,
-                    'price' => 100,
+                    'name'         => $newProduct->name,
+                    'total_count'  => 20,
+                    'unit_price'   => 15,
+                    'total_price'  => 300,
                 ],
             ]
         ];
@@ -194,13 +237,47 @@ class InvoiceControllerTest extends TestCase
         $response->assertStatus(200);
 
         // Assert that the invoice has been replaced in the database
-        $this->assertDatabaseHas('invoices', ['id' => 123, 'manager' => 'ad manager']);
+        $this->assertDatabaseHas('invoices', [
+            'invoice_id' => 123,
+            'manager'    => 'mo manager',
+            'pharmacist' => 'New Pharmacist Name',
+        ]);
 
-        // Assert that the old invoice was replaced (i.e., it's no longer in the database)
-        $this->assertDatabaseMissing('invoices', ['id' => 123, 'manager' => 'mo manager']);
+        // Assert that the invoice items have been updated.
+        $updatedInvoice = Invoice::where('invoice_id', 123)
+            ->where('storage_id', $storage->id)
+            ->first();
+        $this->assertCount(2, $updatedInvoice->invoiceItems);
 
-        // Assert that the new invoice has the new Product
-        $this->assertCount(1, $invoice->fresh()->invoiceItems); // Ensure invoice is refreshed
-        $this->assertEquals($newProduct->id, $invoice->fresh()->invoiceItems->first()->product->id);
+        //invoice item with total count of 0 should be deleted after marking as done
+        $packer = Packer::factory()->create([
+            'can_submit_important_invoices' => true
+        ]);
+
+        $data = [
+            'packer_id'         => $packer->id,
+            'number_of_packages' => 5,
+            'mode'              => 'A'
+        ];
+
+        // Send POST request to mark the invoice as 'Done'
+        $response = $this->postJson("/api/invoices/{$invoice->id}/done", $data);
+
+        // Check if the invoice status has been updated
+        $response->assertStatus(200);
+        $response->assertJson(['data' => ['status' => 'Done']]);
+
+        // Assert that the invoice status has been updated in the database.
+        $this->assertDatabaseHas('invoices', [
+            'invoice_id' => 123,
+            'storage_id' => $storage->id,
+            'status'     => 'Done',
+        ]);
+        $done_invoice = Invoice::where('invoice_id', 123)
+            ->where('storage_id', $storage->id)
+            ->first();
+        $this->assertCount(1, $done_invoice->invoiceItems);
     }
+
+    //todo add tests for packer permissions
 }
