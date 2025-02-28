@@ -7,7 +7,7 @@ import ReloadButton from "../../shared/components/ReloadButton.jsx";
 import IndexInvoiceFilter from "./components/IndexInvoiceFilter.jsx";
 
 function Index() {
-  const [orders, setOrders] = useState([]);
+  const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagingMeta, setPagingMeta] = useState();
   const [filters, setFilters] = useState({});
@@ -18,7 +18,7 @@ function Index() {
       try {
         const newFilters = { ...filters, pageNumber: page };
         const data = await ipcRenderer.invoke("fetch-orders", newFilters);
-        setOrders(data.data);
+        setInvoices(data.data);
         setPagingMeta(data.meta);
       } catch (e) {
         console.error(e);
@@ -45,9 +45,9 @@ function Index() {
   };
 
   const minId =
-    orders.length > 0 ? Math.min(...orders.map((obj) => obj.id)) : 0;
+    invoices.length > 0 ? Math.min(...invoices.map((obj) => obj.id)) : 0;
   const maxId =
-    orders.length > 0 ? Math.max(...orders.map((obj) => obj.id)) : 0;
+    invoices.length > 0 ? Math.max(...invoices.map((obj) => obj.id)) : 0;
 
   return (
     <>
@@ -68,7 +68,7 @@ function Index() {
                 Loading...
               </h1>
             ) : (
-              <IndexTable data={orders} minId={minId} maxId={maxId} />
+              <IndexTable data={invoices} minId={minId} maxId={maxId} />
             )}
           </div>
         </div>
