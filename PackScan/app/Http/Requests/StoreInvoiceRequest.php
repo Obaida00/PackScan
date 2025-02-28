@@ -23,7 +23,7 @@ class StoreInvoiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => ['required', 'integer'],
+            'invoice_id' => ['required', 'integer'],
             'statement' => ['required', 'string'],
             'pharmacist' => ['required', 'string'],
             'date' => ['required', 'string'],

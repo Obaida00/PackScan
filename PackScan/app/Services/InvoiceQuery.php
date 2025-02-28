@@ -15,6 +15,7 @@ class InvoiceQuery
     ];
 
     protected $columnMap = [
+        'id' => 'invoice_id',
         'st' => 'storage_id',
         'imp' => 'is_important'
     ];
