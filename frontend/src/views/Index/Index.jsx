@@ -12,7 +12,7 @@ function Index() {
   const [pagingMeta, setPagingMeta] = useState();
   const [filters, setFilters] = useState({});
 
-  const getOrders = useCallback(
+  const getInvoices = useCallback(
     async (page = 1) => {
       setLoading(true);
       try {
@@ -30,24 +30,19 @@ function Index() {
   );
 
   useEffect(() => {
-    getOrders();
-  }, [getOrders]);
+    getInvoices();
+  }, [getInvoices]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      getOrders();
+      getInvoices();
     }, 10000);
     return () => clearInterval(intervalId);
-  }, [getOrders]);
+  }, [getInvoices]);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
   };
-
-  const minId =
-    invoices.length > 0 ? Math.min(...invoices.map((obj) => obj.id)) : 0;
-  const maxId =
-    invoices.length > 0 ? Math.max(...invoices.map((obj) => obj.id)) : 0;
 
   return (
     <>
@@ -55,7 +50,7 @@ function Index() {
         <div className="flex flex-col items-center pt-2 gap-4">
           <div className="min-h-[5vh] w-[90vw] flex gap-5">
             <BackButton />
-            <ReloadButton callback={getOrders} />
+            <ReloadButton callback={getInvoices} />
           </div>
           <div className="w-[85vw]">
             <IndexInvoiceFilter onChange={handleFilterChange} />
@@ -68,7 +63,7 @@ function Index() {
                 Loading...
               </h1>
             ) : (
-              <IndexTable data={invoices} minId={minId} maxId={maxId} />
+              <IndexTable invoices={invoices} />
             )}
           </div>
         </div>
@@ -80,7 +75,7 @@ function Index() {
               className="w-fit"
               currentPage={pagingMeta.current_page}
               totalPages={pagingMeta.last_page}
-              onPageChange={getOrders}
+              onPageChange={getInvoices}
             />
           )}
         </div>
