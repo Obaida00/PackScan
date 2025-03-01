@@ -58,7 +58,7 @@ function StorageInvoiceModal({ invoice }) {
 
     if (packerName !== "") {
       handleClose();
-      nav(`/storage/almousoaa/${invoice.id}`, {
+      nav(`/storage/almousoaa/${invoice.invoice_id}`, {
         state: { packerId: id },
       });
     } else {
@@ -105,7 +105,7 @@ function StorageInvoiceModal({ invoice }) {
       >
         <DialogTitle className="flex align-middle justify-between p-3 bg-slate-200">
           <div className="text-3xl font-mono font-semibold text-gray-800">
-            -{invoice.id}-
+            -{invoice.invoice_id}-
           </div>
           <button
             onClick={handleClose}
