@@ -18,7 +18,7 @@ const statusOptions = [
 function IndexInvoiceFilters({ onChange }) {
   const [filters, setFilters] = useState({
     invoiceId: "",
-    storage: "",
+    storageId: "",
     status: "",
     date: "",
     isImportant: false,
@@ -31,7 +31,7 @@ function IndexInvoiceFilters({ onChange }) {
     { label: "-", value: "" },
     ...storageList.map((storage) => ({
       label: storage.name,
-      value: storage.code,
+      value: storage.id,
     })),
   ];
 
@@ -140,8 +140,8 @@ function IndexInvoiceFilters({ onChange }) {
           <TextField
             select
             label="Storage"
-            name="storage"
-            value={filters.storage}
+            name="storageId"
+            value={filters.storageId}
             onChange={handleFilterChange}
             size="small"
             sx={{ ...whiteStyles }}

@@ -26,7 +26,7 @@ export async function fetchInvoices(filters = {}) {
   try {
     let filteredFilters = {
       "id[li]": `${filters.invoiceId}%`,
-      "st[eq]": filters.storage,
+      "st[eq]": filters.storageId,
       "status[eq]": filters.status,
       "creation_date[eq]": filters.date,
       page: filters.pageNumber,

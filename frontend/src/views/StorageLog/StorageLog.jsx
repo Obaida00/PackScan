@@ -11,16 +11,32 @@ function StorageLog({ storageIndex }) {
   const [loading, setLoading] = useState(true);
   const [pagingMeta, setPagingMeta] = useState();
   const [filters, setFilters] = useState({});
+  const [storageId, setStorageId] = useState(null);
 
   const storageCode = storageIndex === 0 ? "mo" : "ad";
+  useEffect(() => {
+    const loadStorages = async () => {
+      try {
+        const { data: storages } = await ipcRenderer.invoke("fetch-storages");
+        setStorageId(
+          storages.find((storage) => storage.code === storageCode).id
+        );
+      } catch (error) {
+        console.error("Error fetching storages:", error);
+      }
+    };
+
+    loadStorages();
+  }, []);
 
   const getInvoices = useCallback(
     async (page = 1) => {
+      if (storageId === null) return;
       setLoading(true);
       try {
         const combinedFilters = {
           ...filters,
-          storage: storageCode,
+          storageId: storageId,
           pageNumber: page,
         };
         const data = await ipcRenderer.invoke("fetch-orders", combinedFilters);
@@ -32,7 +48,7 @@ function StorageLog({ storageIndex }) {
         setLoading(false);
       }
     },
-    [filters, storageCode]
+    [filters, storageId]
   );
 
   useEffect(() => {
