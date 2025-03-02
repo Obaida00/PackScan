@@ -2,23 +2,26 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class InvoiceItem extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     // i added the unit_price here cause i cannot guarantee that it is always gonna be the same as the product price + when the process of feeding the product will start i dont want to add the prices for each product, so keep it simple
     protected $fillable = [
-        "id",
         "invoice_id",
         "product_id",
         "total_count",
         "unit_price",
         "total_price"
-        // "price"
     ];
+
+
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     public function invoice()
     {
