@@ -20,7 +20,7 @@ def fill_template(invoice, barcode_image_path) -> str:
         html = open(template_path).read()
 
         # replacing placeholders
-        html = html.replace("DATA_INVOICE_ID", str(invoice.get("id")))
+        html = html.replace("DATA_INVOICE_ID", str(invoice.get("invoice_id")))
         html = html.replace(
             "DATA_STORAGE_NAME", str(invoice.get("storage_name")).capitalize()
         )
@@ -64,7 +64,7 @@ def generate_sticker(invoice) -> str:
     returns the html file path
     """
     try:
-        invoice_id = invoice.get("id")
+        invoice_id = invoice.get("invoice_id")
 
         print("progress: 40%", flush=True)
 
