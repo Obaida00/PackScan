@@ -26,13 +26,12 @@ class InvoiceController extends Controller
         $filter = new InvoiceQuery();
         $queryItems = $filter->transform($request); // [['column', 'operator', 'value']]
 
+        $invoices = Invoice::with('packer');
         if (!empty($queryItems)) {
-            $invoices = Invoice::where($queryItems)
-                ->with('packer')
-                ->orderBy('id', 'desc');
-        } else {
-            $invoices = Invoice::orderBy('id', 'desc');
+            $invoices = $invoices->where($queryItems);
         }
+        $invoices = $invoices->orderBy('invoice_id', 'desc');
+
 
         $invoices = $invoices->paginate(10);
         return InvoiceResource::collection($invoices);
