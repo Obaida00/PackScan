@@ -115,7 +115,6 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
         className="hover:bg-transparent w-fit h-full"
         onClick={handleClickOpen}
       >
-        
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 14 14"
@@ -134,7 +133,7 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
               d="M7 13A6 6 0 1 0 7 1a6 6 0 0 0 0 12z"
               fill="#FFF"
               fillRule="nonzero"
-              style={{fill: "var(--svg-status-bg, #1f2937)"}}
+              style={{ fill: "var(--svg-status-bg, #1f2937)" }}
             ></path>
             <path d="M6.415 7.04L4.579 5.203a.295.295 0 0 1 .004-.416l.349-.349a.29.29 0 0 1 .416-.004l2.214 2.214a.289.289 0 0 1 .019.021l.132.133c.11.11.108.291 0 .398L5.341 9.573a.282.282 0 0 1-.398 0l-.331-.331a.285.285 0 0 1 0-.399L6.415 7.04zm2.54 0L7.119 5.203a.295.295 0 0 1 .004-.416l.349-.349a.29.29 0 0 1 .416-.004l2.214 2.214a.289.289 0 0 1 .019.021l.132.133c.11.11.108.291 0 .398L7.881 9.573a.282.282 0 0 1-.398 0l-.331-.331a.285.285 0 0 1 0-.399L8.955 7.04z"></path>
           </g>
@@ -149,7 +148,12 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
         }}
         onKeyUp={(e) => e.key === "Enter" && submit(e)}
       >
-        <DialogTitle>Submit Package</DialogTitle>
+        <DialogTitle className="flex justify-between">
+          <div>Submit Package</div>
+          <div className="text-2xl font-mono font-semibold text-gray-800">
+            -{invoiceId}-
+          </div>
+        </DialogTitle>
         <DialogContent>
           <table className="table-auto text-start w-full">
             <tbody>

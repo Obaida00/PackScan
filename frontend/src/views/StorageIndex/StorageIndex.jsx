@@ -9,20 +9,21 @@ import { useEffect, useState } from "react";
 import { Divider } from "@mui/material";
 
 function StorageIndex({ storageIndex }) {
-  const [orders, setOrders] = useState([]);
-  const [importantOrders, setImportantOrders] = useState([]);
+  const [invoices, setInvoices] = useState([]);
+  const [importantInvoices, setImportantInvoices] = useState([]);
   const [loadingSearchResult, setLoadingSearchResult] = useState(false);
-  const [loadingImportantData, setLoadingImportantData] = useState(false);
+  const [loadingImportantInvoices, setLoadingImportantInvoices] =
+    useState(false);
 
   const storageCode = storageIndex == 0 ? "mo" : "ad";
   const storageName = storageIndex == 0 ? "Almousoaa" : "Advanced";
 
   useEffect(() => {
-    fetchImportantData(storageCode);
+    fetchImportantInvoices(storageCode);
   }, []);
 
-  const fetchImportantData = async (storageCode) => {
-    setLoadingImportantData(true);
+  const fetchImportantInvoices = async (storageCode) => {
+    setLoadingImportantInvoices(true);
     try {
       const filters = {
         invoiceId: "",
@@ -34,19 +35,19 @@ function StorageIndex({ storageIndex }) {
         pageNumber: 1,
       };
       const data = await ipcRenderer.invoke("fetch-orders", filters);
-      setImportantOrders(data?.data || []);
+      setImportantInvoices(data?.data || []);
     } catch (e) {
       throw e;
     } finally {
-      setLoadingImportantData(false);
+      setLoadingImportantInvoices(false);
     }
   };
 
   const searchAction = (input) => {
-    fetchOrders(input);
+    fetchInvoices(input);
   };
 
-  const fetchOrders = async (input) => {
+  const fetchInvoices = async (input) => {
     setLoadingSearchResult(true);
     try {
       const filters = {
@@ -59,7 +60,7 @@ function StorageIndex({ storageIndex }) {
       };
       const data = await ipcRenderer.invoke("fetch-orders", filters);
 
-      setOrders(data?.data || []);
+      setInvoices(data?.data || []);
     } catch (e) {
       throw e;
     } finally {
@@ -117,12 +118,15 @@ function StorageIndex({ storageIndex }) {
                   Loading...
                 </h1>
               ) : (
-                <StorageTable data={orders} RowComponent={StorageTableRow} />
+                <StorageTable
+                  invoices={invoices}
+                  RowComponent={StorageTableRow}
+                />
               )}
             </div>
             <Divider color="#1f2937" />
 
-            {!loadingImportantData && importantOrders.length > 0 && (
+            {!loadingImportantInvoices && importantInvoices.length > 0 && (
               <div className="my-4">
                 <div className="flex items-center gap-5">
                   <span className="text-slate-50 text-xl font-sans font-medium">
@@ -140,7 +144,7 @@ function StorageIndex({ storageIndex }) {
                 </div>
                 <div className="w-[80vw] my-4 overflow-x-auto shadow-gray-950 shadow-md rounded-xl">
                   <StorageTable
-                    data={importantOrders}
+                    invoices={importantInvoices}
                     RowComponent={ImportantStorageTableRow}
                   />
                 </div>

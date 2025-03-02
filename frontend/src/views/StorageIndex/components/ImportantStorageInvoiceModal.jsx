@@ -62,7 +62,7 @@ function ImportantStorageInvoiceModal({ invoice }) {
     if (packerName !== "") {
       if (!packerFieldPermissionError) {
         handleClose();
-        nav(`/storage/almousoaa/${invoice.id}`, {
+        nav(`/packing/${invoice.id}`, {
           state: { packerId: id },
         });
       }
@@ -109,7 +109,7 @@ function ImportantStorageInvoiceModal({ invoice }) {
       >
         <DialogTitle className="flex align-middle justify-between p-3 bg-slate-200">
           <div className="text-3xl font-mono font-semibold text-gray-800">
-            -{invoice.id}-
+            -{invoice.invoice_id}-
           </div>
           <button
             onClick={handleClose}

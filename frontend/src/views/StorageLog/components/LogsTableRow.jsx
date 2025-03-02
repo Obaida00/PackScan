@@ -6,8 +6,8 @@ import ManualSubmitModal from "./ManualSubmitModal.jsx";
 
 function LogsTableRow({ i, invoice, reloadInvoices }) {
   return (
-    <tr className=" border-b bg-gray-800 border-gray-700 hover:bg-gray-600 transition ease-in-out text-center">
-      <TableDataCell key={i} data={invoice.id} />
+    <tr className="border-b bg-gray-800 border-gray-700 hover:bg-gray-600 transition ease-in-out text-center">
+      <TableDataCell key={i} data={invoice.invoice_id} />
 
       <td>
         <StatusBadge badgeName={invoice.status} />
@@ -15,7 +15,7 @@ function LogsTableRow({ i, invoice, reloadInvoices }) {
       <td className="px-6 py-4 text-right">
         {invoice.status === "Pending" && (
           <ManualSubmitModal
-            invoiceId={invoice?.id}
+            invoiceId={invoice?.invoice_id}
             afterSubmit={reloadInvoices}
           />
         )}

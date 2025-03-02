@@ -19,10 +19,16 @@ function InvoiceDetailsModal({ invoice }) {
     { label: "Storage", value: invoice.storage_name },
     { label: "Status", value: invoice.status },
     { label: "Packer", value: invoice.packer_name ?? "-----------" },
-    { label: "Number Of Packages", value: invoice.number_of_packages ?? "-----------" },
+    {
+      label: "Number Of Packages",
+      value: invoice.number_of_packages ?? "-----------",
+    },
     { label: "Done At", value: invoice.done_at ?? "-----------" },
     { label: "Sent At", value: invoice.sent_at ?? "-----------" },
-    { label: "Submittion Mode", value: invoice.submittion_mode ?? "-----------" },
+    {
+      label: "Submittion Mode",
+      value: invoice.submittion_mode ?? "-----------",
+    },
   ];
 
   const handleClickOpen = () => {
@@ -51,10 +57,15 @@ function InvoiceDetailsModal({ invoice }) {
           <path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
         </svg>
       </Button>
-      <Dialog open={open} onClose={handleClose} className="text-center" fullWidth>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        className="text-center"
+        fullWidth
+      >
         <DialogTitle className="flex align-middle justify-between p-3 bg-slate-200">
           <div className="text-3xl font-mono font-semibold text-gray-800">
-            -{invoice.id}-
+            -{invoice.invoice_id}-
           </div>
           <button
             onClick={handleClose}

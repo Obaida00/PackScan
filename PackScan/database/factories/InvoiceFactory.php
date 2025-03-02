@@ -27,7 +27,7 @@ class InvoiceFactory extends Factory
         }
 
         return [
-            'id' => fake()->unique()->numberBetween(9000, 9997),
+            'invoice_id' => fake()->numberBetween(9860, 9997),
             'manager' => fake()->name(),
             'statement' => $this->faker->name(),
             'pharmacist' => $this->faker->name(),

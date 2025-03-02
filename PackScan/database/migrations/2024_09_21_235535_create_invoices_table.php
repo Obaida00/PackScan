@@ -11,7 +11,9 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('invoices', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->unsignedBigInteger('invoice_id');
+            $table->index('invoice_id');
 
             $table->foreignId('storage_id')->constrained('storages')->onDelete('cascade');
             $table->foreignId('packer_id')->nullable()->constrained('packers')->onDelete('set null');

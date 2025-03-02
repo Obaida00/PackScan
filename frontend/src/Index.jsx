@@ -72,11 +72,7 @@ root.render(
               path="/storage/advanced/logs"
               element={<StorageLog storageIndex={1} />}
             />
-            <Route path="/storage/almousoaa/:id" element={<Packing />} />
-            <Route
-              path="/storage/advanced/:id"
-              element={<Packing storageIndex={1} />}
-            />
+            <Route path="/packing/:id" element={<Packing />} />
           </Route>
         </Routes>
       </Router>

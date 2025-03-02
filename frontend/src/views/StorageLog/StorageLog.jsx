@@ -7,14 +7,14 @@ import ReloadButton from "../../shared/components/ReloadButton.jsx";
 import StorageLogsInvoiceFilter from "./components/StorageLogsInvoiceFilter.jsx";
 
 function StorageLog({ storageIndex }) {
-  const [orders, setOrders] = useState([]);
+  const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagingMeta, setPagingMeta] = useState();
   const [filters, setFilters] = useState({});
 
   const storageCode = storageIndex === 0 ? "mo" : "ad";
 
-  const getOrders = useCallback(
+  const getInvoices = useCallback(
     async (page = 1) => {
       setLoading(true);
       try {
@@ -24,7 +24,7 @@ function StorageLog({ storageIndex }) {
           pageNumber: page,
         };
         const data = await ipcRenderer.invoke("fetch-orders", combinedFilters);
-        setOrders(data.data);
+        setInvoices(data.data);
         setPagingMeta(data.meta);
       } catch (e) {
         console.error(e);
@@ -36,24 +36,19 @@ function StorageLog({ storageIndex }) {
   );
 
   useEffect(() => {
-    getOrders();
-  }, [getOrders]);
+    getInvoices();
+  }, [getInvoices]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      getOrders();
+      getInvoices();
     }, 10000);
     return () => clearInterval(intervalId);
-  }, [getOrders]);
+  }, [getInvoices]);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
   };
-
-  const minId =
-    orders.length > 0 ? Math.min(...orders.map((obj) => obj.id)) : 0;
-  const maxId =
-    orders.length > 0 ? Math.max(...orders.map((obj) => obj.id)) : 0;
 
   return (
     <>
@@ -61,7 +56,7 @@ function StorageLog({ storageIndex }) {
         <div className="flex flex-col items-center pt-2 gap-4">
           <div className="min-h-[5vh] w-[90vw] flex gap-5">
             <BackButton />
-            <ReloadButton callback={getOrders} />
+            <ReloadButton callback={getInvoices} />
           </div>
           <div className="w-[85vw]">
             <StorageLogsInvoiceFilter onChange={handleFilterChange} />
@@ -74,12 +69,7 @@ function StorageLog({ storageIndex }) {
                 Loading...
               </h1>
             ) : (
-              <LogsTable
-                data={orders}
-                minId={minId}
-                maxId={maxId}
-                reloadInvoices={getOrders}
-              />
+              <LogsTable invoices={invoices} reloadInvoices={getInvoices} />
             )}
           </div>
         </div>
@@ -91,7 +81,7 @@ function StorageLog({ storageIndex }) {
               className="w-fit"
               currentPage={pagingMeta.current_page}
               totalPages={pagingMeta.last_page}
-              onPageChange={getOrders}
+              onPageChange={getInvoices}
             />
           )}
         </div>

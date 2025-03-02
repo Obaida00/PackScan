@@ -6,7 +6,7 @@ import ImportantStorageInvoiceModal from "./ImportantStorageInvoiceModal.jsx";
 function ImportantStorageTableRow({ i, invoice }) {
   return (
     <tr className="border-b bg-gray-800 border-gray-700 hover:bg-gray-600 transition ease-in-out text-center">
-      <TableDataCell key={i} data={invoice.id} />
+      <TableDataCell key={i} data={invoice.invoice_id} />
       <td>
         <StatusBadge badgeName={invoice.status} />
       </td>

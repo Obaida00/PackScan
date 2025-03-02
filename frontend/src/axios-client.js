@@ -69,7 +69,7 @@ export async function getInvoiceById(id) {
 
 // Submit an invoice
 export async function submitInvoice(
-  invoiceId,
+  id,
   packerId,
   numberOfPackages,
   manually
@@ -86,7 +86,7 @@ export async function submitInvoice(
     };
 
     const response = await axios.post(
-      `${BASE_URL}/api/invoices/${invoiceId}/done`,
+      `${BASE_URL}/api/invoices/${id}/done`,
       data,
       header
     );
@@ -103,8 +103,6 @@ export async function submitInvoice(
 
 export async function getPackerById(packerId) {
   try {
-    console.log(packerId);
-
     if (packerId == null || packerId == "" || packerId == undefined) return;
     const response = await axios.get(`${BASE_URL}/api/packers/${packerId}`);
     log.info("fetching packer details", "- status : " + response.status);

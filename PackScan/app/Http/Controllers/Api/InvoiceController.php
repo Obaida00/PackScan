@@ -14,8 +14,6 @@ use App\Services\InvoiceQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-use function Pest\Laravel\json;
-
 class InvoiceController extends Controller
 {
     /**
@@ -28,18 +26,16 @@ class InvoiceController extends Controller
         $filter = new InvoiceQuery();
         $queryItems = $filter->transform($request); // [['column', 'operator', 'value']]
 
+        $invoices = Invoice::with('packer');
         if (!empty($queryItems)) {
-            $invoices = Invoice::where($queryItems)
-                ->with('packer')
-                ->orderBy('id', 'desc');
-        } else {
-            $invoices = Invoice::orderBy('id', 'desc');
+            $invoices = $invoices->where($queryItems);
         }
+        $invoices = $invoices->orderBy('invoice_id', 'desc');
+
 
         $invoices = $invoices->paginate(10);
         return InvoiceResource::collection($invoices);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -54,7 +50,10 @@ class InvoiceController extends Controller
         $manager = $request->storage . " manager";
         //todo manager will be linked by id, maybe the id will be sent with the request body
 
-        $invoice = Invoice::find($request->id);
+        $invoice = Invoice::where('invoice_id', $request->invoice_id)
+            ->where('storage_id', $storage->id)
+            ->first();
+
         if ($invoice) {
             $invoice->manager = $manager;
             $invoice->storage_id = $storage->id;
@@ -67,7 +66,7 @@ class InvoiceController extends Controller
             $invoice->save();
         } else {
             $invoice = Invoice::create([
-                'id' => $request->id,
+                'invoice_id' => $request->invoice_id,
                 'manager' => $manager,
                 'storage_id' => $storage->id,
                 'statement' => $request->statement,
@@ -88,10 +87,10 @@ class InvoiceController extends Controller
         // Fetch all products matching the names.
         $products = Product::whereIn('name', $newItemNames)->get()->keyBy('name');
 
-        // Collect errors for products not found
+        // Collect errors for products not found.
         $errors = [];
 
-        // Get the existing invoice items
+        // Get the existing invoice items.
         $existingItems = $invoice->invoiceItems()->with('product')->get();
 
         // Key the existing items by product name.
@@ -155,7 +154,7 @@ class InvoiceController extends Controller
     /**
      * Mark the current invoice as Done and associate it with a packer.
      */
-    public function markInvoiceAsDone(Request $request, int $id)
+    public function markInvoiceAsDone(Request $request, string $id)
     {
         $invoice = Invoice::find($id);
 
@@ -170,7 +169,7 @@ class InvoiceController extends Controller
         ]);
 
         $packer = Packer::find($request->packer_id);
-        if ($packer == null) {
+        if (!$packer) {
             return response()->json(['message' => 'Packer not found.'], 404);
         }
 
@@ -205,7 +204,7 @@ class InvoiceController extends Controller
     /**
      * Mark the current invoice as Sent.
      */
-    public function markInvoiceAsSent(Request $request, int $id)
+    public function markInvoiceAsSent(Request $request, string $id)
     {
         $invoice = Invoice::find($id);
 
@@ -220,7 +219,6 @@ class InvoiceController extends Controller
         return new InvoiceResource($invoice);
     }
 
-
     /**
      * Remove the specified resource from storage.
      */
@@ -231,11 +229,9 @@ class InvoiceController extends Controller
         }
 
         $invoice->invoiceItems()->delete();
-
         $invoice->delete();
         return response("", 204);
     }
-
 
     protected function getStorageByCode(string $storageCode): Storage
     {
@@ -243,7 +239,7 @@ class InvoiceController extends Controller
 
         if (!$storage) {
             Log::error("Storage not found: {$storageCode}");
-            return response()->json([
+            response()->json([
                 'message' => "Storage with code {$storageCode} not found."
             ], 404);
         }
