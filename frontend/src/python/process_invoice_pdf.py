@@ -5,16 +5,18 @@ import sys
 import json
 import unicodedata
 
+
 def normalize_arabic_text(text):
     """
     normalizes the arabic text to avoid font rendering or character encoding issues
     """
-    return unicodedata.normalize('NFKC', text)
+    return unicodedata.normalize("NFKC", text)
+
 
 def decode_unicode(input_json):
     """
     Decode Unicode-encoded strings in a JSON object.
-    use when debugging cause it displays the arabic text instead of the unicoded characters 
+    use when debugging cause it displays the arabic text instead of the unicoded characters
 
     Args:
         input_json (str): JSON string with Unicode characters.
@@ -71,7 +73,8 @@ def process_table_to_json(df: pd.DataFrame):
     # Iterate through each row in the DataFrame
     for _, row in df.iterrows():
         try:
-            if row.iloc[3] == "يفاصلا": net_price = int(float(str(row["نايبلا"]).replace(",", "")))
+            if row.iloc[3] == "يفاصلا":
+                net_price = int(float(str(row["نايبلا"]).replace(",", "")))
             unit_price = str(row["يدارفﻹا"]).replace(",", "")
             total_price = str(row["يلامجﻹا"]).replace(",", "")
             name = row["فنصلا"]
@@ -114,13 +117,13 @@ def extract_invoice_details(pdf_path):
             lines = text.split("\n")
 
             # Find the line containing important data
-            date_start = ':خيراتلا'
-            pharmacist_start = ':ديسلا'
+            date_start = ":خيراتلا"
+            pharmacist_start = ":ديسلا"
             statement_start = ":نايبلا"
 
-            date = ''
-            pharmacist = ''
-            statement = ''
+            date = ""
+            pharmacist = ""
+            statement = ""
             id = 0
 
             storage = "mo"
@@ -129,32 +132,38 @@ def extract_invoice_details(pdf_path):
                     storage = "ad"
 
                 if statement_start in line:
-                    parts = line.split(" ") 
+                    parts = line.split(" ")
                     id = next((part for part in parts if part.isdigit()), "")
                     statement = " ".join(
-                        part for part in parts if (part != id and part != statement_start)
+                        part
+                        for part in parts
+                        if (part != id and part != statement_start)
                     )
 
                 if pharmacist_start in line:
                     sections = line.split(date_start)
-                    pharmacist_parts = sections[1].split(" ") 
+                    pharmacist_parts = sections[1].split(" ")
                     pharmacist = " ".join(
-                        part for part in pharmacist_parts if (part != id and part != pharmacist_start)
+                        part
+                        for part in pharmacist_parts
+                        if (part != id and part != pharmacist_start)
                     )
-                    date_parts = sections[0].split(" ") 
+                    date_parts = sections[0].split(" ")
                     date = " ".join(
-                        part for part in date_parts if (part != id and part != pharmacist_start)
+                        part
+                        for part in date_parts
+                        if (part != id and part != pharmacist_start)
                     )
-            
+
             statement = normalize_arabic_text(statement[::-1].strip())
             pharmacist = normalize_arabic_text(pharmacist[::-1].strip())
-            
+
             return {
                 "id": int(id),
                 "storage": storage,
                 "statement": statement,
                 "pharmacist": pharmacist,
-                "date": date.strip()
+                "date": date.strip(),
             }
     return {"err": "invalid request"}
 
@@ -177,7 +186,9 @@ def main():
         # Extract invoice details
         details = extract_invoice_details(file_path)
         # Process the table into JSON
-        items, net_price = process_table_to_json(table_df) if table_df is not None else []
+        items, net_price = (
+            process_table_to_json(table_df) if table_df is not None else []
+        )
         # Combine details and items into final JSON
         output = {
             "id": details["id"],
@@ -192,7 +203,7 @@ def main():
         print(json.dumps(output))
 
     except Exception as e:
-        print(f"An error occurred:")
+        print(f"An error occurred: {e}")
         raise e
 
 
