@@ -58,7 +58,7 @@ function StorageInvoiceModal({ invoice }) {
 
     if (packerName !== "") {
       handleClose();
-      nav(`/storage/almousoaa/${invoice.invoice_id}`, {
+      nav(`/packing/${invoice.id}`, {
         state: { packerId: id },
       });
     } else {

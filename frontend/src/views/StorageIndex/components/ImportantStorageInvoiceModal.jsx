@@ -62,7 +62,7 @@ function ImportantStorageInvoiceModal({ invoice }) {
     if (packerName !== "") {
       if (!packerFieldPermissionError) {
         handleClose();
-        nav(`/storage/almousoaa/${invoice.invoice_id}`, {
+        nav(`/packing/${invoice.id}`, {
           state: { packerId: id },
         });
       }
