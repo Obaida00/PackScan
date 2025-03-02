@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSFX } from "./useSFX.jsx";
 
-export function usePacking(invoiceId) {
+export function usePacking(id) {
   const [invoice, setInvoice] = useState({});
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,7 +37,7 @@ export function usePacking(invoiceId) {
   const getItems = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await ipcRenderer.invoke("fetch-order", invoiceId);
+      const data = await ipcRenderer.invoke("fetch-order", id);
       setInvoice(data.data);
 
       const items = data.data.items.map((item) =>
@@ -50,7 +50,7 @@ export function usePacking(invoiceId) {
     } finally {
       setLoading(false);
     }
-  }, [invoiceId, updateItemState]);
+  }, [id, updateItemState]);
 
   useEffect(() => {
     getItems();

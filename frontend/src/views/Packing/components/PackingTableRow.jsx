@@ -3,35 +3,32 @@ import TableDataCell from "../../../shared/components/TableComponents/TableDataC
 import ProgressBar from "../../../shared/components/ProgressBar.jsx";
 import Decrement from "./Decrement.jsx";
 
-function PackingTableRow({ itemObj, decrementFunc }) {
-    const [background, setBackground] = useState({
-        backgroundColor: "#1f2937",
-    });
+function PackingTableRow({ item, decrementFunc }) {
+  const [background, setBackground] = useState({
+    backgroundColor: "#1f2937",
+  });
 
-    useEffect(() => {
-        setBackground({ background: itemObj.colorMain });
-    }, [itemObj.current_count]);
+  useEffect(() => {
+    setBackground({ background: item.colorMain });
+  }, [item.current_count]);
 
-    return (
-        <tr
-            style={background}
-            className="group border-0 text-center"
-        >
-            <TableDataCell data={itemObj.name} />
-            <TableDataCell
-                data={
-                    <ProgressBar
-                        currentCount={itemObj.current_count}
-                        totalCount={itemObj.total_count}
-                        color={itemObj.colorSecond}
-                    />
-                }
-            />
-            <TableDataCell
-                data={<Decrement data={itemObj} action={decrementFunc} />}
-            />
-        </tr>
-    );
+  return (
+    <tr style={background} className="group border-0 text-center">
+      <TableDataCell data={item.name} />
+      <TableDataCell
+        data={
+          <ProgressBar
+            currentCount={item.current_count}
+            totalCount={item.total_count}
+            color={item.colorSecond}
+          />
+        }
+      />
+      <TableDataCell
+        data={<Decrement _key={item.barcode} action={decrementFunc} />}
+      />
+    </tr>
+  );
 }
 
 export default PackingTableRow;

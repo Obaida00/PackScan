@@ -24,8 +24,7 @@ function Packing() {
     decrementItem,
   } = usePacking(id);
 
-  const { setProgressLoading } =
-    useLoadingContext();
+  const { setProgressLoading } = useLoadingContext();
 
   const { playCanSubmitSound } = useSFX();
 
@@ -38,10 +37,10 @@ function Packing() {
     setProgressLoading(true);
     ipcRenderer
       .invoke("submit-order", {
-        invoiceId: id,
+        id: id,
         packerId: packerId,
         numberOfPackages: numberOfPackages,
-        manually: false
+        manually: false,
       })
       .then(async () => {
         playCanSubmitSound();
@@ -74,7 +73,7 @@ function Packing() {
           </div>
           <div className="flex justify-center px-4">
             <div className="w-full self-center font-sans text-xl text-slate-300">
-              {invoice.id && `- ${invoice.id} -`}
+              {invoice.invoice_id && `- ${invoice.invoice_id} -`}
             </div>
           </div>
         </div>
@@ -88,7 +87,7 @@ function Packing() {
                 Loading...
               </h1>
             ) : (
-              <PackingTable data={items} decrementFunc={decrementItem} />
+              <PackingTable items={items} decrementFunc={decrementItem} />
             )}
           </div>
         </div>

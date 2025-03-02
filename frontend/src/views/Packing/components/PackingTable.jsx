@@ -3,7 +3,7 @@ import TableHeader from "../../../shared/components/TableComponents/TableHeader.
 import PackingTableRow from "./PackingTableRow.jsx";
 import TableEmptyRow from "../../../shared/components/TableComponents/TableEmptyRow.jsx";
 
-function PackingTable({ data, decrementFunc }) {
+function PackingTable({ items, decrementFunc }) {
   return (
     <table className="table-fixed w-full text-md text-gray-300 tracking-wide ">
       <thead className="text-mg bg-gray-700 text-gray-400">
@@ -14,12 +14,12 @@ function PackingTable({ data, decrementFunc }) {
         </tr>
       </thead>
       <tbody>
-        {data.length > 0 ? (
-          data.map((obj, key) => (
+        {items.length > 0 ? (
+          items.map((item, key) => (
             <PackingTableRow
               key={key}
               i={key}
-              itemObj={obj}
+              item={item}
               decrementFunc={decrementFunc}
             />
           ))
