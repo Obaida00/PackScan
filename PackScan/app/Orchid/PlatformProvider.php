@@ -39,6 +39,10 @@ class PlatformProvider extends OrchidServiceProvider
                 ->route('platform.screens.packers')
                 ->title('Tools'),
 
+            Menu::make('Products')
+                ->icon('fa.barcode')
+                ->route('platform.screens.products'),
+                
             Menu::make('Get Started')
                 ->icon('bs.book')
                 ->title('Navigation')
