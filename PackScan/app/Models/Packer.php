@@ -19,6 +19,12 @@ class Packer extends Model
         'is_invoice_admin'
     ];
 
+    protected $allowedSorts = [
+        'name' => Like::class,
+        'can_manually_submit',
+        'can_submit_important_invoices',
+        'is_invoice_admin'
+    ];
 
     public function invoices()
     {

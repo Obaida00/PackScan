@@ -28,7 +28,7 @@ class PackerScreen extends Screen
     public function query(): iterable
     {
         return [
-            'packers' => Packer::latest()->get(),
+            'packers' => Packer::filters()->defaultSort('name')->paginate(),
         ];
     }
 
@@ -68,14 +68,23 @@ class PackerScreen extends Screen
         return [
             Layout::table('packers', [
                 TD::make('id'),
-                TD::make('name'),
+                TD::make('name')
+                    ->sort()
+                    ->filter(Input::make()),
                 TD::make('Can Manually Submit')
+                    ->sort()
                     ->render(function (Packer $packer) {
                         return $packer->can_manually_submit ? 'YES' : 'NO';
                     }),
                 TD::make('Can Submit Important Invoices')
+                    ->sort()
                     ->render(function (Packer $packer) {
                         return $packer->can_submit_important_invoices ? 'YES' : 'NO';
+                    }),
+                TD::make('Is Invoice Admin')
+                    ->sort()
+                    ->render(function (Packer $packer) {
+                        return $packer->is_invoice_admin ? 'YES' : 'NO';
                     }),
                 TD::make('Actions')
                     ->alignRight()
