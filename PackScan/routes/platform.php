@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Invoice;
 use App\Orchid\Screens\Examples\ExampleActionsScreen;
 use App\Orchid\Screens\Examples\ExampleCardsScreen;
 use App\Orchid\Screens\Examples\ExampleChartsScreen;
@@ -11,6 +12,8 @@ use App\Orchid\Screens\Examples\ExampleGridScreen;
 use App\Orchid\Screens\Examples\ExampleLayoutsScreen;
 use App\Orchid\Screens\Examples\ExampleScreen;
 use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
+use App\Orchid\Screens\InvoiceItemsScreen;
+use App\Orchid\Screens\InvoiceScreen;
 use App\Orchid\Screens\PackerScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\ProductScreen;
@@ -117,4 +120,20 @@ Route::screen('/products', ProductScreen::class)
         return $trail
             ->parent('platform.index')
             ->push('products');
+    });
+
+Route::screen('/invoices', InvoiceScreen::class)
+    ->name('platform.screens.invoices')
+    ->breadcrumbs(function (Trail $trail) {
+        return $trail
+            ->parent('platform.index')
+            ->push('invoices');
+    });
+
+Route::screen('/invoices/{invoice}/items', InvoiceItemsScreen::class)
+    ->name('platform.screens.invoice.items')
+    ->breadcrumbs(function (Trail $trail, Invoice $invoice) {
+        return $trail
+            ->parent('platform.screens.invoices')
+            ->push("Items: {$invoice->invoice_id}");
     });
