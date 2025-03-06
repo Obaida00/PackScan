@@ -19,6 +19,7 @@ use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\ProductScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
+use App\Orchid\Screens\StorageScreen;
 use App\Orchid\Screens\User\UserEditScreen;
 use App\Orchid\Screens\User\UserListScreen;
 use App\Orchid\Screens\User\UserProfileScreen;
@@ -137,3 +138,5 @@ Route::screen('/invoices/{invoice}/items', InvoiceItemsScreen::class)
             ->parent('platform.screens.invoices')
             ->push("Items: {$invoice->invoice_id}");
     });
+
+Route::screen('/storages', StorageScreen::class)->name('platform.screens.storages');

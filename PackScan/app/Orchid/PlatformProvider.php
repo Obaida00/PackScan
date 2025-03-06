@@ -45,6 +45,10 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('fa.file-invoice')
                 ->route('platform.screens.invoices'),
 
+            Menu::make('Storages')
+                ->icon('fa.warehouse')
+                ->route('platform.screens.storages'),
+
             // Menu::make('Get Started')
             //     ->icon('bs.book')
             //     ->title('Navigation')
