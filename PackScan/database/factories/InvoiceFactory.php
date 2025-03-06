@@ -28,7 +28,6 @@ class InvoiceFactory extends Factory
 
         return [
             'invoice_id' => fake()->numberBetween(9860, 9997),
-            'manager' => fake()->name(),
             'statement' => $this->faker->name(),
             'pharmacist' => $this->faker->name(),
             'date' => $this->faker->date(max: "+1 month"),

@@ -47,15 +47,11 @@ class InvoiceController extends Controller
         $storage = $this->getStorageByCode($request->storage);
         Log::info("The invoice belongs to the storage: {$storage->name}");
 
-        $manager = $request->storage . " manager";
-        //todo manager will be linked by id, maybe the id will be sent with the request body
-
         $invoice = Invoice::where('invoice_id', $request->invoice_id)
             ->where('storage_id', $storage->id)
             ->first();
 
         if ($invoice) {
-            $invoice->manager = $manager;
             $invoice->storage_id = $storage->id;
             $invoice->statement = $request->statement;
             $invoice->pharmacist = $request->pharmacist;
@@ -67,7 +63,6 @@ class InvoiceController extends Controller
         } else {
             $invoice = Invoice::create([
                 'invoice_id' => $request->invoice_id,
-                'manager' => $manager,
                 'storage_id' => $storage->id,
                 'statement' => $request->statement,
                 'pharmacist' => $request->pharmacist,
