@@ -26,7 +26,7 @@ class ProductScreen extends Screen
     public function query(): iterable
     {
         return [
-            'products' => Product::latest()->get(),
+            'products' => Product::filters()->defaultSort('name')->paginate(),
         ];
     }
 
@@ -68,11 +68,18 @@ class ProductScreen extends Screen
                 TD::make('id')->render(function (Product $product) {
                     return $product->id;
                 }),
-                TD::make('name'),
-                TD::make('barcode'),
-                TD::make('created_at')->render(function (Product $product) {
-                    return $product->created_at->format('Y-m-d H:i');
-                }),
+                TD::make('name')
+                    ->sort()
+                    ->filter(Input::make()),
+                TD::make('barcode')
+                    ->sort()
+                    ->filter(Input::make()),
+                TD::make('created_at')
+                    ->sort()
+                    ->filter(Input::make())
+                    ->render(function (Product $product) {
+                        return $product->created_at->format('Y-m-d H:i');
+                    }),
                 TD::make('Actions')
                     ->alignRight()
                     ->render(function (Product $product) {

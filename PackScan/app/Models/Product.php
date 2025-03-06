@@ -17,6 +17,11 @@ class Product extends Model
         "barcode",
     ];
 
+    protected $allowedSorts = [
+        'name' => Like::class,
+    ];
+
+
     public $incrementing = false;
     protected $keyType = 'string';
 
