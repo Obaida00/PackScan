@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Orchid\Filters\Filterable;
 use Orchid\Screen\AsSource;
 
 class Invoice extends Model
 {
-    use HasFactory, HasUuids, AsSource;
+    use HasFactory, HasUuids, AsSource, Filterable;
 
     protected $fillable = [
         'invoice_id',
