@@ -34,7 +34,7 @@ class InvoiceScreen extends Screen
     public function query(): iterable
     {
         return [
-            'invoices' => Invoice::with(['storage', 'packer'])->latest()->get(),
+            'invoices' => Invoice::filters()->defaultSort('invoice_id', 'desc')->paginate(),
         ];
     }
 
@@ -73,18 +73,28 @@ class InvoiceScreen extends Screen
     {
         return [
             Layout::table('invoices', [
-                TD::make('invoice_id', 'Invoice ID'),
+                TD::make('invoice_id', 'Invoice ID')
+                    ->sort()
+                    ->filter(Input::make()),
                 TD::make('storage')
+                    ->sort()
+                    ->filter(Input::make())
                     ->render(function (Invoice $invoice) {
                         return $invoice->storage->name;
                     }),
                 TD::make('statement'),
-                TD::make('pharmacist'),
+                TD::make('pharmacist')
+                    ->sort()
+                    ->filter(Input::make()),
                 TD::make('date')
+                    ->sort()
+                    ->filter(Input::make())
                     ->render(function (Invoice $invoice) {
                         return $invoice->date ? date('Y-m-d', strtotime($invoice->date)) : 'N/A';
                     }),
-                TD::make('status'),
+                TD::make('status')
+                    ->sort()
+                    ->filter(Input::make()),
                 TD::make('Actions')
                     ->alignRight()
                     ->render(function (Invoice $invoice) {

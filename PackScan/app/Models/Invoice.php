@@ -25,20 +25,27 @@ class Invoice extends Model
         // todo 'file'
     ];
 
+    protected $allowedSorts = [
+        'invoice_id' => Like::class,
+        'storage' => Like::class,
+        'date' => Like::class,
+        'status' => Like::class
+    ];
+
     public $incrementing = false;
     protected $keyType = 'string';
 
-    public function invoiceItems() : HasMany
+    public function invoiceItems(): HasMany
     {
         return $this->hasMany(InvoiceItem::class);
     }
 
-    public function storage() : BelongsTo
+    public function storage(): BelongsTo
     {
         return $this->belongsTo(Storage::class);
     }
-    
-    public function packer() : BelongsTo
+
+    public function packer(): BelongsTo
     {
         return $this->belongsTo(Packer::class);
     }
