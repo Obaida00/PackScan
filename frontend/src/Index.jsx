@@ -56,22 +56,8 @@ root.render(
             <Route index element={<Navigator />} />
             <Route path="/monitor" element={<Index />} />
             <Route path="/storage" element={<StorageSelector />} />
-            <Route
-              path="/storage/almousoaa"
-              element={<StorageIndex storageIndex={0} />}
-            />
-            <Route
-              path="/storage/advanced"
-              element={<StorageIndex storageIndex={1} />}
-            />
-            <Route
-              path="/storage/almousoaa/logs"
-              element={<StorageLog storageIndex={0} />}
-            />
-            <Route
-              path="/storage/advanced/logs"
-              element={<StorageLog storageIndex={1} />}
-            />
+            <Route path="/storage/:id" element={<StorageIndex />} />
+            <Route path="/storage/:id/logs" element={<StorageLog />} />
             <Route path="/packing/:id" element={<Packing />} />
           </Route>
         </Routes>

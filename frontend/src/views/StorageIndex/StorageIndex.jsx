@@ -4,30 +4,31 @@ import StorageTableRow from "./components/StorageTableRow.jsx";
 import ImportantStorageTableRow from "./components/ImportantStorageTableRow.jsx";
 import SearchBox from "../../shared/components/SearchBox.jsx";
 import BackButton from "../../shared/components/BackButton.jsx";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Divider } from "@mui/material";
 
-function StorageIndex({ storageIndex }) {
+function StorageIndex() {
+  const { id } = useParams();
+
   const [invoices, setInvoices] = useState([]);
   const [importantInvoices, setImportantInvoices] = useState([]);
   const [loadingSearchResult, setLoadingSearchResult] = useState(false);
   const [loadingImportantInvoices, setLoadingImportantInvoices] =
     useState(false);
 
-  const storageCode = storageIndex == 0 ? "mo" : "ad";
-  const storageName = storageIndex == 0 ? "Almousoaa" : "Advanced";
+  const storageName = id == 0 ? "Almousoaa" : "Advanced";
 
   useEffect(() => {
-    fetchImportantInvoices(storageCode);
+    fetchImportantInvoices();
   }, []);
 
-  const fetchImportantInvoices = async (storageCode) => {
+  const fetchImportantInvoices = async () => {
     setLoadingImportantInvoices(true);
     try {
       const filters = {
         invoiceId: "",
-        storage: storageCode,
+        storageId: id,
         status: "",
         date: "",
         isImportant: true,
@@ -52,11 +53,12 @@ function StorageIndex({ storageIndex }) {
     try {
       const filters = {
         invoiceId: String(input),
-        storage: storageCode,
+        storageId: id,
         status: "",
         date: "",
         isImportant: false,
         isMissing: false,
+        pageNumber: 1,
       };
       const data = await ipcRenderer.invoke("fetch-orders", filters);
 
