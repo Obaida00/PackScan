@@ -10,7 +10,7 @@ use Orchid\Screen\AsSource;
 
 class InvoiceItem extends Model
 {
-    use HasFactory, HasUuids, AsSource, Filterable;
+    use HasFactory, HasUuids, AsSource;
 
     // i added the unit_price here cause i cannot guarantee that it is always gonna be the same as the product price + when the process of feeding the product will start i dont want to add the prices for each product, so keep it simple
     protected $fillable = [
