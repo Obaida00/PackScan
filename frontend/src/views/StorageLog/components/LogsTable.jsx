@@ -15,8 +15,8 @@ function LogsTable({ invoices, reloadInvoices }) {
       </thead>
       <tbody>
         {invoices.map((invoice, key) =>
-          false ? ( // for future missing invoices handling
-            <LogsTableRowForMissingInvoices key={key} id={0} />
+          invoice.is_missing ? (
+            <LogsTableRowForMissingInvoices key={key} id={invoice.invoice_id} />
           ) : (
             <LogsTableRow
               key={key}

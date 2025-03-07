@@ -15,16 +15,18 @@ return new class extends Migration {
             $table->unsignedBigInteger('invoice_id');
             $table->index('invoice_id');
 
-            $table->foreignId('storage_id')->constrained('storages')->onDelete('cascade');
+            $table->foreignId('storage_id')->nullable()->constrained('storages')->onDelete('cascade');
             $table->foreignId('packer_id')->nullable()->constrained('packers')->onDelete('set null');
-            $table->string('statement');
-            $table->string('pharmacist');
-            $table->string('date');
-            $table->string('net_price');
-            $table->enum('status', ['Pending', 'In Progress', 'Done', 'Sent']);
+            $table->string('statement')->nullable();
+            $table->string('pharmacist')->nullable();
+            $table->string('date')->nullable();
+            $table->string('net_price')->nullable();
+            $table->enum('status', ['Pending', 'In Progress', 'Done', 'Sent'])->nullable();
             $table->integer('number_of_packages')->nullable();
             $table->enum('submittion_mode', ['M', 'A'])->nullable();
-            $table->boolean('is_important')->default(false);
+
+            $table->boolean('is_important')->default(false)->nullable();
+            $table->boolean('is_missing')->default(false);
 
             $table->timestamp('done_at')->nullable();
             $table->timestamp('sent_at')->nullable();
