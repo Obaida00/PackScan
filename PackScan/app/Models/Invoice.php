@@ -21,7 +21,8 @@ class Invoice extends Model
         'pharmacist',
         'date',
         'status',
-        'net_price'
+        'net_price',
+        'is_missing'
         // todo 'file'
     ];
 
