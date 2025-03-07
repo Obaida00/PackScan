@@ -15,8 +15,8 @@ function IndexTable({ invoices }) {
       </thead>
       <tbody>
         {invoices.map((invoice, key) =>
-          false ? ( // for future missing invoices modification
-            <IndexTableRowForMissingInvoices key={key} id={0} />
+          invoice.is_missing ? (
+            <IndexTableRowForMissingInvoices key={key} id={invoice.invoice_id} />
           ) : (
             <IndexTableRow key={key} i={key} invoice={invoice} />
           )
