@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->boolean('can_manually_submit');
             $table->boolean('can_submit_important_invoices');
+            $table->boolean('is_invoice_admin');
             
             $table->timestamps();
         });
