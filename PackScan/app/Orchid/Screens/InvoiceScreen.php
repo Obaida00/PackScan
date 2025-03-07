@@ -302,6 +302,18 @@ class InvoiceScreen extends Screen
             'packer_id' => $request->input('invoice.packer_id'),
         ];
 
+        $duplicateInvoice = Invoice::where('invoice_id', $invoiceData['invoice_id'])
+            ->where('storage_id', $invoiceData['storage_id'])
+            ->when($isEdit, function ($query) use ($invoice_id) {
+                return $query->where('id', '!=', $invoice_id);
+            })
+            ->exists();
+
+        if ($duplicateInvoice) {
+            Toast::error("An invoice with ID {$invoiceData['invoice_id']} already exists for this storage.");
+            return;
+        }
+
         if ($isEdit) {
             $invoice = Invoice::findOrFail($invoice_id);
             $invoice->update($invoiceData);
