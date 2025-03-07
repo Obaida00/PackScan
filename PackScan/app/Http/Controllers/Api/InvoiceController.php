@@ -38,7 +38,7 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a resource in storage.
      */
     public function store(StoreInvoiceRequest $request)
     {
@@ -46,6 +46,32 @@ class InvoiceController extends Controller
 
         $storage = $this->getStorageByCode($request->storage);
         Log::info("The invoice belongs to the storage: {$storage->name}");
+
+        // Find the highest existing invoice_id for the storage
+        $lastInvoice = Invoice::where('storage_id', $storage->id)
+            ->orderBy('invoice_id', 'desc')
+            ->first();
+
+        $lastInvoiceId = $lastInvoice ? (int)$lastInvoice->invoice_id : 0;
+        $newInvoiceId = (int)$request->invoice_id;
+
+        if ($newInvoiceId > $lastInvoiceId + 1) {
+            Log::info("Detected gap in invoice sequence. Creating missing invoices.");
+            for ($id = $lastInvoiceId + 1; $id < $newInvoiceId; $id++) {
+                Invoice::create([
+                    'invoice_id' => $id,
+                    'storage_id' => $storage->id,
+                    'is_missing' => true,
+                    'statement' => null,
+                    'pharmacist' => null,
+                    'date' => null,
+                    'net_price' => null,
+                    'status' => null,
+                    'packer_id' => null,
+                ]);
+                Log::info("Created missing invoice with ID: $id");
+            }
+        }
 
         $invoice = Invoice::where('invoice_id', $request->invoice_id)
             ->where('storage_id', $storage->id)
