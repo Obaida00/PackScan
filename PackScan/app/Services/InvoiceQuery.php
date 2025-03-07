@@ -10,6 +10,7 @@ class InvoiceQuery
         'id' => ['li'],
         'st' => ['eq'],
         'imp' => ['eq'],
+        'missing' => ['eq'],
         'status' => ['eq'],
         'creation_date' => ['eq']
     ];
@@ -17,7 +18,8 @@ class InvoiceQuery
     protected $columnMap = [
         'id' => 'invoice_id',
         'st' => 'storage_id',
-        'imp' => 'is_important'
+        'imp' => 'is_important',
+        'missing' => 'is_missing'
     ];
 
     protected $operatorMap = [
