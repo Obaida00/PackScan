@@ -191,7 +191,7 @@ def main():
         )
         # Combine details and items into final JSON
         output = {
-            "id": details["id"],
+            "invoice_id": details["id"],
             "statement": details["statement"],
             "storage": details["storage"],
             "pharmacist": details["pharmacist"],
