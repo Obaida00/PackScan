@@ -125,10 +125,12 @@ if (!fs.existsSync(folderToWatch)) {
 const watcher = chokidar.watch(folderToWatch, {
   persistent: true,
   ignoreInitial: true,
+  awaitWriteFinish: {
+    stabilityThreshold: 1000,
+  },
 });
 
-// Watch for changes
-watcher.on("add", async (file_path) => {
+const OnFileEvent = (file_path) => {
   log.info(`New file detected: ${file_path}`);
 
   executePythonScript(file_path).then(async (data) => {
@@ -136,7 +138,11 @@ watcher.on("add", async (file_path) => {
 
     await axiosClient.uploadNewInvoice(data);
   });
-});
+};
+
+// Watch for changes
+watcher.on("change", OnFileEvent);
+watcher.on("add", OnFileEvent);
 
 async function executePythonScript(file_path) {
   log.info("python execution started");
