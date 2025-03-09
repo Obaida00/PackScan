@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const chokidar = require("chokidar");
 const fs = require("fs");
+const FormData = require("form-data");
 import * as axiosClient from "./axios-client.js";
 const path = require("path");
 const child_process = require("child_process");
@@ -130,14 +131,14 @@ const watcher = chokidar.watch(folderToWatch, {
   },
 });
 
-const OnFileEvent = (file_path) => {
-  log.info(`New file detected: ${file_path}`);
+const OnFileEvent = async (filePath) => {
+  log.info(`New file detected: ${filePath}`);
 
-  executePythonScript(file_path).then(async (data) => {
-    log.info("python exection finished");
+  if (path.extname(filePath) != ".xlsx") {
+    log.error("File is not supported !!!");
+  }
 
-    await axiosClient.uploadNewInvoice(data);
-  });
+  await axiosClient.uploadNewFile(filePath);
 };
 
 // Watch for changes
