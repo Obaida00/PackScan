@@ -145,50 +145,6 @@ const OnFileEvent = async (filePath) => {
 watcher.on("change", OnFileEvent);
 watcher.on("add", OnFileEvent);
 
-async function executePythonScript(file_path) {
-  log.info("python execution started");
-
-  try {
-    let pythonScriptPath;
-
-    if (app.isPackaged) {
-      // In production, extract the Python script to a temp directory
-      const tempDir = os.tmpdir();
-      pythonScriptPath = path.join(tempDir, "process_invoice_pdf.py");
-
-      // Extract the script if it doesn't exist
-      if (!fs.existsSync(pythonScriptPath)) {
-        const asarScriptPath = path.join(
-          app.getAppPath(),
-          ".webpack\\main\\process_invoice_pdf.py"
-        );
-        fs.copyFileSync(asarScriptPath, pythonScriptPath);
-        log.info(`Python script extracted to: ${pythonScriptPath}`);
-      }
-    } else {
-      // In development, use the original script path
-      pythonScriptPath = path.join(__dirname, "process_invoice_pdf.py");
-    }
-
-    // Execute the Python script
-    log.info("python script path:", pythonScriptPath);
-
-    const { stdout, stderr } = await execFile("python", [
-      pythonScriptPath,
-      file_path,
-    ]).catch((e) => log.info("error occured with execFile: ", e));
-
-    if (stderr) {
-      console.error(`Python script error: ${stderr}`);
-      return;
-    }
-    log.info("python output => ", stdout);
-    return stdout;
-  } catch (error) {
-    log.info(error);
-  }
-}
-
 async function generateStickerForInvoice(invoice) {
   log.info("python generating sticker");
 
