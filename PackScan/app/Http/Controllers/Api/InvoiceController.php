@@ -52,8 +52,8 @@ class InvoiceController extends Controller
             ->orderBy('invoice_id', 'desc')
             ->first();
 
-        $lastInvoiceId = $lastInvoice ? (int)$lastInvoice->invoice_id : 0;
         $newInvoiceId = (int)$request->invoice_id;
+        $lastInvoiceId = $lastInvoice ? (int)$lastInvoice->invoice_id : $newInvoiceId;
 
         if ($newInvoiceId > $lastInvoiceId + 1) {
             Log::info("Detected gap in invoice sequence. Creating missing invoices.");
