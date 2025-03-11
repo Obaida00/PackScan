@@ -33,7 +33,7 @@ class InvoiceController extends Controller
         $invoices = $invoices->orderBy('invoice_id', 'desc');
 
 
-        $invoices = $invoices->paginate(10);
+        $invoices = $invoices->paginate(10)->appends($request->input());
         return InvoiceResource::collection($invoices);
     }
 
