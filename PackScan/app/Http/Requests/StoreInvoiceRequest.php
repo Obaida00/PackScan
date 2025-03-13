@@ -27,20 +27,23 @@ class StoreInvoiceRequest extends FormRequest
             'statement' => ['required', 'string'],
             'pharmacist' => ['required', 'string'],
             'date' => ['required', 'string'],
-            'net_price' => ['required', 'integer'],
+            'total_price' => ['required', 'numeric'],
+            'total_discount' => ['required', 'numeric'],
+            'balance' => ['required', 'numeric'],            
+            'net_price' => ['required', 'numeric'],
+            'net_price_in_words' => ['required', 'string'],
+            'number_of_items' => ['required', 'numeric'],
             'storage' => ['required', 'exists:storages,code'],
             'items' => ['sometimes', 'array'],
-        ];
-    }
-
-
-    public function messages()
-    {
-        return [
-            'items.*.name.required' => 'Each item must have a name.',
-            'items.*.quantity.required' => 'Each item must have a quantity.',
-            'items.*.price.required' => 'Each item must have a price.',
-            'storage.exists' => 'The storage code must exist in our records.',
+            'items.*.collectionName' => ['required', 'string'],
+            'items.*.productName' => ['required', 'string'],
+            'items.*.quantity' => ['required', 'integer'],
+            'items.*.gifted_quantity' => ['required', 'integer'],
+            'items.*.unit_price' => ['required', 'numeric'],
+            'items.*.total_price' => ['required', 'numeric'],
+            'items.*.public_price' => ['required', 'numeric'],
+            'items.*.discount' => ['required', 'numeric'],
+            'items.*.description' => ['required', 'string'],
         ];
     }
 }

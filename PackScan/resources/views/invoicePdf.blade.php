@@ -30,8 +30,7 @@
 
         .head-img {
             width: 100%;
-            margin-top: 20px;
-            height: 90px;
+            height: 100px;
             object-fit: contain;
         }
 
@@ -147,9 +146,7 @@
         }
 
         .tg td {
-            border-color: black;
-            border-style: solid;
-            border-width: 1px;
+            border: 1px solid #00000080;
             font-family: Arial, sans-serif;
             font-size: 14px;
             overflow: hidden;
@@ -172,6 +169,14 @@
         .tg .tg-lqy6 {
             text-align: right;
             vertical-align: top;
+        }
+
+        .net-price-in-words {
+            min-width: 200px;
+        }
+
+        .balance-discount {
+            width: 50px;
         }
     </style>
 </head>
@@ -213,15 +218,15 @@
                 <tbody>
                     @foreach ($invoice->invoiceItems as $item)
                     <tr>
-                        <td></td>
-                        <td>0.0</td>
-                        <td>6,000.0</td>
+                        <td>{{ $item->description }}</td>
+                        <td>{{ number_format($item->discount) }}</td>
+                        <td>{{ number_format($item->public_price) }}</td>
                         <td>{{ number_format($item->total_price) }}</td>
                         <td>{{ number_format($item->unit_price) }}</td>
-                        <td>0</td>
+                        <td>{{ number_format($item->gifted_quanity) }}</td>
                         <td>{{ number_format($item->total_count) }}</td>
                         <td>{{ $item->product->name }}</td>
-                        <td>ابن الهيثم</td>
+                        <td>{{ $item->product->collection->name ?? 'ابن الهيثم' }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -229,7 +234,7 @@
             <table class="bottom-table tg">
                 <tbody>
                     <tr>
-                        <td class="tg-lqy6" colspan="2">{{ number_format($invoice->net_price) }}</td>
+                        <td class="tg-lqy6" colspan="2">{{ number_format($invoice->total_price) }}</td>
                         <td class="tg-lqy6" colspan="2">المجموع</td>
                         <td class="tg-lqy6"></td>
                         <td class="tg-lqy6" colspan="2"></td>
@@ -238,21 +243,21 @@
                     <tr>
                         <td class="tg-lqy6">{{ number_format($invoice->net_price) }}</td>
                         <td class="tg-lqy6" colspan="3">الصافي</td>
-                        <td class="tg-lqy6" colspan="5">
-                            فقط لاغيرفقط لاغيرفقط لاغيرفقط لاغيرفقط لاغير
+                        <td class="tg-lqy6 net-price-in-words" colspan="5">
+                            {{ $invoice->net_price_in_words }}
                         </td>
                     </tr>
                     <tr>
-                        <td class="tg-lqy6" colspan="3">1</td>
+                        <td class="tg-lqy6" colspan="3">3</td>
                         <td class="tg-lqy6" colspan="3"></td>
-                        <td class="tg-lqy6" colspan="2">{{ number_format($invoice->net_price) }}</td>
-                        <td class="tg-lqy6">الرصيد</td>
+                        <td class="tg-lqy6" colspan="2">{{ number_format($invoice->balance) }}</td>
+                        <td class="tg-lqy6 balance-discount">الرصيد</td>
                     </tr>
                     <tr>
-                        <td class="tg-lqy6" colspan="3">10</td>
+                        <td class="tg-lqy6" colspan="3">{{number_format($invoice->number_of_items)}}</td>
                         <td class="tg-lqy6" colspan="3">الأقلام</td>
-                        <td class="tg-lqy6" colspan="2">0.0</td>
-                        <td class="tg-lqy6">الحسم</td>
+                        <td class="tg-lqy6" colspan="2">{{ number_format($invoice->total_discount) }}</td>
+                        <td class="tg-lqy6 balance-discount">الحسم</td>
                     </tr>
                 </tbody>
             </table>

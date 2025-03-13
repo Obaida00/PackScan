@@ -13,6 +13,7 @@ use App\Models\Storage;
 use App\Services\InvoiceQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Spatie\LaravelPdf\Enums\Unit;
 
 use function Spatie\LaravelPdf\Support\pdf;
 
@@ -22,10 +23,11 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::with('invoiceItems.product')->findOrFail($id);
 
-        
         $pdf = pdf()
-            ->margins(0, 0, 0, 0)
+            ->margins(10, 2, 40, 2, Unit::Pixel)
             ->format('A5')
+            ->headerView('header', ['id' => $invoice->id])
+            ->footerView('footer')
             ->view('invoicePdf', ['invoice' => $invoice,]);
         return $pdf;
     }
@@ -76,12 +78,7 @@ class InvoiceController extends Controller
                     'invoice_id' => $id,
                     'storage_id' => $storage->id,
                     'is_missing' => true,
-                    'statement' => null,
-                    'pharmacist' => null,
-                    'date' => null,
-                    'net_price' => null,
-                    'status' => null,
-                    'packer_id' => null,
+                    'is_important' => false
                 ]);
                 Log::info("Created missing invoice with ID: $id");
             }
@@ -96,7 +93,12 @@ class InvoiceController extends Controller
             $invoice->statement = $request->statement;
             $invoice->pharmacist = $request->pharmacist;
             $invoice->date = $request->date;
+            $invoice->total_price = $request->total_price;
+            $invoice->total_discount = $request->total_discount;
+            $invoice->balance = $request->balance;
             $invoice->net_price = $request->net_price;
+            $invoice->net_price_in_words = $request->net_price_in_words;
+            $invoice->number_of_items = $request->number_of_items;
             $invoice->status = "Pending";
             $invoice->is_important = true;
             $invoice->save();
@@ -106,8 +108,13 @@ class InvoiceController extends Controller
                 'storage_id' => $storage->id,
                 'statement' => $request->statement,
                 'pharmacist' => $request->pharmacist,
+                'total_price' => $request->total_price,
+                'total_discount' => $request->total_discount,
+                'balance' => $request->balance,
                 'date' => $request->date,
                 'net_price' => $request->net_price,
+                'net_price_in_words' => $request->net_price_in_words,
+                'number_of_items' => $request->number_of_items,
                 'status' => "Pending",
             ]);
         }
@@ -153,9 +160,13 @@ class InvoiceController extends Controller
                 $existingItemsByProduct->forget($product->name);
             } else {
                 $invoiceItem = new InvoiceItem([
-                    "total_count" => $item['total_count'],
+                    "total_count" => $item['quantity'],
+                    "gifted_quantity" => $item['gifted_quantity'],
                     "unit_price" => $item['unit_price'],
                     "total_price" => $item['total_price'],
+                    "public_price" => $item['public_price'],
+                    "discount" => $item['discount'],
+                    "description" => $item['description'],
                     'current_count' => 0
                 ]);
                 $invoiceItem->invoice()->associate($invoice);

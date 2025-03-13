@@ -30,11 +30,12 @@ class InvoiceFileUploadController extends Controller
             $fileName = "report_" . time() . "_" . uniqid() . ".xlsx";
             $file->storeAs('uploads', $fileName, 'public');
 
-            $this->createInvoiceFromFile($fileName);
+            $invoice = $this->createInvoiceFromFile($fileName);
 
             return response()->json([
                 'success' => true,
                 'message' => 'File uploaded successfully',
+                'invoice_id' => $invoice->id
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -61,6 +62,8 @@ class InvoiceFileUploadController extends Controller
 
             unlink($fullPath);
             Log::info("Invoice ID {$invoice->invoice_id} created/updated successfully");
+
+            return $invoice;
         } catch (\Exception $e) {
             Log::error('Error processing invoice file: ' . $e->getMessage());
             throw $e;
@@ -79,7 +82,11 @@ class InvoiceFileUploadController extends Controller
             'pharmacist' => (string)$data[3][1],
             'statement' => (string)$data[4][1],
             'date' => (string)$data[3][4],
+            'total_price' => (float)$this->parseNumericString($data[$totalRowCount - 4][4]),
+            'total_discount' => (float)$this->parseNumericString($data[$totalRowCount - 1][1]),
+            'balance' => (float)$this->parseNumericString($data[$totalRowCount - 2][1]),
             'net_price' => (float)$this->parseNumericString($data[$totalRowCount - 3][2]),
+            'net_price_in_words' => (string)$data[$totalRowCount - 3][0],
             'number_of_items' => (int)$this->parseNumericString($data[$totalRowCount - 1][3]),
         ];
 
@@ -94,8 +101,12 @@ class InvoiceFileUploadController extends Controller
                 'collectionName' => (string)$itemData[0],
                 'productName' => (string)$itemData[1],
                 'quantity' => (int)$this->parseNumericString($itemData[2]),
+                'gifted_quantity' => (int)$this->parseNumericString($itemData[3]),
                 'unit_price' => (float)$this->parseNumericString($itemData[4]),
                 'total_price' => (float)$this->parseNumericString($itemData[5]),
+                'public_price' => (float)$this->parseNumericString($itemData[6]),
+                'discount' => (float)$this->parseNumericString($itemData[7]),
+                'description' => (string)$itemData[8],
             ];
         }
 
@@ -115,13 +126,22 @@ class InvoiceFileUploadController extends Controller
             'statement' => ['required', 'string'],
             'pharmacist' => ['required', 'string'],
             'date' => ['required', 'string'],
-            'net_price' => ['required', 'integer'],
+            'total_price' => ['required', 'numeric'],
+            'total_discount' => ['required', 'numeric'],
+            'balance' => ['required', 'numeric'],
+            'net_price' => ['required', 'numeric'],
+            'net_price_in_words' => ['required', 'string'],
+            'number_of_items' => ['required', 'numeric'],
             'items' => ['sometimes', 'array'],
             'items.*.collectionName' => ['required', 'string'],
             'items.*.productName' => ['required', 'string'],
             'items.*.quantity' => ['required', 'integer'],
+            'items.*.gifted_quantity' => ['required', 'integer'],
             'items.*.unit_price' => ['required', 'numeric'],
             'items.*.total_price' => ['required', 'numeric'],
+            'items.*.public_price' => ['required', 'numeric'],
+            'items.*.discount' => ['required', 'numeric'],
+            'items.*.description' => ['required', 'string'],
         ]);
 
         if ($validator->fails()) {
@@ -147,7 +167,19 @@ class InvoiceFileUploadController extends Controller
 
         $this->fillMissingInvoices($storage->id, $invoiceId);
 
-        $invoice = $this->createOrUpdateInvoiceModel($invoiceId, $storage->id, $invoiceData['statement'], $invoiceData['pharmacist'], $invoiceData['date'], $invoiceData['net_price']);
+        $invoice = $this->createOrUpdateInvoiceModel([
+            'invoice_id' => $invoiceId,
+            'storage_id'=> $storage->id,
+            'statement'=> $invoiceData['statement'],
+            'pharmacist'=> $invoiceData['pharmacist'],
+            'date'=> $invoiceData['date'],
+            'total_price'=> $invoiceData['total_price'],
+            'total_discount'=> $invoiceData['total_discount'],
+            'balance'=> $invoiceData['balance'],
+            'net_price'=> $invoiceData['net_price'],
+            'net_price_in_words'=> $invoiceData['net_price_in_words'],
+            'number_of_items'=> $invoiceData['number_of_items'],
+        ]);
 
         $this->updateInvoiceItems($invoice, $invoiceData['items']);
 
@@ -175,42 +207,47 @@ class InvoiceFileUploadController extends Controller
                     'invoice_id' => $id,
                     'storage_id' => $storageId,
                     'is_missing' => true,
-                    'statement' => null,
-                    'pharmacist' => null,
-                    'date' => null,
-                    'net_price' => null,
-                    'status' => null,
-                    'packer_id' => null,
+                    'is_important' => null
                 ]);
                 Log::info("Created missing invoice for storage: $storageId with ID: $id");
             }
         }
     }
 
-    private function createOrUpdateInvoiceModel($invoiceId, $storageId, $statement, $pharmacist, $date, $netPrice): Invoice
+    private function createOrUpdateInvoiceModel($data): Invoice
     {
-        $invoice = Invoice::where('invoice_id', $invoiceId)
-            ->where('storage_id', $storageId)
+        $invoice = Invoice::where('invoice_id', $data['invoice_id'])
+            ->where('storage_id', $data['storage_id'])
             ->first();
 
         if ($invoice) {
             Log::info("Updating existing invoice ID: {$invoice->invoice_id}");
-            $invoice->statement = $statement;
-            $invoice->pharmacist = $pharmacist;
-            $invoice->date = $date;
-            $invoice->net_price = $netPrice;
+            $invoice->statement = $data['statement'];
+            $invoice->pharmacist = $data['pharmacist'];
+            $invoice->date = $data['date'];
+            $invoice->total_price = $data['total_price'];
+            $invoice->total_discount = $data['total_discount'];
+            $invoice->balance = $data['balance'];
+            $invoice->net_price = $data['net_price'];
+            $invoice->net_price_in_words = $data['net_price_in_words'];
+            $invoice->number_of_items = $data['number_of_items'];
             $invoice->status = "Pending";
             $invoice->is_important = true;
             $invoice->save();
         } else {
-            Log::info("Creating new invoice ID: {$invoiceId}");
+            Log::info("Creating new invoice ID: {$data['invoice_id']}");
             $invoice = Invoice::create([
-                'invoice_id' => $invoiceId,
-                'storage_id' => $storageId,
-                'statement' => $statement,
-                'pharmacist' => $pharmacist,
-                'date' => $date,
-                'net_price' => $netPrice,
+                'invoice_id' => $data['invoice_id'],
+                'storage_id' => $data['storage_id'],
+                'statement' => $data['statement'],
+                'pharmacist' => $data['pharmacist'],
+                'date' => $data['date'],
+                'total_price' => $data['total_price'],
+                'total_discount' => $data['total_discount'],
+                'balance' => $data['balance'],
+                'net_price' => $data['net_price'],
+                'net_price_in_words' => $data['net_price_in_words'],
+                'number_of_items' => $data['number_of_items'],
                 'status' => "Pending",
             ]);
         }
@@ -241,10 +278,16 @@ class InvoiceFileUploadController extends Controller
                 continue;
             }
 
-            // If an invoice item for this product already exists, update it.
+            // If an invoice item for this product already exists, update it, keep the current count
             if ($existingItemsByProduct->has($product->name)) {
                 $invoiceItem = $existingItemsByProduct->get($product->name);
+                $invoiceItem->description = $item['description'];
                 $invoiceItem->total_count = $item['quantity'];
+                $invoiceItem->gifted_quantity = $item['gifted_quantity'];
+                $invoiceItem->total_price = $item['total_price'];
+                $invoiceItem->public_price = $item['public_price'];
+                $invoiceItem->unit_price = $item['unit_price'];
+                $invoiceItem->discount = $item['discount'];
                 $invoiceItem->save();
 
                 // Remove this item from the collection so that remaining ones are those
@@ -253,8 +296,12 @@ class InvoiceFileUploadController extends Controller
             } else {
                 $invoiceItem = new InvoiceItem([
                     "total_count" => $item['quantity'],
+                    "gifted_quantity" => $item['gifted_quantity'],
                     "unit_price" => $item['unit_price'],
                     "total_price" => $item['total_price'],
+                    "public_price" => $item['public_price'],
+                    "discount" => $item['discount'],
+                    "description" => $item['description'],
                     'current_count' => 0
                 ]);
                 $invoiceItem->invoice()->associate($invoice);

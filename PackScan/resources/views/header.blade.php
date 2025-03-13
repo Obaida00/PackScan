@@ -1,0 +1,1 @@
+<div style="margin-left: 5px; margin-right: 5px; font-size: 5px;"> {{ $id }}-@pageNumber-@totalPages </div>

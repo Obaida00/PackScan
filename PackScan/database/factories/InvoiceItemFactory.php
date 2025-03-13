@@ -26,8 +26,10 @@ class InvoiceItemFactory extends Factory
             'invoice_id' => Invoice::factory(),
             'product_id' => Product::factory(),
             'total_count' => $total_count,
-            'unit_price' => $unit_price,
-            'total_price' => $total_price
+            'gifted_quantity' => fake()->numberBetween(1, 10),
+            'total_price' => $total_price,
+            'public_price' => $total_price,
+            'unit_price' => $unit_price
         ];
     }
 }

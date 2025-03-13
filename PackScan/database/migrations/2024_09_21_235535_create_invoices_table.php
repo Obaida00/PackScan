@@ -20,9 +20,14 @@ return new class extends Migration {
             $table->string('statement')->nullable();
             $table->string('pharmacist')->nullable();
             $table->string('date')->nullable();
+            $table->float('total_price')->nullable();
+            $table->float('total_discount')->nullable();
             $table->float('net_price')->nullable();
+            $table->string('net_price_in_words')->nullable();
+            $table->float('balance')->nullable();
             $table->enum('status', ['Pending', 'In Progress', 'Done', 'Sent'])->nullable();
             $table->integer('number_of_packages')->nullable();
+            $table->integer('number_of_items');
             $table->enum('submittion_mode', ['M', 'A'])->nullable();
 
             $table->boolean('is_important')->default(false)->nullable();
