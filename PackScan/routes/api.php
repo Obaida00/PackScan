@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('/invoices', InvoiceController::class);
 Route::post("/invoices/{id}/done", [InvoiceController::class, 'markInvoiceAsDone']);
 Route::post("/invoices/{id}/sent", [InvoiceController::class, 'markInvoiceAsSent']);
+Route::get('/invoices/{id}/to-pdf', [InvoiceController::class, 'generatePdf']);
 Route::post('/invoices/upload', [InvoiceFileUploadController::class, 'upload']);
 
 Route::get('storages', [StorageController::class, 'index']);

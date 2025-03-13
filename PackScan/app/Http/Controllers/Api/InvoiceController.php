@@ -14,8 +14,22 @@ use App\Services\InvoiceQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+use function Spatie\LaravelPdf\Support\pdf;
+
 class InvoiceController extends Controller
 {
+    public function generatePdf(string $id)
+    {
+        $invoice = Invoice::with('invoiceItems.product')->findOrFail($id);
+
+        
+        $pdf = pdf()
+            ->margins(0, 0, 0, 0)
+            ->format('A5')
+            ->view('invoicePdf', ['invoice' => $invoice,]);
+        return $pdf;
+    }
+
     /**
      * Display a listing of the resource.
      */
