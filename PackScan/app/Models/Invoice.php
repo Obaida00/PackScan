@@ -22,7 +22,12 @@ class Invoice extends Model
         'date',
         'status',
         'net_price',
-        'is_missing'
+        'number_of_items',
+        'is_missing',
+        'total_price',
+        'total_discount',
+        'balance',
+        'net_price_in_words',
         // todo 'file'
     ];
 

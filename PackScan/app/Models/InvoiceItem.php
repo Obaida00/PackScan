@@ -17,9 +17,13 @@ class InvoiceItem extends Model
         "invoice_id",
         "product_id",
         "current_count",
+        "description",
         "total_count",
+        "gifted_quantity",
+        "total_price",
+        "public_price",
         "unit_price",
-        "total_price"
+        "discount"
     ];
 
 
