@@ -177,7 +177,7 @@ export async function downloadInvoicePdfFile(invoiceId) {
     log.info(`PDF saved to: ${filePath}`);
     return filePath;
   } catch (error) {
-    log.error("File upload failed:", error);
+    log.error("File download failed:", error);
     throw error;
   }
 }
