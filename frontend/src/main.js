@@ -1,5 +1,4 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
-const chokidar = require("chokidar");
 const fs = require("fs");
 import * as axiosClient from "./axios-client.js";
 const path = require("path");
@@ -146,26 +145,8 @@ ipcMain.handle("print-invoice", async (event, invoiceId) => {
   printInvoice(invoiceId);
 });
 
-// chokidar monitoring setup and starting
-// Directory to watch
-const folderToWatch = "./watched";
-
-// Ensure the folder exists
-if (!fs.existsSync(folderToWatch)) {
-  fs.mkdirSync(folderToWatch);
-}
-
-// Initialize Chokidar watcher
-const watcher = chokidar.watch(folderToWatch, {
-  persistent: true,
-  ignoreInitial: true,
-  awaitWriteFinish: {
-    stabilityThreshold: 1000,
-  },
-});
-
 const OnFileEvent = async (filePath) => {
-  log.info(`New file detected: ${filePath}`);
+  log.info(`New file opened: ${filePath}`);
 
   if (path.extname(filePath) != ".packscan") {
     log.error(`File type \"${path.extname(filePath)}\" is not supported !!!`);
@@ -191,10 +172,6 @@ function printPdf(pdf) {
     })
     .catch((e) => log.error("Pdf printing error occured... ", e));
 }
-
-// Watch for changes
-watcher.on("change", OnFileEvent);
-watcher.on("add", OnFileEvent);
 
 async function generateStickerForInvoice(invoice) {
   log.info("python generating sticker");
