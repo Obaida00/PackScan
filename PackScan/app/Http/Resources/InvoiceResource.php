@@ -23,6 +23,7 @@ class InvoiceResource extends JsonResource
             'pharmacist' => $this->pharmacist,
             'date' => $this->date,
             'storage_name' => $this->storage->name,
+            'storage_code' => $this->storage->code,
             'status' => $this->status,
             'is_important' => $this->is_important,
             'is_missing' => $this->is_missing,
