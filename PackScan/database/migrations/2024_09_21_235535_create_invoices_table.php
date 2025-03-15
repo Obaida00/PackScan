@@ -27,7 +27,7 @@ return new class extends Migration {
             $table->float('balance')->nullable();
             $table->enum('status', ['Pending', 'In Progress', 'Done', 'Sent'])->nullable();
             $table->integer('number_of_packages')->nullable();
-            $table->integer('number_of_items');
+            $table->integer('number_of_items')->nullable();
             $table->enum('submittion_mode', ['M', 'A'])->nullable();
 
             $table->boolean('is_important')->default(false)->nullable();
