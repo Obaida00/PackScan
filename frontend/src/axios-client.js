@@ -185,7 +185,7 @@ export async function downloadInvoicePdfFile(invoiceId) {
 }
 
 function getInvoicePdfFilePath(invoiceId) {
-  const dirName = "./temp";
+  let dirName = "./temp";
   if (!fs.existsSync(dirName)) {
     fs.mkdirSync(dirName);
   }
