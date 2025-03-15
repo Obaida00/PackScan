@@ -52,11 +52,8 @@ if (!gotTheLock) {
   app.on("second-instance", (event, commandLine, workingDirectory) => {
     if (mainWindow) {
       const filePath = commandLine[commandLine.length - 1];
-      if (filePath && filePath.endsWith(".packscan")) {
-        log.info("|||||||||||||||||||");
-        log.info("file", filePath, "opened again")
-        if (mainWindow.isMinimized()) mainWindow.restore();
-        mainWindow.focus();
+      if (filePath && filePath.endsWith(`.${FILE_EXTENSION}`)) {
+        OnFileEvent(filePath);
       }
     }
   });
@@ -85,8 +82,7 @@ if (!gotTheLock) {
     const filePath = process.argv[1];
     if (filePath && filePath.endsWith(`.${FILE_EXTENSION}`)) {
       app.whenReady().then(() => {
-        log.info("|||||||||||||||||||");
-        log.info("file", filePath, "opened")
+        OnFileEvent(filePath);
       });
     }
   }
