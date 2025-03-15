@@ -5,22 +5,22 @@ import LogsTable from "./components/LogsTable.jsx";
 import BackButton from "../../shared/components/BackButton.jsx";
 import ReloadButton from "../../shared/components/ReloadButton.jsx";
 import StorageLogsInvoiceFilter from "./components/StorageLogsInvoiceFilter.jsx";
+import { useParams } from "react-router-dom";
 
-function StorageLog({ storageIndex }) {
+function StorageLog() {
+  const { id } = useParams();
+
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagingMeta, setPagingMeta] = useState();
   const [filters, setFilters] = useState({});
-  const [storageId, setStorageId] = useState(null);
+  const [storage, setStorage] = useState(null);
 
-  const storageCode = storageIndex === 0 ? "mo" : "ad";
   useEffect(() => {
     const loadStorages = async () => {
       try {
-        const { data: storages } = await ipcRenderer.invoke("fetch-storages");
-        setStorageId(
-          storages.find((storage) => storage.code === storageCode).id
-        );
+        const { data } = await ipcRenderer.invoke("fetch-storage-by-id", id);
+        setStorage(data);
       } catch (error) {
         console.error("Error fetching storages:", error);
       }
@@ -31,12 +31,12 @@ function StorageLog({ storageIndex }) {
 
   const getInvoices = useCallback(
     async (page = 1) => {
-      if (storageId === null) return;
+      if (storage?.id === null) return;
       setLoading(true);
       try {
         const combinedFilters = {
           ...filters,
-          storageId: storageId,
+          storageId: storage?.id,
           pageNumber: page,
         };
         const data = await ipcRenderer.invoke("fetch-orders", combinedFilters);
@@ -48,7 +48,7 @@ function StorageLog({ storageIndex }) {
         setLoading(false);
       }
     },
-    [filters, storageId]
+    [filters, storage?.id]
   );
 
   useEffect(() => {

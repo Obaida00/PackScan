@@ -16,10 +16,19 @@ function StorageIndex() {
   const [loadingSearchResult, setLoadingSearchResult] = useState(false);
   const [loadingImportantInvoices, setLoadingImportantInvoices] =
     useState(false);
-
-  const storageName = id == 0 ? "Almousoaa" : "Advanced";
+  const [storageName, setStorageName] = useState("");
 
   useEffect(() => {
+    const fetchStorageName = async () => {
+      try {
+        const { data } = await ipcRenderer.invoke("fetch-storage-by-id", id);
+        setStorageName(data.name);
+      } catch (error) {
+        console.error("Error fetching storages:", error);
+      }
+    };
+
+    fetchStorageName();
     fetchImportantInvoices();
   }, []);
 

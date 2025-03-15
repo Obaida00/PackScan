@@ -5,7 +5,6 @@ const log = require("electron-log");
 const fs = require("fs");
 const path = require("path");
 
-
 log.transports.file.level = "info";
 log.transports.file.file = __dirname + "/log/log";
 
@@ -19,6 +18,23 @@ export async function fetchStorages() {
       .catch((e) => log.error(e));
     log.info(
       "fetching storages",
+      "- status : " + response.status,
+      "- data : " + JSON.stringify(response.data)
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Fetch storage by id
+export async function fetchStorageById(id) {
+  try {
+    const response = await axios
+      .get(`${BASE_URL}/api/storages/${id}`)
+      .catch((e) => log.error(e));
+    log.info(
+      `fetching storage ${id}`,
       "- status : " + response.status,
       "- data : " + JSON.stringify(response.data)
     );

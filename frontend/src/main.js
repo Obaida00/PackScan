@@ -103,6 +103,9 @@ if (!gotTheLock) {
 ipcMain.handle("fetch-storages", async (event) => {
   return await axiosClient.fetchStorages();
 });
+ipcMain.handle("fetch-storage-by-id", async (event, id) => {
+  return await axiosClient.fetchStorageById(id);
+});
 ipcMain.handle("fetch-orders", async (event, filters) => {
   return await axiosClient.fetchInvoices(filters);
 });
