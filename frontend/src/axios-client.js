@@ -157,3 +157,27 @@ export async function uploadNewFile(filePath) {
     throw error;
   }
 }
+
+export async function downloadInvoicePdfFile(invoiceId) {
+  try {
+    const response = await axios
+      .get(`${BASE_URL}/api/invoices/${invoiceId}/to-pdf`, {
+        responseType: "arraybuffer",
+        onDownloadProgress: (progressEvent) => {
+          log.info(`Downloaded: ${progressEvent.loaded} bytes`);
+        },
+      })
+      .catch((e) => log.error(e));
+
+    log.info("downloading invoice pdf", "- status : " + response.status);
+
+    const filePath = `./temp/invoice-${invoiceId}.pdf`;
+    await fs.promises.writeFile(filePath, Buffer.from(response.data));
+
+    log.info(`PDF saved to: ${filePath}`);
+    return filePath;
+  } catch (error) {
+    log.error("File upload failed:", error);
+    throw error;
+  }
+}
