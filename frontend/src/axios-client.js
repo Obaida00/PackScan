@@ -3,6 +3,8 @@ import FormData from "form-data";
 const axios = require("axios");
 const log = require("electron-log");
 const fs = require("fs");
+const path = require("path");
+
 
 log.transports.file.level = "info";
 log.transports.file.file = __dirname + "/log/log";
@@ -171,7 +173,7 @@ export async function downloadInvoicePdfFile(invoiceId) {
 
     log.info("downloading invoice pdf", "- status : " + response.status);
 
-    const filePath = `./temp/invoice-${invoiceId}.pdf`;
+    const filePath = getInvoicePdfFilePath(invoiceId);
     await fs.promises.writeFile(filePath, Buffer.from(response.data));
 
     log.info(`PDF saved to: ${filePath}`);
@@ -180,4 +182,14 @@ export async function downloadInvoicePdfFile(invoiceId) {
     log.error("File download failed:", error);
     throw error;
   }
+}
+
+function getInvoicePdfFilePath(invoiceId) {
+  const dirName = "./temp";
+  if (!fs.existsSync(dirName)) {
+    fs.mkdirSync(dirName);
+  }
+  dirName = path.resolve(dirName);
+  const filePath = path.join(dirName, `invoice-${invoiceId}.pdf`);
+  return filePath;
 }
