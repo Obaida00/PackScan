@@ -28,7 +28,8 @@ class InvoiceController extends Controller
             ->format('A5')
             ->headerView('header', ['id' => $invoice->id])
             ->footerView('footer')
-            ->view('invoicePdf', ['invoice' => $invoice,]);
+            ->view('invoicePdf', ['invoice' => $invoice,])
+            ->download("$invoice->id.pdf");
         return $pdf;
     }
 
