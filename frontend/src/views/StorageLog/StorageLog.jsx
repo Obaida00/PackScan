@@ -58,7 +58,7 @@ function StorageLog({ storageIndex }) {
   useEffect(() => {
     const intervalId = setInterval(() => {
       getInvoices();
-    }, 10000);
+    }, 20000);
     return () => clearInterval(intervalId);
   }, [getInvoices]);
 
