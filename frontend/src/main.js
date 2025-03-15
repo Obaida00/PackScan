@@ -1,7 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const chokidar = require("chokidar");
 const fs = require("fs");
-const FormData = require("form-data");
 import * as axiosClient from "./axios-client.js";
 const path = require("path");
 const child_process = require("child_process");
@@ -134,12 +133,30 @@ const watcher = chokidar.watch(folderToWatch, {
 const OnFileEvent = async (filePath) => {
   log.info(`New file detected: ${filePath}`);
 
-  if (path.extname(filePath) != ".xlsx") {
-    log.error("File is not supported !!!");
+  if (path.extname(filePath) != ".packscan") {
+    log.error(`File type \"${path.extname(filePath)}\" is not supported !!!`);
+    return;
   }
 
-  await axiosClient.uploadNewFile(filePath);
+  let { invoice_id: invoiceId } = await axiosClient.uploadNewFile(filePath);
+
+  await printInvoice(invoiceId);
 };
+
+async function printInvoice(invoiceId) {
+  let pdf = await axiosClient.downloadInvoicePdfFile(invoiceId);
+  printPdf(pdf);
+}
+
+function printPdf(pdf) {
+  PdfPrintToPrinter(pdf)
+    .then((code) => {
+      code == 0
+        ? log.info("Pdf printed successfully")
+        : log.info("Pdf printing cancelled");
+    })
+    .catch((e) => log.error("Pdf printing error occured... ", e));
+}
 
 // Watch for changes
 watcher.on("change", OnFileEvent);
@@ -244,6 +261,65 @@ function getGenerateStickerScriptPath() {
 
     log.info("python script path:", generateStickerScriptPath);
     return generateStickerScriptPath;
+  } catch (error) {
+    log.error(error);
+  }
+}
+
+function PdfPrintToPrinter(file_path) {
+  let exePath = getPtpExePath();
+
+  return new Promise((resolve, reject) => {
+    const ptpProcess = child_process.spawn(exePath, [file_path]);
+
+    ptpProcess.stdout.on("data", (data) => {
+      const output = data.toString();
+      log.info("ptp exe stdout:", output);
+    });
+
+    ptpProcess.stderr.on("data", (data) => {
+      const errorMsg = data.toString();
+      log.error("ptp exe stderr:", errorMsg);
+    });
+
+    ptpProcess.on("error", (error) => {
+      log.error("ptp exe process error:", error);
+      reject(error);
+    });
+
+    ptpProcess.on("close", (code) => {
+      log.info("ptp exe process closed with code", code);
+      if (code === 0 || code === 1) {
+        resolve(code);
+      } else {
+        reject(new Error("ptp exe process exited with code " + code));
+      }
+    });
+  });
+}
+
+function getPtpExePath() {
+  try {
+    let PtpExePath;
+
+    if (app.isPackaged) {
+      const tempDir = os.tmpdir();
+
+      PtpExePath = path.join(tempDir, "PDFtoPrinterSelect.exe");
+      if (!fs.existsSync(PtpExePath)) {
+        const asarScriptPath = path.join(
+          app.getAppPath(),
+          ".webpack\\main\\PDFtoPrinterSelect.exe"
+        );
+        fs.copyFileSync(asarScriptPath, PtpExePath);
+        log.info(`ptp exe extracted to: ${PtpExePath}`);
+      }
+    } else {
+      PtpExePath = path.join(__dirname, "PDFtoPrinterSelect.exe");
+    }
+
+    log.info("ptp exe path:", PtpExePath);
+    return PtpExePath;
   } catch (error) {
     log.error(error);
   }
