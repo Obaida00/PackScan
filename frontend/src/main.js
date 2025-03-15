@@ -144,7 +144,7 @@ ipcMain.handle("print-invoice", async (event, invoiceId) => {
 const OnFileEvent = async (filePath) => {
   log.info(`New file opened: ${filePath}`);
 
-  if (path.extname(filePath) != ".packscan") {
+  if (path.extname(filePath) != `.${FILE_EXTENSION}`) {
     log.error(`File type \"${path.extname(filePath)}\" is not supported !!!`);
     return;
   }
