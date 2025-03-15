@@ -106,7 +106,7 @@ class InvoiceFileUploadController extends Controller
                 'total_price' => (float)$this->parseNumericString($itemData[5]),
                 'public_price' => (float)$this->parseNumericString($itemData[6]),
                 'discount' => (float)$this->parseNumericString($itemData[7]),
-                'description' => (string)$itemData[8],
+                'description' => (string)$itemData[8] != "0" ? (string)$itemData[8] : null,
             ];
         }
 
