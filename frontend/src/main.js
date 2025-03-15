@@ -12,8 +12,6 @@ const os = require("os");
 log.transports.file.level = "info";
 log.transports.file.file = __dirname + "/log/log";
 
-const execFile = util.promisify(child_process.execFile);
-
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
   app.quit();
@@ -104,12 +102,14 @@ ipcMain.handle("go-back", async (event) => {
     mainWindow.webContents.navigationHistory.goBack();
   }
 });
-
 ipcMain.handle("play-sound", async (event, soundName) => {
   log.info(`playing sound: ${soundName}`);
 
   const soundFilePath = path.join(__dirname, `sounds/${soundName}.mp3`);
   await sound.play(soundFilePath);
+});
+ipcMain.handle("print-invoice", async (event, invoiceId) => {
+  printInvoice(invoiceId);
 });
 
 // chokidar monitoring setup and starting
