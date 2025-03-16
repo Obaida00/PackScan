@@ -160,9 +160,13 @@ class InvoiceController extends Controller
                 // that are not present in the new request.
                 $existingItemsByProduct->forget($product->name);
             } else {
+                $quantity = $item['quantity'];
+                $gifted_quantity = $item['gifted_quantity'];
+                $total_count = $quantity + $gifted_quantity;
                 $invoiceItem = new InvoiceItem([
-                    "total_count" => $item['quantity'],
-                    "gifted_quantity" => $item['gifted_quantity'],
+                    "quantity" => $quantity,
+                    "gifted_quantity" => $gifted_quantity,
+                    "total_count" => $total_count,
                     "unit_price" => $item['unit_price'],
                     "total_price" => $item['total_price'],
                     "public_price" => $item['public_price'],

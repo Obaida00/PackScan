@@ -97,11 +97,15 @@ class InvoiceFileUploadController extends Controller
         $end = $start + $numberOfItems;
         for ($i = $start; $i < $end; $i++) {
             $itemData = $data[$i];
+            $quantity = (int)$this->parseNumericString($itemData[2]);
+            $gifted_quantity = (int)$this->parseNumericString($itemData[3]);
+            $total_count = $quantity + $gifted_quantity;
             $invoiceItems[] = [
                 'collectionName' => (string)$itemData[0],
                 'productName' => (string)$itemData[1],
-                'quantity' => (int)$this->parseNumericString($itemData[2]),
-                'gifted_quantity' => (int)$this->parseNumericString($itemData[3]),
+                'quantity' => $quantity,
+                'gifted_quantity' => $gifted_quantity,
+                'total_count' => $total_count,
                 'unit_price' => (float)$this->parseNumericString($itemData[4]),
                 'total_price' => (float)$this->parseNumericString($itemData[5]),
                 'public_price' => (float)$this->parseNumericString($itemData[6]),
@@ -135,13 +139,14 @@ class InvoiceFileUploadController extends Controller
             'items' => ['sometimes', 'array'],
             'items.*.collectionName' => ['required', 'string'],
             'items.*.productName' => ['required', 'string'],
-            'items.*.quantity' => ['required', 'integer'],
-            'items.*.gifted_quantity' => ['required', 'integer'],
+            'items.*.quantity' => ['required', 'numeric'],
+            'items.*.gifted_quantity' => ['required', 'numeric'],
+            'items.*.total_count' => ['required', 'numeric'],
             'items.*.unit_price' => ['required', 'numeric'],
             'items.*.total_price' => ['required', 'numeric'],
             'items.*.public_price' => ['required', 'numeric'],
             'items.*.discount' => ['required', 'numeric'],
-            'items.*.description' => ['required', 'string'],
+            'items.*.description' => ['nullable', 'string'],
         ]);
 
         if ($validator->fails()) {
@@ -169,16 +174,16 @@ class InvoiceFileUploadController extends Controller
 
         $invoice = $this->createOrUpdateInvoiceModel([
             'invoice_id' => $invoiceId,
-            'storage_id'=> $storage->id,
-            'statement'=> $invoiceData['statement'],
-            'pharmacist'=> $invoiceData['pharmacist'],
-            'date'=> $invoiceData['date'],
-            'total_price'=> $invoiceData['total_price'],
-            'total_discount'=> $invoiceData['total_discount'],
-            'balance'=> $invoiceData['balance'],
-            'net_price'=> $invoiceData['net_price'],
-            'net_price_in_words'=> $invoiceData['net_price_in_words'],
-            'number_of_items'=> $invoiceData['number_of_items'],
+            'storage_id' => $storage->id,
+            'statement' => $invoiceData['statement'],
+            'pharmacist' => $invoiceData['pharmacist'],
+            'date' => $invoiceData['date'],
+            'total_price' => $invoiceData['total_price'],
+            'total_discount' => $invoiceData['total_discount'],
+            'balance' => $invoiceData['balance'],
+            'net_price' => $invoiceData['net_price'],
+            'net_price_in_words' => $invoiceData['net_price_in_words'],
+            'number_of_items' => $invoiceData['number_of_items'],
         ]);
 
         $this->updateInvoiceItems($invoice, $invoiceData['items']);
@@ -280,10 +285,15 @@ class InvoiceFileUploadController extends Controller
 
             // If an invoice item for this product already exists, update it, keep the current count
             if ($existingItemsByProduct->has($product->name)) {
+                $quantity = $item['quantity'];
+                $gifted_quantity = $item['gifted_quantity'];
+                $total_count = $quantity + $gifted_quantity;
+
                 $invoiceItem = $existingItemsByProduct->get($product->name);
                 $invoiceItem->description = $item['description'];
-                $invoiceItem->total_count = $item['quantity'];
-                $invoiceItem->gifted_quantity = $item['gifted_quantity'];
+                $invoiceItem->quantity = $quantity;
+                $invoiceItem->gifted_quantity = $gifted_quantity;
+                $invoiceItem->total_count = $total_count;
                 $invoiceItem->total_price = $item['total_price'];
                 $invoiceItem->public_price = $item['public_price'];
                 $invoiceItem->unit_price = $item['unit_price'];
@@ -295,8 +305,9 @@ class InvoiceFileUploadController extends Controller
                 $existingItemsByProduct->forget($product->name);
             } else {
                 $invoiceItem = new InvoiceItem([
-                    "total_count" => $item['quantity'],
+                    "quantity" => $item['quantity'],
                     "gifted_quantity" => $item['gifted_quantity'],
+                    "total_count" => $item['total_count'],
                     "unit_price" => $item['unit_price'],
                     "total_price" => $item['total_price'],
                     "public_price" => $item['public_price'],

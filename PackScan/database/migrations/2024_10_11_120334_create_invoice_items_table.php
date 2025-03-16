@@ -16,13 +16,14 @@ return new class extends Migration {
             $table->foreignId('invoice_id')->constrained('invoices')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->string('description')->nullable();
-            $table->integer('total_count');
-            $table->integer('gifted_quantity')->default(0);
+            $table->integer('total_count')->default(-1);
+            $table->integer('gifted_quantity')->default(-1);
+            $table->integer('quantity')->default(-1);
             $table->integer('current_count')->default(0);
-            $table->float('total_price');
-            $table->float('public_price');
-            $table->float('unit_price');
-            $table->float('discount')->default(0);
+            $table->float('total_price')->default(-1);
+            $table->float('public_price')->default(-1);
+            $table->float('unit_price')->default(-1);
+            $table->float('discount')->default(-1);
 
             $table->timestamps();
         });
