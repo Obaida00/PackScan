@@ -30,7 +30,7 @@ class InvoiceResource extends JsonResource
             'total_price' => number_format((int)$this->total_price, 0, '.', ','),
             'total_discount' => number_format((int)$this->total_discount, 0, '.', ','),
             'net_price' => number_format((int)$this->net_price, 0, '.', ','),
-            'net_price_in_words' => number_format((int)$this->net_price_in_words, 0, '.', ','),
+            'net_price_in_words' => $this->net_price_in_words,
             'balance' => number_format((int)$this->balance, 0, '.', ','),
             'packer_id' => $this->whenloaded('packer', $this->packer?->id),
             'packer_name' => $this->whenloaded('packer', $this->packer?->name),
