@@ -27,7 +27,7 @@ class InvoiceFileUploadController extends Controller
             }
 
             $file = $request->file('file');
-            $fileName = "report_" . time() . "_" . uniqid() . ".xlsx";
+            $fileName = "report_" . time() . "_" . now("+3")->format('M-dD-H-i-s') . "_" . uniqid() . ".xlsx";
             $file->storeAs('uploads', $fileName, 'public');
 
             $invoice = $this->createInvoiceFromFile($fileName);
@@ -60,7 +60,6 @@ class InvoiceFileUploadController extends Controller
 
             $invoice = $this->createInvoiceFromData($invoiceData);
 
-            unlink($fullPath);
             Log::info("Invoice ID {$invoice->invoice_id} created/updated successfully");
 
             return $invoice;
