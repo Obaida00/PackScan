@@ -237,7 +237,7 @@ class InvoiceController extends Controller
         $invoice->status = "Done";
         $invoice->is_important = false;
         $invoice->submittion_mode = $request->mode;
-        $invoice->done_at = now();
+        $invoice->done_at = now("+3");
         $invoice->save();
 
         foreach ($invoice->invoiceItems as $invoiceItem) {
@@ -264,7 +264,7 @@ class InvoiceController extends Controller
         }
 
         $invoice->status = "Sent";
-        $invoice->sent_at = now();
+        $invoice->sent_at = now("+3");
         $invoice->save();
 
         return new InvoiceResource($invoice);

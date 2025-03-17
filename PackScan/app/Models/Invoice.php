@@ -28,7 +28,6 @@ class Invoice extends Model
         'total_discount',
         'balance',
         'net_price_in_words',
-        // todo 'file'
     ];
 
     protected $allowedSorts = [
