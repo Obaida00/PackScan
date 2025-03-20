@@ -25,4 +25,9 @@ class Storage extends Model
     {
         return $this->hasMany(Invoice::class);
     }
+
+    public function collections()
+    {
+        return $this->hasMany(Collection::class);
+    }
 }

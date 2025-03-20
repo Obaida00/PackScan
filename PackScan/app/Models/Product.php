@@ -15,6 +15,7 @@ class Product extends Model
     protected $fillable = [
         "name",
         "barcode",
+        "collection_id"
     ];
 
     protected $allowedSorts = [
@@ -28,5 +29,10 @@ class Product extends Model
     public function invoiceItems()
     {
         return $this->hasMany(InvoiceItem::class);
+    }
+
+    public function collection()
+    {
+        return $this->belongsTo(Collection::class);
     }
 }

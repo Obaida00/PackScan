@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->string("name");
+            $table->string("name")->unique();
             $table->bigInteger("barcode")->unique();
+            $table->foreignId('collection_id')->nullable()->constrained('collections')->onDelete('cascade');
+
             
             $table->timestamps();
         });
