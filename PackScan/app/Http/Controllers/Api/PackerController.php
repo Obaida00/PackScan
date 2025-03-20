@@ -26,14 +26,16 @@ class PackerController extends Controller
             'id' => 'required|integer',
             'name' => 'required|string|max:255',
             'can_manually_submit' => 'required|boolean',
-            'can_submit_important_invoices' => 'required|boolean'
+            'can_submit_important_invoices' => 'required|boolean',
+            'is_invoice_admin' => 'required|boolean'
         ]);
 
         $packer = Packer::create([
             'id' => $request->id,
             'name' => $request->name,
             'can_manually_submit' => $request->can_manually_submit,
-            'can_submit_important_invoices' => $request->can_submit_important_invoices
+            'can_submit_important_invoices' => $request->can_submit_important_invoices,
+            'is_invoice_admin' => $request->is_invoice_admin
         ]);
 
         return response()->json($packer, 201);
@@ -58,13 +60,15 @@ class PackerController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'can_manually_submit' => 'required|boolean',
-            'can_submit_important_invoices' => 'required|boolean'
+            'can_submit_important_invoices' => 'required|boolean',
+            'is_invoice_admin' => 'required|boolean'
         ]);
 
         $packer->update([
             'name' => $request->name,
             'can_manually_submit' => $request->can_manually_submit,
-            'can_submit_important_invoices' => $request->can_submit_important_invoices
+            'can_submit_important_invoices' => $request->can_submit_important_invoices,
+            'is_invoice_admin' => $request->is_invoice_admin
         ]);
 
         return response()->json($packer);
