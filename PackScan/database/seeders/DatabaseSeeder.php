@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Collection;
 use Illuminate\Database\Seeder;
 use App\Models\Storage;
 use App\Models\Invoice;
@@ -16,47 +17,39 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Packer::factory()->count(10)->create();
+        $storages = Storage::factory()->count(2)->create();
 
-        // Create Storage with associated invoices and invoice items
-        $this->createStorageWithInvoices([
-            'id' => 0,
-            'name' => 'almousoaa',
-            'code' => 'mo',
-        ], 2, 2);
+        $collections = collect();
+        foreach ($storages as $storage) {
+            $collections = $collections->merge(
+                Collection::factory()
+                    ->count(5)
+                    ->create(['storage_id' => $storage->id])
+            );
+        }
 
-        $this->createStorageWithInvoices([
-            'id' => 1,
-            'name' => 'advanced',
-            'code' => 'ad',
-        ], 4, 3);
+        $products = collect();
+        foreach ($collections as $collection) {
+            $products = $products->merge(
+                Product::factory()
+                    ->count(5)
+                    ->create(['collection_id' => $collection->id])
+            );
+        }
 
-        // Optionally, seed some standalone products for variety
-        Product::factory(10)->create();
-    }
-
-    /**
-     * Create a storage record with associated invoices and invoice items.
-     *
-     * @param array $storageData
-     * @param int $invoiceCount
-     * @param int $invoiceItemsPerInvoice
-     */
-    private function createStorageWithInvoices(array $storageData, int $invoiceCount, int $invoiceItemsPerInvoice): void
-    {
-        $storage = Storage::factory()->create($storageData);
+        $packers = Packer::factory()->count(5)->create();
 
         Invoice::factory()
-            ->count($invoiceCount)
-            ->has(
-                InvoiceItem::factory()
-                    ->count($invoiceItemsPerInvoice)
-                    ->state(function (array $attributes, Invoice $invoice) {
-                        return [
-                            'product_id' => Product::factory()->create()->id,
-                        ];
-                    })
-            )
-            ->create(['storage_id' => $storage->id]);
+            ->count(100)
+            ->create()
+            ->each(function ($invoice) use ($products) {
+                $randomProducts = $products->random(rand(2, 3));
+                foreach ($randomProducts as $product) {
+                    InvoiceItem::factory()->create([
+                        'invoice_id' => $invoice->id,
+                        'product_id' => $product->id,
+                    ]);
+                }
+            });
     }
 }
