@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->string("name")->unique();
             $table->bigInteger("barcode")->unique();
-            $table->foreignId('collection_id')->nullable()->constrained('collections')->onDelete('cascade');
+            $table->foreignId('collection_id')->constrained('collections')->onDelete('cascade');
 
             
             $table->timestamps();
