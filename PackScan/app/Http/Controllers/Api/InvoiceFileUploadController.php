@@ -102,8 +102,8 @@ class InvoiceFileUploadController extends Controller
             $gifted_quantity = (int)$this->parseNumericString($itemData[3]);
             $total_count = $quantity + $gifted_quantity;
             $invoiceItems[] = [
-                'collectionName' => (string)$itemData[0],
-                'productName' => (string)$itemData[1],
+                'collection_name' => (string)$itemData[0],
+                'product_name' => (string)$itemData[1],
                 'quantity' => $quantity,
                 'gifted_quantity' => $gifted_quantity,
                 'total_count' => $total_count,
@@ -138,8 +138,8 @@ class InvoiceFileUploadController extends Controller
             'net_price_in_words' => ['required', 'string'],
             'number_of_items' => ['required', 'numeric'],
             'items' => ['sometimes', 'array'],
-            'items.*.collectionName' => ['required', 'string'],
-            'items.*.productName' => ['required', 'string'],
+            'items.*.collection_name' => ['required', 'string'],
+            'items.*.product_name' => ['required', 'string'],
             'items.*.quantity' => ['required', 'numeric'],
             'items.*.gifted_quantity' => ['required', 'numeric'],
             'items.*.total_count' => ['required', 'numeric'],
@@ -162,7 +162,7 @@ class InvoiceFileUploadController extends Controller
         Log::info("Storing new invoice from file");
 
         $collectionNames = collect($invoiceData['items'])
-            ->pluck('collectionName')
+            ->pluck('collection_name')
             ->unique()
             ->values()
             ->all();
@@ -289,7 +289,7 @@ class InvoiceFileUploadController extends Controller
     {
         $oldItems = $invoice->invoiceItems()->with('product')->get();
 
-        $newItemNames = collect($newItems)->pluck('productName')->unique();
+        $newItemNames = collect($newItems)->pluck('product_name')->unique();
 
         $products = Product::whereIn('name', $newItemNames)->get()->keyBy('name');
 
@@ -307,9 +307,9 @@ class InvoiceFileUploadController extends Controller
 
         // Process each new item.
         foreach ($newItems as $item) {
-            $product = $products->get($item['productName']);
+            $product = $products->get($item['product_name']);
             if (!$product) {
-                Log::error("Product " . $item['productName'] . " not found");
+                Log::error("Product " . $item['product_name'] . " not found");
                 $errors[] = "Product " . $item['productName'] . " not found.";
                 continue;
             }
