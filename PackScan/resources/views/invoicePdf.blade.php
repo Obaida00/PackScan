@@ -178,6 +178,12 @@
         .balance-discount {
             width: 50px;
         }
+
+        .last-table-cell {
+            border: 1px solid white;
+            width: 100%;
+            padding: 1px;
+        }
     </style>
 </head>
 
@@ -187,15 +193,13 @@
             <table>
                 <thead>
                     <tr>
-                        <th
-                            colspan="9"
-                            class="white-border-left white-border-top white-border-right no-bold">
+                        <th colspan="9" class="white-border-left white-border-top white-border-right no-bold">
                             <img src="{{ public_path('images/head.png') }}" class="head-img" />
                             <div class="time">11:44</div>
                             <div class="width-full text-center">مبيعات</div>
                             <div class="title">
                                 <div class="width-half text-right">السيد: {{ $invoice->pharmacist }}</div>
-                                <div class="width-half text-center">التاريخ: {{$invoice->date}}</div>
+                                <div class="width-half text-center">التاريخ: {{ $invoice->date }}</div>
                             </div>
                             <div class="title">
                                 <div class="width-half text-right">البيان: {{ $invoice->statement }}</div>
@@ -211,14 +215,14 @@
                         <th>الإفرادي</th>
                         <th>الهدايا</th>
                         <th>الكمية</th>
-                        <th>الصف</th>
+                        <th>الصنف</th>
                         <th>المجموعة</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($invoice->invoiceItems as $item)
                     @if ($item->total_count == 0)
-                        @continue
+                    @continue
                     @endif
                     <tr>
                         <td>{{ $item->description }}</td>
@@ -228,50 +232,57 @@
                         <td>{{ number_format($item->unit_price) }}</td>
                         <td>{{ number_format($item->gifted_quantity) }}</td>
                         <td>{{ number_format($item->quantity) }}</td>
-                        <td>{{ $item->product->name }}</td>
-                        <td>{{ $item->product->collection->name}}</td>
+                        <td style="word-wrap: break-word; text-wrap-mode: wrap;">{{ $item->product->name }}</td>
+                        <td>{{ $item->product->collection->name }}</td>
                     </tr>
                     @endforeach
-                </tbody>
-            </table>
-            <table class="bottom-table tg">
-                <tbody>
                     <tr>
-                        <td class="tg-lqy6" colspan="2">{{ number_format($invoice->total_price) }}</td>
-                        <td class="tg-lqy6" colspan="2">المجموع</td>
-                        <td class="tg-lqy6"></td>
-                        <td class="tg-lqy6" colspan="2"></td>
-                        <td class="tg-lqy6" colspan="2"></td>
-                    </tr>
-                    <tr>
-                        <td class="tg-lqy6">{{ number_format($invoice->net_price) }}</td>
-                        <td class="tg-lqy6" colspan="3">الصافي</td>
-                        <td class="tg-lqy6 net-price-in-words" colspan="5">
-                            {{ $invoice->net_price_in_words }}
+                        <td class="last-table-cell" colspan="9">
+                            <table class="bottom-table tg">
+                                <tbody>
+                                    <tr>
+                                        <td class="tg-lqy6" colspan="2">{{ number_format($invoice->total_price) }}
+                                        </td>
+                                        <td class="tg-lqy6" colspan="2">المجموع</td>
+                                        <td class="tg-lqy6"></td>
+                                        <td class="tg-lqy6" colspan="2"></td>
+                                        <td class="tg-lqy6" colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tg-lqy6">{{ number_format($invoice->net_price) }}</td>
+                                        <td class="tg-lqy6" colspan="3">الصافي</td>
+                                        <td class="tg-lqy6 net-price-in-words" colspan="5">
+                                            {{ $invoice->net_price_in_words }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tg-lqy6" colspan="3">3</td>
+                                        <td class="tg-lqy6" colspan="3"></td>
+                                        <td class="tg-lqy6" colspan="2">{{ number_format($invoice->balance) }}</td>
+                                        <td class="tg-lqy6 balance-discount">الرصيد</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tg-lqy6" colspan="3">
+                                            {{ number_format($invoice->number_of_items) }}
+                                        </td>
+                                        <td class="tg-lqy6" colspan="3">الأقلام</td>
+                                        <td class="tg-lqy6" colspan="2">
+                                            {{ number_format($invoice->total_discount) }}
+                                        </td>
+                                        <td class="tg-lqy6 balance-discount">الحسم</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="signitures">
+                                <div>تحضير</div>
+                                <div>تدقيق</div>
+                                <div>توضيب</div>
+                            </div>
                         </td>
                     </tr>
-                    <tr>
-                        <td class="tg-lqy6" colspan="3">3</td>
-                        <td class="tg-lqy6" colspan="3"></td>
-                        <td class="tg-lqy6" colspan="2">{{ number_format($invoice->balance) }}</td>
-                        <td class="tg-lqy6 balance-discount">الرصيد</td>
-                    </tr>
-                    <tr>
-                        <td class="tg-lqy6" colspan="3">{{number_format($invoice->number_of_items)}}</td>
-                        <td class="tg-lqy6" colspan="3">الأقلام</td>
-                        <td class="tg-lqy6" colspan="2">{{ number_format($invoice->total_discount) }}</td>
-                        <td class="tg-lqy6 balance-discount">الحسم</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
-
-        <div class="signitures">
-            <div>تحضير</div>
-            <div>تدقيق</div>
-            <div>توضيب</div>
-        </div>
-    </div>
 </body>
 
 </html>
