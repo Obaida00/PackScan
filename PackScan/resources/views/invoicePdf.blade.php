@@ -229,7 +229,7 @@
                         <td>{{ number_format($item->gifted_quantity) }}</td>
                         <td>{{ number_format($item->quantity) }}</td>
                         <td>{{ $item->product->name }}</td>
-                        <td>{{ $item->product->collection->name ?? 'ابن الهيثم' }}</td>
+                        <td>{{ $item->product->collection->name}}</td>
                     </tr>
                     @endforeach
                 </tbody>
