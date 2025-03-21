@@ -127,6 +127,23 @@ class InvoiceController extends Controller
     }
 
     /**
+     * Unmark the important flag for the invoice.
+     */
+    public function unmarkInvoiceImportant(Request $request, string $id)
+    {
+        $invoice = Invoice::find($id);
+
+        if (!$invoice) {
+            return response()->json(['message' => 'Invoice not found.'], 404);
+        }
+
+        $invoice->is_important = false;
+        $invoice->save();
+
+        return new InvoiceResource($invoice);
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Invoice $invoice)
