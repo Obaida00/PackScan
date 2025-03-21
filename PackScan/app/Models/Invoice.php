@@ -28,6 +28,7 @@ class Invoice extends Model
         'total_discount',
         'balance',
         'net_price_in_words',
+        'deputy_number'
     ];
 
     protected $allowedSorts = [

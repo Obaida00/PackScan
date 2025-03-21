@@ -86,6 +86,7 @@ class InvoiceFileUploadController extends Controller
             'total_price' => (float)$this->parseNumericString($data[$totalRowCount - 4][4]),
             'total_discount' => (float)$this->parseNumericString($data[$totalRowCount - 1][1]),
             'balance' => (float)$this->parseNumericString($data[$totalRowCount - 2][1]),
+            'deputy_number' => (int)$this->parseNumericString($data[$totalRowCount - 2][3]),
             'net_price' => (float)$this->parseNumericString($data[$totalRowCount - 3][2]),
             'net_price_in_words' => (string)$data[$totalRowCount - 3][0],
             'number_of_items' => (int)$this->parseNumericString($data[$totalRowCount - 1][3]),
@@ -102,8 +103,8 @@ class InvoiceFileUploadController extends Controller
             $gifted_quantity = (int)$this->parseNumericString($itemData[3]);
             $total_count = $quantity + $gifted_quantity;
             $invoiceItems[] = [
-                'collectionName' => (string)$itemData[0],
-                'productName' => (string)$itemData[1],
+                'collection_name' => (string)$itemData[0],
+                'product_name' => (string)$itemData[1],
                 'quantity' => $quantity,
                 'gifted_quantity' => $gifted_quantity,
                 'total_count' => $total_count,
@@ -134,12 +135,13 @@ class InvoiceFileUploadController extends Controller
             'total_price' => ['required', 'numeric'],
             'total_discount' => ['required', 'numeric'],
             'balance' => ['required', 'numeric'],
+            'deputy_number' => ['required', 'numeric'],
             'net_price' => ['required', 'numeric'],
             'net_price_in_words' => ['required', 'string'],
             'number_of_items' => ['required', 'numeric'],
             'items' => ['sometimes', 'array'],
-            'items.*.collectionName' => ['required', 'string'],
-            'items.*.productName' => ['required', 'string'],
+            'items.*.collection_name' => ['required', 'string'],
+            'items.*.product_name' => ['required', 'string'],
             'items.*.quantity' => ['required', 'numeric'],
             'items.*.gifted_quantity' => ['required', 'numeric'],
             'items.*.total_count' => ['required', 'numeric'],
@@ -162,7 +164,7 @@ class InvoiceFileUploadController extends Controller
         Log::info("Storing new invoice from file");
 
         $collectionNames = collect($invoiceData['items'])
-            ->pluck('collectionName')
+            ->pluck('collection_name')
             ->unique()
             ->values()
             ->all();
@@ -182,6 +184,7 @@ class InvoiceFileUploadController extends Controller
             'total_price' => $invoiceData['total_price'],
             'total_discount' => $invoiceData['total_discount'],
             'balance' => $invoiceData['balance'],
+            'deputy_number' => $invoiceData['deputy_number'],
             'net_price' => $invoiceData['net_price'],
             'net_price_in_words' => $invoiceData['net_price_in_words'],
             'number_of_items' => $invoiceData['number_of_items'],
@@ -258,6 +261,7 @@ class InvoiceFileUploadController extends Controller
             $invoice->total_price = $data['total_price'];
             $invoice->total_discount = $data['total_discount'];
             $invoice->balance = $data['balance'];
+            $invoice->deputy_number = $data['deputy_number'];
             $invoice->net_price = $data['net_price'];
             $invoice->net_price_in_words = $data['net_price_in_words'];
             $invoice->number_of_items = $data['number_of_items'];
@@ -275,6 +279,7 @@ class InvoiceFileUploadController extends Controller
                 'total_price' => $data['total_price'],
                 'total_discount' => $data['total_discount'],
                 'balance' => $data['balance'],
+                'deputy_number' => $data['deputy_number'],
                 'net_price' => $data['net_price'],
                 'net_price_in_words' => $data['net_price_in_words'],
                 'number_of_items' => $data['number_of_items'],
@@ -289,7 +294,7 @@ class InvoiceFileUploadController extends Controller
     {
         $oldItems = $invoice->invoiceItems()->with('product')->get();
 
-        $newItemNames = collect($newItems)->pluck('productName')->unique();
+        $newItemNames = collect($newItems)->pluck('product_name')->unique();
 
         $products = Product::whereIn('name', $newItemNames)->get()->keyBy('name');
 
@@ -307,9 +312,9 @@ class InvoiceFileUploadController extends Controller
 
         // Process each new item.
         foreach ($newItems as $item) {
-            $product = $products->get($item['productName']);
+            $product = $products->get($item['product_name']);
             if (!$product) {
-                Log::error("Product " . $item['productName'] . " not found");
+                Log::error("Product " . $item['product_name'] . " not found");
                 $errors[] = "Product " . $item['productName'] . " not found.";
                 continue;
             }

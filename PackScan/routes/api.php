@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CollectionController;
 use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\PackerController;
 use App\Http\Controllers\Api\StorageController;
@@ -25,3 +26,4 @@ Route::delete('storages/{storage}', [StorageController::class, 'destroy']);
 
 Route::apiResource('products', ProductController::class);
 Route::apiResource('packers', PackerController::class);
+Route::apiResource('collections', CollectionController::class);
