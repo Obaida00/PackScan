@@ -63,7 +63,7 @@ function Index() {
                 Loading...
               </h1>
             ) : (
-              <IndexTable invoices={invoices} />
+              <IndexTable invoices={invoices} reloadInvoices={getInvoices}/>
             )}
           </div>
         </div>

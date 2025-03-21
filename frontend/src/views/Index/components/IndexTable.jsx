@@ -3,7 +3,7 @@ import TableHeader from "../../../shared/components/TableComponents/TableHeader.
 import IndexTableRow from "./IndexTableRow.jsx";
 import IndexTableRowForMissingInvoices from "./IndexTableRowForMissingInvoices.jsx";
 
-function IndexTable({ invoices }) {
+function IndexTable({ invoices, reloadInvoices }) {
   return (
     <table className="w-full text-md text-gray-300 tracking-wide ">
       <thead className="text-mg bg-gray-700 text-gray-400">
@@ -18,7 +18,7 @@ function IndexTable({ invoices }) {
           invoice.is_missing ? (
             <IndexTableRowForMissingInvoices key={key} id={invoice.invoice_id} />
           ) : (
-            <IndexTableRow key={key} i={key} invoice={invoice} />
+            <IndexTableRow key={key} i={key} invoice={invoice} reloadInvoices={reloadInvoices}/>
           )
         )}
       </tbody>

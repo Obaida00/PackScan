@@ -120,6 +120,24 @@ export async function submitInvoice(id, packerId, numberOfPackages, manually) {
   }
 }
 
+// Unmark invoice important flag
+export async function unmarkInvoiceAsImportant(id) {
+  try {
+    const response = await axios
+      .post(`${BASE_URL}/api/invoices/${id}/unmark-important`)
+      .catch((e) => log.error(e));
+
+    log.info(
+      "unmark invoice important flag",
+      "- status : " + response.status,
+      "- data : " + JSON.stringify(response.data)
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getPackerById(packerId) {
   try {
     if (packerId == null || packerId == "" || packerId == undefined) return;

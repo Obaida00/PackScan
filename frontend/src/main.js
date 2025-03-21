@@ -128,7 +128,9 @@ ipcMain.handle(
     return;
   }
 );
-
+ipcMain.handle("unmark-invoice-important", async (event, invoiceId) => {
+  return await axiosClient.unmarkInvoiceAsImportant(invoiceId);
+});
 ipcMain.handle("go-back", async (event) => {
   if (mainWindow.webContents.navigationHistory.canGoBack()) {
     mainWindow.webContents.navigationHistory.goBack();
