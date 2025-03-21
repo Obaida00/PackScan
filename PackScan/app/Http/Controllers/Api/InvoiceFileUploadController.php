@@ -7,6 +7,7 @@ use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Product;
 use App\Models\Storage;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -40,7 +41,8 @@ class InvoiceFileUploadController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ], 500);
         }
     }
@@ -192,8 +194,32 @@ class InvoiceFileUploadController extends Controller
 
     private function getStorageByCollections(array $collectionNames): Storage
     {
-        //todo search & validate storage with collections
-        return Storage::first();
+        $matchingStorages = Storage::with('collections')->whereHas(
+            'collections',
+            fn(Builder $query) =>
+            $query->whereIn('name', $collectionNames)
+        )->get();
+
+        if (count($matchingStorages) > 1) {
+            throw new \Exception("Different storages found for collections: " . implode(', ', $collectionNames));
+        }
+
+        if ($matchingStorages->isEmpty()) {
+            throw new \Exception("No storage found for collections: " . implode(', ', $collectionNames));
+        }
+
+        $storage = $matchingStorages->first();
+
+        $storageCollectionNames = $storage->collections->pluck('name')->toArray();
+        $missingCollections = array_diff($collectionNames, $storageCollectionNames);
+
+        if (!empty($missingCollections)) {
+            $missingCollectionsStr = implode(', ', $missingCollections);
+            throw new \Exception("Collections not found in the same storage as the rest of the collections: $missingCollectionsStr");
+        }
+
+        Log::info("matched invoice: with storage: {$storage->name} - {$storage->id} with collections: " . implode(', ', $storageCollectionNames));
+        return $storage;
     }
 
     private function fillMissingInvoices($storageId, $newInvoiceId)
@@ -266,6 +292,12 @@ class InvoiceFileUploadController extends Controller
         $newItemNames = collect($newItems)->pluck('productName')->unique();
 
         $products = Product::whereIn('name', $newItemNames)->get()->keyBy('name');
+
+        foreach ($products as $product) {
+            if (!$invoice->storage->collections->contains($product->collection)) {
+                throw new \Exception("Collection for product {$product->name}-{$product->id} not matching any of the collections in the invoice storage.");
+            }
+        }
 
         $errors = [];
 
