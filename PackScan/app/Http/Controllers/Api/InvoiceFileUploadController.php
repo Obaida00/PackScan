@@ -86,6 +86,7 @@ class InvoiceFileUploadController extends Controller
             'total_price' => (float)$this->parseNumericString($data[$totalRowCount - 4][4]),
             'total_discount' => (float)$this->parseNumericString($data[$totalRowCount - 1][1]),
             'balance' => (float)$this->parseNumericString($data[$totalRowCount - 2][1]),
+            'deputy_number' => (int)$this->parseNumericString($data[$totalRowCount - 2][3]),
             'net_price' => (float)$this->parseNumericString($data[$totalRowCount - 3][2]),
             'net_price_in_words' => (string)$data[$totalRowCount - 3][0],
             'number_of_items' => (int)$this->parseNumericString($data[$totalRowCount - 1][3]),
@@ -134,6 +135,7 @@ class InvoiceFileUploadController extends Controller
             'total_price' => ['required', 'numeric'],
             'total_discount' => ['required', 'numeric'],
             'balance' => ['required', 'numeric'],
+            'deputy_number' => ['required', 'numeric'],
             'net_price' => ['required', 'numeric'],
             'net_price_in_words' => ['required', 'string'],
             'number_of_items' => ['required', 'numeric'],
@@ -182,6 +184,7 @@ class InvoiceFileUploadController extends Controller
             'total_price' => $invoiceData['total_price'],
             'total_discount' => $invoiceData['total_discount'],
             'balance' => $invoiceData['balance'],
+            'deputy_number' => $invoiceData['deputy_number'],
             'net_price' => $invoiceData['net_price'],
             'net_price_in_words' => $invoiceData['net_price_in_words'],
             'number_of_items' => $invoiceData['number_of_items'],
@@ -258,6 +261,7 @@ class InvoiceFileUploadController extends Controller
             $invoice->total_price = $data['total_price'];
             $invoice->total_discount = $data['total_discount'];
             $invoice->balance = $data['balance'];
+            $invoice->deputy_number = $data['deputy_number'];
             $invoice->net_price = $data['net_price'];
             $invoice->net_price_in_words = $data['net_price_in_words'];
             $invoice->number_of_items = $data['number_of_items'];
@@ -275,6 +279,7 @@ class InvoiceFileUploadController extends Controller
                 'total_price' => $data['total_price'],
                 'total_discount' => $data['total_discount'],
                 'balance' => $data['balance'],
+                'deputy_number' => $data['deputy_number'],
                 'net_price' => $data['net_price'],
                 'net_price_in_words' => $data['net_price_in_words'],
                 'number_of_items' => $data['number_of_items'],

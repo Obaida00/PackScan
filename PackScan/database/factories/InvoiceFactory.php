@@ -37,6 +37,7 @@ class InvoiceFactory extends Factory
             'net_price' => $this->faker->numberBetween(100000, 1000000),
             'net_price_in_words' => $this->faker->numberBetween(100000, 1000000),
             'balance' => $this->faker->numberBetween(100000, 1000000),
+            'deputy_number' => $this->faker->numberBetween(1, 5),
             'storage_id' => Storage::inRandomOrder()->first()->id,
             'number_of_items' => $this->faker->numberBetween(1, 20),
             'is_important' => $this->faker->randomElement([true, false]),

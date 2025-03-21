@@ -256,7 +256,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="tg-lqy6" colspan="3">3</td>
+                                        <td class="tg-lqy6" colspan="3">{{ $invoice->deputy_number }}</td>
                                         <td class="tg-lqy6" colspan="3"></td>
                                         <td class="tg-lqy6" colspan="2">{{ number_format($invoice->balance) }}</td>
                                         <td class="tg-lqy6 balance-discount">الرصيد</td>

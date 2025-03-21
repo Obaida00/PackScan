@@ -25,6 +25,7 @@ return new class extends Migration {
             $table->float('net_price')->nullable();
             $table->string('net_price_in_words')->nullable();
             $table->float('balance')->nullable();
+            $table->float('deputy_number')->nullable();
             $table->enum('status', ['Pending', 'In Progress', 'Done', 'Sent'])->nullable();
             $table->integer('number_of_packages')->nullable();
             $table->integer('number_of_items')->nullable();
