@@ -217,6 +217,9 @@
                 </thead>
                 <tbody>
                     @foreach ($invoice->invoiceItems as $item)
+                    @if ($item->total_count == 0)
+                        @continue
+                    @endif
                     <tr>
                         <td>{{ $item->description }}</td>
                         <td>{{ number_format($item->discount) }}</td>
