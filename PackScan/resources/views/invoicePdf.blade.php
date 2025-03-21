@@ -226,8 +226,8 @@
                         <td>{{ number_format($item->public_price) }}</td>
                         <td>{{ number_format($item->total_price) }}</td>
                         <td>{{ number_format($item->unit_price) }}</td>
-                        <td>{{ number_format($item->gifted_quanity) }}</td>
-                        <td>{{ number_format($item->total_count) }}</td>
+                        <td>{{ number_format($item->gifted_quantity) }}</td>
+                        <td>{{ number_format($item->quantity) }}</td>
                         <td>{{ $item->product->name }}</td>
                         <td>{{ $item->product->collection->name ?? 'ابن الهيثم' }}</td>
                     </tr>
