@@ -21,11 +21,10 @@ class InvoiceController extends Controller
         $invoice = Invoice::with('invoiceItems.product')->findOrFail($id);
 
         $pdf = pdf()
-            ->margins(10, 2, 40, 2, Unit::Pixel)
+            ->margins(10, 10, 40, 10, Unit::Pixel)
             ->format('A5')
-            ->headerView('header', ['id' => $invoice->id])
-            ->footerView('footer')
-            ->view('invoicePdf', ['invoice' => $invoice,])
+            ->footerView('footer', ['id' => $invoice->id])
+            ->view('invoicePdf', ['invoice' => $invoice])
             ->download("$invoice->id.pdf");
         return $pdf;
     }
