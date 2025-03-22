@@ -118,14 +118,8 @@ ipcMain.handle("fetch-packer", async (event, id) => {
 ipcMain.handle(
   "submit-order",
   async (event, { id, packerId, numberOfPackages, manually = true }) => {
-    var data = await axiosClient.submitInvoice(
-      id,
-      packerId,
-      numberOfPackages,
-      manually
-    );
-    await generateStickerForInvoice(data.data);
-    return;
+    await axiosClient.submitInvoice(id, packerId, numberOfPackages, manually);
+    await printInvoiceSticker(id)
   }
 );
 ipcMain.handle("unmark-invoice-important", async (event, invoiceId) => {
@@ -145,6 +139,9 @@ ipcMain.handle("play-sound", async (event, soundName) => {
 ipcMain.handle("print-invoice", async (event, invoiceId) => {
   printInvoice(invoiceId);
 });
+ipcMain.handle("print-invoice-sticker", async (event, invoiceId) => {
+  await printInvoiceSticker(invoiceId);
+});
 
 const OnFileEvent = async (filePath) => {
   log.info(`New file opened: ${filePath}`);
@@ -155,127 +152,19 @@ const OnFileEvent = async (filePath) => {
   }
 
   let { invoice_id: invoiceId } = await axiosClient.uploadNewFile(filePath);
-
-  await printInvoice(invoiceId);
+  let r = await axiosClient.downloadInvoiceReceipt(invoiceId);
+  printPdf(r);
 };
 
-async function printInvoice(invoiceId) {
-  let pdf = await axiosClient.downloadInvoicePdfFile(invoiceId);
-  printPdf(pdf);
-}
-
 function printPdf(pdf) {
+  log.info("File printing started...");
   PdfPrintToPrinter(pdf)
     .then((code) => {
       code == 0
-        ? log.info("Pdf printed successfully")
-        : log.info("Pdf printing cancelled");
+        ? log.info("File printed successfully")
+        : log.info("File printing cancelled");
     })
-    .catch((e) => log.error("Pdf printing error occured... ", e));
-}
-
-async function generateStickerForInvoice(invoice) {
-  log.info("python generating sticker");
-
-  let generateStickerScriptPath = getGenerateStickerScriptPath();
-
-  let data = JSON.stringify(invoice).toString();
-
-  // Execute the Python script
-  return new Promise((resolve, reject) => {
-    const pythonProcess = child_process.spawn("python", [
-      "-u",
-      generateStickerScriptPath,
-      data,
-    ]);
-    let fullOutput = "";
-
-    pythonProcess.stdout.on("data", (data) => {
-      const output = data.toString();
-      fullOutput += output;
-      log.info("python stdout:", output);
-
-      const progressMatch = output.match(/progress:\s*(\d+)%/i);
-      if (progressMatch && progressMatch[1]) {
-        const progress = parseInt(progressMatch[1], 10);
-        if (mainWindow && mainWindow.webContents) {
-          mainWindow.webContents.send("loading-progress", progress);
-        }
-      }
-    });
-
-    pythonProcess.stderr.on("data", (data) => {
-      const errorMsg = data.toString();
-      log.error("python stderr:", errorMsg);
-    });
-
-    pythonProcess.on("error", (error) => {
-      log.error("python process error:", error);
-      reject(error);
-    });
-
-    pythonProcess.on("close", (code) => {
-      log.info("python process closed with code", code);
-      if (code === 0) {
-        resolve(fullOutput);
-      } else {
-        reject(new Error("python process exited with code " + code));
-      }
-    });
-  });
-}
-
-function getGenerateStickerScriptPath() {
-  try {
-    let generateStickerScriptPath;
-
-    if (app.isPackaged) {
-      // In production, extract the Python script to a temp directory
-      const tempDir = os.tmpdir();
-      // Extract the scripts if they doesn't exist
-
-      // generate_sticker.py
-      generateStickerScriptPath = path.join(tempDir, "generate_sticker.py");
-      if (!fs.existsSync(generateStickerScriptPath)) {
-        const asarScriptPath = path.join(
-          app.getAppPath(),
-          ".webpack\\main\\generate_sticker.py"
-        );
-        fs.copyFileSync(asarScriptPath, generateStickerScriptPath);
-        log.info(`Python script extracted to: ${generateStickerScriptPath}`);
-      }
-
-      let generateBarcodeScriptPath = path.join(tempDir, "generate_barcode.py");
-      // generate_barcode.py
-      if (!fs.existsSync(generateBarcodeScriptPath)) {
-        const asarScriptPath = path.join(
-          app.getAppPath(),
-          ".webpack\\main\\generate_barcode.py"
-        );
-        fs.copyFileSync(asarScriptPath, generateBarcodeScriptPath);
-        log.info(`Python script extracted to: ${generateBarcodeScriptPath}`);
-      }
-
-      //print_html.py
-      let printHtmlScriptPath = path.join(tempDir, "print_html.py");
-      if (!fs.existsSync(printHtmlScriptPath)) {
-        const asarScriptPath = path.join(
-          app.getAppPath(),
-          ".webpack\\main\\print_html.py"
-        );
-        fs.copyFileSync(asarScriptPath, printHtmlScriptPath);
-        log.info(`Python script extracted to: ${printHtmlScriptPath}`);
-      }
-    } else {
-      // In development, use the original script path
-      generateStickerScriptPath = path.join(__dirname, "generate_sticker.py");
-    }
-
-    log.info("python script path:", generateStickerScriptPath);
-    return generateStickerScriptPath;
-  } catch (error) {
-    log.error(error);
-  }
+    .catch((e) => log.error("File printing error occured... ", e));
 }
 
 function PdfPrintToPrinter(file_path) {
@@ -335,4 +224,9 @@ function getPtpExePath() {
   } catch (error) {
     log.error(error);
   }
+}
+
+async function printInvoiceSticker(invoiceId) {
+  let s = await axiosClient.downloadInvoiceSticker(invoiceId);
+  printPdf(s);
 }

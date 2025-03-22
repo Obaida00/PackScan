@@ -16,7 +16,7 @@ use function Spatie\LaravelPdf\Support\pdf;
 
 class InvoiceController extends Controller
 {
-    public function generatePdf(string $id)
+    public function generateReceipt(string $id)
     {
         $invoice = Invoice::with('invoiceItems.product')->findOrFail($id);
 
@@ -24,8 +24,22 @@ class InvoiceController extends Controller
             ->margins(10, 10, 40, 10, Unit::Pixel)
             ->format('A5')
             ->footerView('footer', ['id' => $invoice->id])
-            ->view('invoicePdf', ['invoice' => $invoice])
+            ->view('invoiceReceipt', ['invoice' => $invoice])
             ->download("$invoice->id.pdf");
+        return $pdf;
+    }
+
+    public function generateSticker(string $id)
+    {
+        $invoice = Invoice::with(['storage', 'packer'])->findOrFail($id);
+
+        if ($invoice->status !== 'Done' && $invoice->status !== 'Sent') {
+            return response()->json(['message' => 'Invoice is not done'], 400);
+        }
+
+        $pdf = pdf()
+            ->view('invoiceSticker', ['invoice' => $invoice]);
+        // ->download("R-$invoice->id.pdf");
         return $pdf;
     }
 
