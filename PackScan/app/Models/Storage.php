@@ -14,6 +14,7 @@ class Storage extends Model
     use HasFactory, HasUuids, AsSource, Filterable;
 
     protected $fillable = [
+        'barcode_id',
         'name',
         'code',
     ];

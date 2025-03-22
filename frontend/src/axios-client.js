@@ -194,10 +194,10 @@ export async function uploadNewFile(filePath) {
   }
 }
 
-export async function downloadInvoicePdfFile(invoiceId) {
+export async function downloadInvoiceReceipt(invoiceId) {
   try {
     const response = await axios
-      .get(`${BASE_URL}/api/invoices/${invoiceId}/to-pdf`, {
+      .get(`${BASE_URL}/api/invoices/${invoiceId}/receipt`, {
         responseType: "arraybuffer",
         onDownloadProgress: (progressEvent) => {
           log.info(`Downloaded: ${progressEvent.loaded} bytes`);
@@ -205,12 +205,36 @@ export async function downloadInvoicePdfFile(invoiceId) {
       })
       .catch((e) => log.error(e));
 
-    log.info("downloading invoice pdf", "- status : " + response.status);
+    log.info("downloading invoice receipt", "- status : " + response.status);
 
     const filePath = getInvoicePdfFilePath(invoiceId);
     await fs.promises.writeFile(filePath, Buffer.from(response.data));
 
-    log.info(`PDF saved to: ${filePath}`);
+    log.info(`Receipt saved to: ${filePath}`);
+    return filePath;
+  } catch (error) {
+    log.error("File download failed:", error);
+    throw error;
+  }
+}
+
+export async function downloadInvoiceSticker(invoiceId) {
+  try {
+    const response = await axios
+      .get(`${BASE_URL}/api/invoices/${invoiceId}/sticker`, {
+        responseType: "arraybuffer",
+        onDownloadProgress: (progressEvent) => {
+          log.info(`Downloaded: ${progressEvent.loaded} bytes`);
+        },
+      })
+      .catch((e) => log.error(e));
+
+    log.info("downloading invoice sticker", "- status : " + response.status);
+
+    const filePath = getInvoicePdfFilePath("R-" + invoiceId);
+    await fs.promises.writeFile(filePath, Buffer.from(response.data));
+
+    log.info(`Sticker saved to: ${filePath}`);
     return filePath;
   } catch (error) {
     log.error("File download failed:", error);

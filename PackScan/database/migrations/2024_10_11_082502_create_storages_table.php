@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('storages', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
+            $table->integer('barcode_id')->unique();
             $table->string("name");
             $table->string("code")->unique();
 

@@ -10,13 +10,15 @@ use App\Models\Storage;
 use App\Services\InvoiceQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Picqer\Barcode\Renderers\HtmlRenderer;
+use Picqer\Barcode\Types\TypeCode128;
 use Spatie\LaravelPdf\Enums\Unit;
 
 use function Spatie\LaravelPdf\Support\pdf;
 
 class InvoiceController extends Controller
 {
-    public function generatePdf(string $id)
+    public function generateReceipt(string $id)
     {
         $invoice = Invoice::with('invoiceItems.product')->findOrFail($id);
 
@@ -24,8 +26,28 @@ class InvoiceController extends Controller
             ->margins(10, 10, 40, 10, Unit::Pixel)
             ->format('A5')
             ->footerView('footer', ['id' => $invoice->id])
-            ->view('invoicePdf', ['invoice' => $invoice])
+            ->view('invoiceReceipt', ['invoice' => $invoice])
             ->download("$invoice->id.pdf");
+        return $pdf;
+    }
+
+    public function generateSticker(string $id)
+    {
+        $invoice = Invoice::with(['storage', 'packer'])->findOrFail($id);
+
+        if ($invoice->status !== 'Done' && $invoice->status !== 'Sent') {
+            return response()->json(['message' => 'Invoice is not done'], 400);
+        }
+
+        $barcode = (new TypeCode128())->getBarcode($invoice->invoice_id . '-' . $invoice->storage->barcode_id);
+        $barcode_image = (new HtmlRenderer())->render($barcode, 300, 60);
+
+        $pdf = pdf()
+            ->view('invoiceSticker', [
+                'invoice' => $invoice,
+                'barcode' => $barcode_image
+            ])
+            ->download("R-$invoice->id.pdf");
         return $pdf;
     }
 
