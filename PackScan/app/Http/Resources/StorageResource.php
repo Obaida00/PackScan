@@ -17,6 +17,7 @@ class StorageResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'barcode_id' => $this->barcode_id,
             'name' => $this->name,
             'code' => $this->code,
             'created_at' => $this->created_at,

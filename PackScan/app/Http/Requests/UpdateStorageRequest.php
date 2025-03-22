@@ -22,6 +22,7 @@ class UpdateStorageRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'barcode_id' => ['required', 'numeric', 'unique:storages,barcode_id,' . $this->barcode_id],
             'name' => ['sometimes', 'string', 'max:255'],
             'code' => ['sometimes', 'string', 'max:10', 'unique:storages,code,' . $this->route('storage')],
         ];

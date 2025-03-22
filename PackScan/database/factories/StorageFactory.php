@@ -20,6 +20,7 @@ class StorageFactory extends Factory
         $code = $name == "almousoaa" ? "mo" : "ad";
 
         return [
+            "barcode_id" => fake()->unique()->randomNumber(5, true),
             "name" => $name,
             "code" => $code
         ];

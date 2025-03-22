@@ -22,6 +22,7 @@ class StoreStorageRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'barcode_id' => ['required', 'numeric', 'unique:storages,barcode_id'],
             'name' => ['required', 'string', 'max:255'],
             'code' => ['required', 'string', 'max:10', 'unique:storages,code']
         ];
