@@ -103,12 +103,11 @@
 
         .barcode {
             grid-area: barcode-body;
-            background-image: url("BARCODE_IMAGE_PATH");
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             margin: 50px 50px 40px 50px;
         }
 
@@ -196,7 +195,9 @@
                     <div>{{ $invoice->net_price }}</div>
                 </div>
             </div>
-            <div class="barcode"></div>
+            <div class="barcode">
+                {!! $barcode !!}
+            </div>
         </div>
     </div>
 </body>

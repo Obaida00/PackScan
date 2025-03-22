@@ -10,6 +10,8 @@ use App\Models\Storage;
 use App\Services\InvoiceQuery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Picqer\Barcode\Renderers\HtmlRenderer;
+use Picqer\Barcode\Types\TypeCode128;
 use Spatie\LaravelPdf\Enums\Unit;
 
 use function Spatie\LaravelPdf\Support\pdf;
@@ -37,9 +39,15 @@ class InvoiceController extends Controller
             return response()->json(['message' => 'Invoice is not done'], 400);
         }
 
+        $barcode = (new TypeCode128())->getBarcode($invoice->invoice_id . '-' . $invoice->storage->barcode_id);
+        $barcode_image = (new HtmlRenderer())->render($barcode, 300, 60);
+
         $pdf = pdf()
-            ->view('invoiceSticker', ['invoice' => $invoice]);
-        // ->download("R-$invoice->id.pdf");
+            ->view('invoiceSticker', [
+                'invoice' => $invoice,
+                'barcode' => $barcode_image
+            ])
+            ->download("R-$invoice->id.pdf");
         return $pdf;
     }
 
