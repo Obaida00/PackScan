@@ -30,6 +30,7 @@ function StorageIndex() {
 
     fetchStorageName();
     fetchImportantInvoices();
+    fetchInvoices();
   }, []);
 
   const fetchImportantInvoices = async () => {
