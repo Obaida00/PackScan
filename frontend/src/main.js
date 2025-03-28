@@ -119,7 +119,7 @@ ipcMain.handle(
   "submit-order",
   async (event, { id, packerId, numberOfPackages, manually = true }) => {
     await axiosClient.submitInvoice(id, packerId, numberOfPackages, manually);
-    await printInvoiceSticker(id)
+    await printInvoiceSticker(id);
   }
 );
 ipcMain.handle("unmark-invoice-important", async (event, invoiceId) => {
@@ -137,7 +137,8 @@ ipcMain.handle("play-sound", async (event, soundName) => {
   await sound.play(soundFilePath);
 });
 ipcMain.handle("print-invoice", async (event, invoiceId) => {
-  printInvoice(invoiceId);
+  let r = await axiosClient.downloadInvoiceReceipt(invoiceId);
+  printPdf(r);
 });
 ipcMain.handle("print-invoice-sticker", async (event, invoiceId) => {
   await printInvoiceSticker(invoiceId);
