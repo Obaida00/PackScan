@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, Notification } = require("electron");
 const fs = require("fs");
 import * as axiosClient from "./axios-client.js";
 const path = require("path");
@@ -9,6 +9,17 @@ const os = require("os");
 
 log.transports.file.level = "info";
 log.transports.file.file = __dirname + "/log/log";
+log.transports.console.format = "[{m}-{d} {h}:{i}:{s}.{ms}] [{level}] {text}";
+log.transports.notificationTransport = (msg) => {
+  if (msg.level === "error") {
+    sendNotification(
+      "Error Occurred ❗",
+      "An error occurred in the application.",
+      5000
+    );
+  }
+};
+log.transports.notificationTransport.level = "error";
 
 const FILE_EXTENSION = "packscan";
 
@@ -53,7 +64,7 @@ if (!gotTheLock) {
     if (mainWindow) {
       const filePath = commandLine[commandLine.length - 1];
       if (filePath && filePath.endsWith(`.${FILE_EXTENSION}`)) {
-        OnFileEvent(filePath);
+        onFileEvent(filePath);
       }
     }
   });
@@ -82,7 +93,7 @@ if (!gotTheLock) {
     const filePath = process.argv[1];
     if (filePath && filePath.endsWith(`.${FILE_EXTENSION}`)) {
       app.whenReady().then(() => {
-        OnFileEvent(filePath);
+        onFileEvent(filePath);
       });
     }
   }
@@ -143,8 +154,15 @@ ipcMain.handle("print-invoice", async (event, invoiceId) => {
 ipcMain.handle("print-invoice-sticker", async (event, invoiceId) => {
   await printInvoiceSticker(invoiceId);
 });
+ipcMain.handle("notify", (event, title, body) => {
+  sendNotification(title, body);
+});
 
-const OnFileEvent = async (filePath) => {
+const onFileEvent = async (filePath) => {
+  sendNotification(
+    "New File Opened!",
+    "New file has just been opened, proceessing in progress..."
+  );
   log.info(`New file opened: ${filePath}`);
 
   if (path.extname(filePath) != `.${FILE_EXTENSION}`) {
@@ -158,14 +176,23 @@ const OnFileEvent = async (filePath) => {
 };
 
 function printPdf(pdf) {
-  log.info("File printing started...");
+  sendNotification("Printing...", "Printing new file...");
   PdfPrintToPrinter(pdf)
     .then((code) => {
       code == 0
-        ? log.info("File printed successfully")
-        : log.info("File printing cancelled");
+        ? sendNotification("Success!!", "File printed successfully ✔️")
+        : sendNotification(
+            "Something went wrong",
+            "File printing cancelled ✖️"
+          );
     })
-    .catch((e) => log.error("File printing error occured... ", e));
+    .catch((e) => {
+      sendNotification(
+        "Error occured during printing",
+        "File printing cancelled 🚫"
+      );
+      log.error("File printing error occured... ", e);
+    });
 }
 
 function PdfPrintToPrinter(file_path) {
@@ -230,4 +257,29 @@ function getPtpExePath() {
 async function printInvoiceSticker(invoiceId) {
   let s = await axiosClient.downloadInvoiceSticker(invoiceId);
   printPdf(s);
+}
+
+function sendNotification(title, body, timeout = null) {
+  log.info(`sending notification - title: ${title} - body: ${body}`);
+  try {
+    if (Notification.isSupported()) {
+      const notification = new Notification({
+        title: title,
+        body: body,
+      });
+      notification.show();
+
+      setTimeout(() => {
+        notification.close();
+      }, timeout || 3000);
+
+      notification.on("click", () => {
+        mainWindow.focus();
+      });
+    } else {
+      console.warn("Notifications are not supported on this platform.");
+    }
+  } catch (err) {
+    log.error("Failed to display notification:", err);
+  }
 }
