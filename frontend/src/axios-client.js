@@ -157,7 +157,7 @@ export async function getPackerById(packerId) {
 }
 
 // Upload a new invoice file
-export async function uploadNewFile(filePath) {
+export async function uploadNewFile(filePath, setProgress) {
   try {
     const formData = new FormData();
     formData.append("file", fs.createReadStream(filePath));
@@ -169,14 +169,21 @@ export async function uploadNewFile(filePath) {
         timeout: 30000,
         onUploadProgress: (progressEvent) => {
           if (progressEvent.total) {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
+            const progress = Math.round(
+              progressEvent.loaded / progressEvent.total
             );
-            log.info(`Upload progress: ${percentCompleted}%`);
+            if (setProgress && typeof setProgress === "function") {
+              setProgress(progress);
+            }
+            log.info(`Upload progress: ${progress * 100}%`);
           }
         },
       })
       .catch((e) => log.error(e));
+
+    if (setProgress && typeof setProgress === "function") {
+      setProgress(0);
+    }
 
     log.info(
       "uploading invoice",
@@ -194,12 +201,15 @@ export async function uploadNewFile(filePath) {
   }
 }
 
-export async function downloadInvoiceReceipt(invoiceId) {
+export async function downloadInvoiceReceipt(invoiceId, setProgress) {
   try {
     const response = await axios
       .get(`${BASE_URL}/api/invoices/${invoiceId}/receipt`, {
         responseType: "arraybuffer",
         onDownloadProgress: (progressEvent) => {
+          if (setProgress && typeof setProgress === "function") {
+            setProgress(1);
+          }
           log.info(`Downloaded: ${progressEvent.loaded} bytes`);
         },
       })
@@ -210,6 +220,10 @@ export async function downloadInvoiceReceipt(invoiceId) {
     const filePath = getInvoicePdfFilePath(invoiceId);
     await fs.promises.writeFile(filePath, Buffer.from(response.data));
 
+    if (setProgress && typeof setProgress === "function") {
+      setProgress(0);
+    }
+
     log.info(`Receipt saved to: ${filePath}`);
     return filePath;
   } catch (error) {
@@ -218,12 +232,15 @@ export async function downloadInvoiceReceipt(invoiceId) {
   }
 }
 
-export async function downloadInvoiceSticker(invoiceId) {
+export async function downloadInvoiceSticker(invoiceId, setProgress) {
   try {
     const response = await axios
       .get(`${BASE_URL}/api/invoices/${invoiceId}/sticker`, {
         responseType: "arraybuffer",
         onDownloadProgress: (progressEvent) => {
+          if (setProgress && typeof setProgress === "function") {
+            setProgress(1);
+          }
           log.info(`Downloaded: ${progressEvent.loaded} bytes`);
         },
       })
@@ -233,6 +250,8 @@ export async function downloadInvoiceSticker(invoiceId) {
 
     const filePath = getInvoicePdfFilePath("R-" + invoiceId);
     await fs.promises.writeFile(filePath, Buffer.from(response.data));
+
+    setProgress(0);
 
     log.info(`Sticker saved to: ${filePath}`);
     return filePath;

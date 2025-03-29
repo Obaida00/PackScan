@@ -148,7 +148,7 @@ ipcMain.handle("play-sound", async (event, soundName) => {
   await sound.play(soundFilePath);
 });
 ipcMain.handle("print-invoice", async (event, invoiceId) => {
-  let r = await axiosClient.downloadInvoiceReceipt(invoiceId);
+  let r = await axiosClient.downloadInvoiceReceipt(invoiceId, setProgress);
   printPdf(r);
 });
 ipcMain.handle("print-invoice-sticker", async (event, invoiceId) => {
@@ -255,12 +255,20 @@ function getPtpExePath() {
 }
 
 async function printInvoiceSticker(invoiceId) {
-  let s = await axiosClient.downloadInvoiceSticker(invoiceId);
+  let s = await axiosClient.downloadInvoiceSticker(invoiceId, setProgress);
   printPdf(s);
+}
+
+function setProgress(progress) {
+  log.info("Taskbar progress: ", progress);
+  if (mainWindow) mainWindow.setProgressBar(progress);
+  startFlashing();
+  if (progress === 1) stopFlashing();
 }
 
 function sendNotification(title, body, timeout = null) {
   log.info(`sending notification - title: ${title} - body: ${body}`);
+  startFlashing();
   try {
     if (Notification.isSupported()) {
       const notification = new Notification({
@@ -271,6 +279,7 @@ function sendNotification(title, body, timeout = null) {
 
       setTimeout(() => {
         notification.close();
+        stopFlashing();
       }, timeout || 3000);
 
       notification.on("click", () => {
@@ -282,4 +291,14 @@ function sendNotification(title, body, timeout = null) {
   } catch (err) {
     log.error("Failed to display notification:", err);
   }
+}
+
+function startFlashing() {
+  log.info("Taskbar flashing ON");
+  if (mainWindow) mainWindow.flashFrame(true);
+}
+
+function stopFlashing() {
+  log.info("Taskbar flashing OFF");
+  if (mainWindow) mainWindow.flashFrame(false);
 }
