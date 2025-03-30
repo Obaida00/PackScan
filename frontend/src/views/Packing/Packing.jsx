@@ -97,7 +97,7 @@ function Packing() {
         <div className="flex justify-center">
           <div className="w-[90%] flex justify-between px-5">
             <div className="flex justify-center py-4">
-              <div className="min-h-[5vh] w-[90%] flex justify-end">
+              <div className="min-h-[5vh] w-[100%] flex justify-end">
                 <button
                   onClick={reset}
                   className="text-slate-100 border border-slate-400 bg-red-900 focus:ring-2 focus:outline-none focus:ring-slate-300 font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-75"
