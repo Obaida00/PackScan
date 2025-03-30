@@ -143,7 +143,7 @@ function StorageIndex() {
               <div className="my-4">
                 <div className="flex items-center gap-5">
                   <span className="text-slate-50 text-xl font-sans font-medium">
-                    Important Orders
+                    {t("invoice.importantInvoices")}
                   </span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
