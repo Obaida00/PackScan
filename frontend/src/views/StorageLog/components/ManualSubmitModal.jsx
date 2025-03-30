@@ -151,7 +151,7 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
         onKeyUp={(e) => e.key === "Enter" && submit(e)}
       >
         <DialogTitle className="flex justify-between">
-          <div>{t("invoice.submit")}</div>
+          <div>{t("invoice.submitInvoice")}</div>
           <div className="text-2xl font-mono font-semibold text-gray-800">
             -{invoiceId}-
           </div>
@@ -169,7 +169,7 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
                     required
                     size="small"
                     margin="none"
-                    placeholder="Number of Packages"
+                    placeholder={t("invoice.numberOfPackages")}
                     error={packageNumberFieldError}
                     name="numberOfPackages"
                     variant="outlined"
@@ -192,7 +192,7 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
                         size="small"
                         margin="none"
                         name="packerId"
-                        placeholder="Your ID"
+                        placeholder={t("packer.packerIdPlaceholder")}
                         variant="outlined"
                         onChange={onInputChange}
                       />
