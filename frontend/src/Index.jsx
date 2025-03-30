@@ -26,50 +26,50 @@ initializeLanguage();
 
 const DynamicThemeProvider = ({ children }) => {
   const [muiTheme, setMuiTheme] = useState(null);
-  
+
   useEffect(() => {
     const loadTheme = async () => {
       try {
         const settings = await ipcRenderer.invoke("get-settings");
-        const mode = settings?.theme || 'dark';
-        
+        const mode = settings?.theme || "dark";
+
         updateMuiTheme(mode);
       } catch (error) {
-        console.error('Failed to load theme setting:', error);
-        updateMuiTheme('dark');
+        console.error("Failed to load theme setting:", error);
+        updateMuiTheme("dark");
       }
     };
-    
+
     loadTheme();
-    
+
     const handleThemeChange = (event, newTheme) => {
       updateMuiTheme(newTheme);
     };
-    
-    window.addEventListener('themeChange', handleThemeChange);
-    
+
+    window.addEventListener("themeChange", handleThemeChange);
+
     return () => {
-      window.removeEventListener('themeChange', handleThemeChange);
+      window.removeEventListener("themeChange", handleThemeChange);
     };
   }, []);
-  
+
   const updateMuiTheme = (mode) => {
     const newTheme = createTheme({
       palette: {
         mode: mode,
         primary: {
-          main: mode === 'light' ? "#1976d2" : "#90caf9",
+          main: mode === "light" ? "#1976d2" : "#90caf9",
         },
         secondary: {
-          main: mode === 'light' ? "#dc004e" : "#f48fb1",
+          main: mode === "light" ? "#dc004e" : "#f48fb1",
         },
         background: {
-          default: mode === 'light' ? "#f8fafc" : "#1e293b",
-          paper: mode === 'light' ? "#ffffff" : "#0f172a",
+          default: mode === "light" ? "#f8fafc" : "#1e293b",
+          paper: mode === "light" ? "#ffffff" : "#0f172a",
         },
         text: {
-          primary: mode === 'light' ? "#1e293b" : "#f8fafc",
-          secondary: mode === 'light' ? "#475569" : "#e2e8f0",
+          primary: mode === "light" ? "#1e293b" : "#f8fafc",
+          secondary: mode === "light" ? "#475569" : "#e2e8f0",
         },
       },
       components: {
@@ -77,14 +77,14 @@ const DynamicThemeProvider = ({ children }) => {
           styleOverrides: {
             paper: {
               borderRadius: "16px",
-              backgroundColor: mode === 'light' ? "#ffffff" : "#1e293b",
+              backgroundColor: mode === "light" ? "#ffffff" : "#1e293b",
             },
           },
         },
         MuiPaper: {
           styleOverrides: {
             root: {
-              backgroundColor: mode === 'light' ? "#ffffff" : "#1e293b",
+              backgroundColor: mode === "light" ? "#ffffff" : "#1e293b",
             },
           },
         },
@@ -93,13 +93,13 @@ const DynamicThemeProvider = ({ children }) => {
             root: {
               "& .MuiOutlinedInput-root": {
                 "& fieldset": {
-                  borderColor: mode === 'light' ? "#cbd5e1" : "#334155",
+                  borderColor: mode === "light" ? "#cbd5e1" : "#334155",
                 },
                 "&:hover fieldset": {
-                  borderColor: mode === 'light' ? "#94a3b8" : "#64748b",
+                  borderColor: mode === "light" ? "#94a3b8" : "#64748b",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: mode === 'light' ? "#3b82f6" : "#60a5fa",
+                  borderColor: mode === "light" ? "#3b82f6" : "#60a5fa",
                 },
               },
             },
@@ -107,14 +107,14 @@ const DynamicThemeProvider = ({ children }) => {
         },
       },
     });
-    
+
     setMuiTheme(newTheme);
   };
-  
+
   if (!muiTheme) {
     return null;
   }
-  
+
   return <MuiThemeProvider theme={muiTheme}>{children}</MuiThemeProvider>;
 };
 
