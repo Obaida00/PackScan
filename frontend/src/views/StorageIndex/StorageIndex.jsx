@@ -4,6 +4,7 @@ import StorageTableRow from "./components/StorageTableRow.jsx";
 import ImportantStorageTableRow from "./components/ImportantStorageTableRow.jsx";
 import SearchBox from "../../shared/components/SearchBox.jsx";
 import BackButton from "../../shared/components/BackButton.jsx";
+import ArrowIcon from "../../shared/components/ArrowIcon.jsx";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Divider } from "@mui/material";
@@ -106,14 +107,7 @@ function StorageIndex() {
               >
                 <p>{t("storage.log")}</p>
                 &nbsp;
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="20px"
-                  viewBox="0 -960 960 960"
-                  className="fill-slate-500 group-hover/start:fill-slate-200"
-                >
-                  <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z" />
-                </svg>
+                <ArrowIcon height="20px" groupName="start" reversed={true}></ArrowIcon>
               </Link>
             </div>
           </div>
@@ -151,6 +145,7 @@ function StorageIndex() {
                     viewBox="0 -960 960 900"
                     width="24px"
                     fill="#e8eaed"
+                    className="rtl:rotate-180"
                   >
                     <path d="M600-160H160q-25 0-36-22t4-42l192-256-192-256q-15-20-4-42t36-22h440q19 0 36 8.5t28 23.5l180 240q16 21 16 48t-16 48L664-192q-11 15-28 23.5t-36 8.5Zm-360-80h360l180-240-180-240H240l144 192q16 21 16 48t-16 48L240-240Zm270-240Z" />
                   </svg>
