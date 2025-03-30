@@ -1,23 +1,14 @@
 {
   "common": {
     "back": "Back",
-    "save": "Save",
     "cancel": "Cancel",
     "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "confirm": "Confirm",
-    "delete": "Delete",
-    "edit": "Edit",
-    "view": "View",
     "search": "Search",
-    "filter": "Filter",
-    "refresh": "Refresh",
-    "noData": "No data available",
     "close": "Close",
     "remove": "Remove",
     "creationDate": "Creation date",
-    "reset": "Reset"
+    "reset": "Reset",
+    "noContent": "No Content"
   },
   "navigation": {
     "invoiceManager": "Invoice Manager",
@@ -53,8 +44,11 @@
     "createdAt": "Created at",
     "dateOfDelivery": "Date of delivery",
     "netPrice": "Net price",
-    "startPacking": "Start packing",
     "numberOfPackages": "Number of Packages",
+    "doneAt": "Done at",    
+    "sentAt": "Sent at",
+    "submittionMode": "Submittion mode",
+    "startPacking": "Start packing",
     "submitInvoice": "Submit Invoice",
     "item": {
       "name": "Item Name",

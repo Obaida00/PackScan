@@ -1,7 +1,9 @@
 import * as React from "react";
 import { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 function SearchBox({ action, eraseOnPaste }) {
+  const { t } = useTranslation();
   const [search, _setSearch] = useState("");
   const inputRef = useRef(null);
 
@@ -46,7 +48,7 @@ function SearchBox({ action, eraseOnPaste }) {
             type="search"
             name="searchBox"
             className="w-full px-4 py-1 text-gray-800 rounded-full outline-none focus:ring-0 border-none"
-            placeholder="search"
+            placeholder={t("common.search")}
             value={search}
             onPaste={handlePaste}
             onChange={handleInputChange}
