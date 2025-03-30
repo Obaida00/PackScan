@@ -7,8 +7,10 @@ import BackButton from "../../shared/components/BackButton.jsx";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Divider } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 function StorageIndex() {
+  const { t } = useTranslation();
   const { id } = useParams();
 
   const [invoices, setInvoices] = useState([]);
@@ -84,7 +86,6 @@ function StorageIndex() {
     <>
       <div>
         <div className="flex justify-between w-full px-5 py-4">
-          {/* Back Button */}
           <div className="flex justify-center">
             <div className="min-h-[5vh] w-full flex justify-start">
               <BackButton />
@@ -92,18 +93,18 @@ function StorageIndex() {
           </div>
           <div className="flex justify-center">
             <div className="h-full w-full flex justify-center text-center font-sans text-slate-300 text-xl">
-              - {storageName} -
+              - {storageName && t("storage." + storageName)} -
             </div>
           </div>
-          {/* Logs */}
           <div className="flex justify-center]">
             <div className="min-h-[5vh] w-full flex justify-end">
               <Link
+                title={t("storage.log")}
                 to={`logs`}
                 type="button"
                 className="text-slate-400 hover:text-slate-100 border border-slate-400 hover:bg-slate-700 focus:ring-2 focus:outline-none focus:ring-slate-300 font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-75 group/start"
               >
-                <p>Logs</p>
+                <p>{t("storage.log")}</p>
                 &nbsp;
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

@@ -8,19 +8,21 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 function StorageInvoiceModal({ invoice }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [packerName, setPackerName] = useState("");
   const [packerFieldError, setPackerFieldError] = useState(false);
   const nav = useNavigate();
 
   const rows = [
-    { label: "Statement", value: invoice.statement },
-    { label: "Pharmacist", value: invoice.pharmacist },
-    { label: "Created At", value: invoice.created_at },
-    { label: "Date Of Delivery", value: invoice.date },
-    { label: "Net Price", value: invoice.net_price },
+    { label: "statement", value: invoice.statement },
+    { label: "pharmacist", value: invoice.pharmacist },
+    { label: "createdAt", value: invoice.created_at },
+    { label: "dateOfDelivery", value: invoice.date },
+    { label: "netPrice", value: invoice.net_price },
   ];
 
   useEffect(() => {
@@ -134,7 +136,7 @@ function StorageInvoiceModal({ invoice }) {
                 {rows.map((row, index) => (
                   <tr key={index} className="border-b-2 border-slate-50">
                     <td className="py-1 w-48 font-medium text-sm text-gray-500">
-                      {row.label}
+                      {t("invoice." + row.label)}
                     </td>
                     <td className="py-1 w-[300px] font-semibold text-lg text-slate-900">
                       {row.value}
@@ -156,7 +158,7 @@ function StorageInvoiceModal({ invoice }) {
                           margin="none"
                           id="name"
                           name="id"
-                          placeholder="Your ID"
+                          placeholder={t("packer.packerIdPlaceholder")}
                           variant="outlined"
                           onChange={(e) => setPackerById(e.target.value)}
                         />
@@ -168,7 +170,7 @@ function StorageInvoiceModal({ invoice }) {
                             : "text-slate-800 text-lg"
                         }`}
                       >
-                        {packerFieldError ? "ID is not valid" : packerName}
+                        {packerFieldError ? t("packer.idNotValid") : packerName}
                       </div>
                     </div>
                   </td>
@@ -182,7 +184,7 @@ function StorageInvoiceModal({ invoice }) {
             className="text-slate-100 border border-slate-400 bg-green-600 hover:bg-green-700 focus:ring-2 focus:outline-none focus:ring-slate-300  font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-200"
             type="submit"
           >
-            <p>Start Packing</p>
+            <p>{t("invoice.startPacking")}</p>
             &nbsp;
             <svg
               xmlns="http://www.w3.org/2000/svg"
