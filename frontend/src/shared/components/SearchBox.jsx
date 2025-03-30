@@ -57,7 +57,7 @@ function SearchBox({ action, eraseOnPaste }) {
         <div>
           <button
             type="submit"
-            className="flex place-items-center bg-slate-800 justify-center w-12 h-12 text-white rounded-r-lg cursor-pointer"
+            className="flex place-items-center bg-slate-800 justify-center w-12 h-12 text-white rounded-lg cursor-pointer"
             disabled={search.length === 0}
           >
             <svg
