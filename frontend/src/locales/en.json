@@ -16,9 +16,8 @@
     "noData": "No data available"
   },
   "navigation": {
-    "home": "Home",
-    "monitor": "Invoice Manager",
-    "storage": "Storage",
+    "invoiceManager": "Invoice Manager",
+    "packingManager": "Packing Manager",
     "settings": "Settings"
   },
   "settings": {
