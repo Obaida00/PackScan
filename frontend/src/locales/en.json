@@ -1,0 +1,90 @@
+{
+  "common": {
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "refresh": "Refresh",
+    "noData": "No data available"
+  },
+  "navigation": {
+    "home": "Home",
+    "monitor": "Invoice Manager",
+    "storage": "Storage",
+    "settings": "Settings"
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "lightTheme": "Light Theme",
+    "language": "Language",
+    "printing": "Printing",
+    "defaultPrinter": "Default Printer",
+    "selectPrinter": "Select a printer",
+    "developer": "Developer Tools",
+    "showDevTools": "Show Developer Tools",
+    "applicationLogs": "Application Logs",
+    "refresh": "Refresh"
+  },
+  "invoices": {
+    "title": "Invoices",
+    "id": "Invoice ID",
+    "status": {
+      "pending": "Pending",
+      "inProgress": "In Progress",
+      "done": "Done",
+      "important": "Important"
+    },
+    "date": "Date",
+    "storage": "Storage",
+    "items": "Items",
+    "actions": "Actions",
+    "filter": {
+      "all": "All",
+      "pending": "Pending",
+      "inProgress": "In Progress",
+      "done": "Done",
+      "important": "Important"
+    },
+    "details": "Invoice Details",
+    "print": "Print Invoice",
+    "printSticker": "Print Sticker",
+    "submit": "Submit Invoice",
+    "boxes": "Number of Boxes",
+    "packerId": "Packer ID"
+  },
+  "storage": {
+    "title": "Storage",
+    "select": "Select Storage",
+    "id": "Storage ID",
+    "name": "Storage Name",
+    "location": "Location",
+    "invoices": "Invoices",
+    "logs": "Storage Logs"
+  },
+  "packing": {
+    "title": "Packing",
+    "scan": "Scan Item",
+    "item": "Item",
+    "quantity": "Quantity",
+    "scanned": "Scanned",
+    "remaining": "Remaining",
+    "complete": "Complete",
+    "incomplete": "Incomplete"
+  },
+  "errors": {
+    "invalidPackerId": "Invalid Packer ID",
+    "scanningError": "Scanning Error",
+    "printerError": "Printer Error",
+    "connectionError": "Connection Error",
+    "fileError": "File Error"
+  }
+}

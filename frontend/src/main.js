@@ -1,11 +1,21 @@
-const { app, BrowserWindow, ipcMain, Notification } = require("electron");
+const { app, BrowserWindow, ipcMain, Notification, nativeTheme } = require("electron");
 const fs = require("fs");
-import * as axiosClient from "./axios-client.js";
 const path = require("path");
 const child_process = require("child_process");
 const sound = require("sound-play");
 const log = require("electron-log");
 const os = require("os");
+import Store from "electron-store";
+const axiosClient = require("./axios-client.js");
+
+const store = new Store({
+  name: "settings",
+  defaults: {
+    theme: "dark",
+    language: "en",
+    defaultPrinter: "",
+  },
+});
 
 log.transports.file.level = "info";
 log.transports.file.file = __dirname + "/log/log";
@@ -52,6 +62,8 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  nativeTheme.themeSource = store.store.theme;
 };
 
 // Single-instance lock
@@ -74,7 +86,7 @@ if (!gotTheLock) {
   // Some APIs can only be used after this event occurs.
   app.whenReady().then(() => {
     const success = app.setAsDefaultProtocolClient(FILE_EXTENSION);
-    console.log(
+    log.info(
       `Registered as default handler for .${FILE_EXTENSION}: ${success}`
     );
 
@@ -143,7 +155,6 @@ ipcMain.handle("go-back", async (event) => {
 });
 ipcMain.handle("play-sound", async (event, soundName) => {
   log.info(`playing sound: ${soundName}`);
-
   const soundFilePath = path.join(__dirname, `sounds/${soundName}.mp3`);
   await sound.play(soundFilePath);
 });
@@ -156,6 +167,56 @@ ipcMain.handle("print-invoice-sticker", async (event, invoiceId) => {
 });
 ipcMain.handle("notify", (event, title, body) => {
   sendNotification(title, body);
+});
+ipcMain.handle("get-settings", async (event) => {
+  log.info("Getting settings");
+  return store.store;
+});
+ipcMain.handle("save-settings", async (event, settings) => {
+  log.info("Saving settings:", settings);
+  for (const [key, value] of Object.entries(settings)) {
+    store.set(key, value);
+    if(key === "theme") nativeTheme.themeSource = value
+  }
+  return store.store;
+});
+ipcMain.handle("get-printers", async (event) => {
+  log.info("Getting printers");
+  try {
+    if (mainWindow) {
+      let printers = await mainWindow.webContents.getPrintersAsync();
+      log.info("printers found...", printers);
+      return printers.map((p) => p.name);
+    } else {
+      log.error("Couldnt get printers, try again later");
+      return [];
+    }
+  } catch (error) {
+    log.error("Error getting printers:", error);
+    return [];
+  }
+});
+ipcMain.handle("get-log-content", async (event) => {
+  log.info("Getting log content");
+  try {
+    const logFilePath = log.transports.file.getFile().path;
+    log.info("log file: ", logFilePath);
+    if (fs.existsSync(logFilePath)) {
+      const logContent = fs.readFileSync(logFilePath, "utf8");
+      const lines = logContent.split("\n");
+      return lines.slice(-1000).join("\n");
+    }
+    return "No log file found";
+  } catch (error) {
+    log.error("Error reading log file:", error);
+    return "Error reading log file: " + error.message;
+  }
+});
+ipcMain.handle("show-dev-tools", async (event) => {
+  log.info("Opening DevTools");
+  if (mainWindow) {
+    mainWindow.webContents.openDevTools();
+  }
 });
 
 const onFileEvent = async (filePath) => {
@@ -197,9 +258,16 @@ function printPdf(pdf) {
 
 function PdfPrintToPrinter(file_path) {
   let exePath = getPtpExePath();
+  const defaultPrinter = store.get("defaultPrinter");
+  const args = [file_path];
+
+  if (defaultPrinter) {
+    args.push("-printer");
+    args.push(defaultPrinter);
+  }
 
   return new Promise((resolve, reject) => {
-    const ptpProcess = child_process.spawn(exePath, [file_path]);
+    const ptpProcess = child_process.spawn(exePath, args);
 
     ptpProcess.stdout.on("data", (data) => {
       const output = data.toString();
