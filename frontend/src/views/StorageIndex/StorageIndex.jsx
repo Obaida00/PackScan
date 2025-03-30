@@ -128,7 +128,7 @@ function StorageIndex() {
             <div className="w-[80vw] my-4 overflow-x-auto shadow-gray-950 shadow-md rounded-xl">
               {loadingSearchResult ? (
                 <h1 className="py-3 text-center font-cocon text-xl text-slate-950">
-                  Loading...
+                  {t("common.loading")}
                 </h1>
               ) : (
                 <StorageTable

@@ -145,7 +145,7 @@ function StorageInvoiceModal({ invoice }) {
                 ))}
                 <tr className="border-b-2 border-slate-50">
                   <td className="py-2 w-48 font-medium text-gray-500">
-                    Packer
+                    {t("packer.title")}
                   </td>
                   <td className="w-64 py-2 text-xl text-slate-900">
                     <div className="flex gap-2 items-center ">
