@@ -13,7 +13,10 @@
     "search": "Search",
     "filter": "Filter",
     "refresh": "Refresh",
-    "noData": "No data available"
+    "noData": "No data available",
+    "close": "Close",
+    "remove": "Remove",
+    "creationDate": "Creation date"
   },
   "navigation": {
     "invoiceManager": "Invoice Manager",
@@ -33,32 +36,17 @@
     "applicationLogs": "Application Logs",
     "refresh": "Refresh"
   },
-  "invoices": {
-    "title": "Invoices",
+  "invoice": {
     "id": "Invoice ID",
     "status": {
+      "title": "Status",
       "pending": "Pending",
       "inProgress": "In Progress",
-      "done": "Done",
-      "important": "Important"
+      "done": "Done"
     },
-    "date": "Date",
-    "storage": "Storage",
-    "items": "Items",
-    "actions": "Actions",
-    "filter": {
-      "all": "All",
-      "pending": "Pending",
-      "inProgress": "In Progress",
-      "done": "Done",
-      "important": "Important"
-    },
-    "details": "Invoice Details",
-    "print": "Print Invoice",
-    "printSticker": "Print Sticker",
-    "submit": "Submit Invoice",
-    "boxes": "Number of Boxes",
-    "packerId": "Packer ID"
+    "important": "Important",
+    "missing": "Missing",
+    "details": "Invoice Details"
   },
   "storage": {
     "title": "Storage",
@@ -74,6 +62,9 @@
     "remaining": "Remaining",
     "complete": "Complete",
     "incomplete": "Incomplete"
+  },
+  "extra":{
+    "doYouWantToRemoveImportantFlag" : "This will remove the important flag.. Are you sure?"
   },
   "errors": {
     "invalidPackerId": "Invalid Packer ID",

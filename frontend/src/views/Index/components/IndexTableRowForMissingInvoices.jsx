@@ -10,8 +10,7 @@ function IndexTableRowForMissingInvoices({ id }) {
     >
       <TableDataCell data={id} />
       <td colSpan="2" className="ribbon-wrapper">
-        {/* Ribbon */}
-        <div className="ribbon">Missing Invoice</div>
+        <div className="ribbon">{t("invoice.missing")}</div>
       </td>
     </tr>
   );
