@@ -40,9 +40,6 @@
     "id": "Invoice ID",
     "status": {
       "title": "Status",
-      "pending": "Pending",
-      "inProgress": "In Progress",
-      "done": "Done",
       "Pending": "Pending",
       "InProgress": "In Progress",
       "Done": "Done"

@@ -10,10 +10,10 @@ import { useTranslation } from "react-i18next";
 
 const statusOptions = [
   { label: "-", value: "" },
-  { label: "pending", value: "Pending" },
-  { label: "inProgress", value: "InProgress" },
-  { label: "done", value: "Done" },
-  { label: "sent", value: "Sent" },
+  { label: "Pending", value: "Pending" },
+  { label: "InProgress", value: "InProgress" },
+  { label: "Done", value: "Done" },
+  { label: "Sent", value: "Sent" },
 ];
 
 function IndexInvoiceFilters({ onChange }) {
