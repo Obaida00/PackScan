@@ -45,7 +45,7 @@
     "dateOfDelivery": "Date of delivery",
     "netPrice": "Net price",
     "numberOfPackages": "Number of Packages",
-    "doneAt": "Done at",    
+    "doneAt": "Done at",
     "sentAt": "Sent at",
     "submittionMode": "Submittion mode",
     "startPacking": "Start packing",
@@ -69,12 +69,5 @@
   },
   "extra": {
     "doYouWantToRemoveImportantFlag": "This will remove the important flag.. Are you sure?"
-  },
-  "errors": {
-    "invalidPackerId": "Invalid Packer ID",
-    "scanningError": "Scanning Error",
-    "printerError": "Printer Error",
-    "connectionError": "Connection Error",
-    "fileError": "File Error"
   }
 }

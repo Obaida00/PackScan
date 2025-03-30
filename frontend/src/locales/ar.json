@@ -1,9 +1,73 @@
 {
-    "settings": {
-      "appearance": "المظهر"
+  "common": {
+    "back": "رجوع",
+    "cancel": "إلغاء",
+    "loading": "جارٍ التحميل...",
+    "search": "بحث",
+    "close": "إغلاق",
+    "remove": "إزالة",
+    "creationDate": "تاريخ الإنشاء",
+    "reset": "إعادة تعيين",
+    "noContent": "لا يوجد محتوى"
+  },
+  "navigation": {
+    "invoiceManager": "إدارة الفواتير",
+    "packagingManager": "إدارة الطلبات",
+    "settings": "الإعدادات"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "appearance": "المظهر",
+    "lightTheme": "الوضع النهاري",
+    "language": "اللغة",
+    "printing": "الطباعة",
+    "defaultPrinter": "الطابعة الافتراضية",
+    "selectPrinter": "اختر طابعة",
+    "developer": "أدوات المطور",
+    "showDevTools": "إظهار أدوات المطور",
+    "applicationLogs": "سجلات التطبيق",
+    "refresh": "تحديث"
+  },
+  "invoice": {
+    "id": "رقم الفاتورة",
+    "status": {
+      "title": "الحالة",
+      "Pending": "معلق",
+      "InProgress": "قيد التنفيذ",
+      "Done": "منتهي"
     },
-    "navigation":{
-      "settings": "الإعدادات"
+    "important": "مهم",
+    "missing": "مفقود",
+    "details": "تفاصيل الفاتورة",
+    "statement": "البيان",
+    "pharmacist": "الصيدلي",
+    "createdAt": "تاريخ الإنشاء",
+    "dateOfDelivery": "تاريخ التسليم",
+    "netPrice": "السعر الصافي",
+    "numberOfPackages": "عدد الطرود",
+    "doneAt": "تاريخ الانتهاء",
+    "sentAt": "تاريخ الإرسال",
+    "submittionMode": "طريقة التقديم",
+    "startPacking": "بدء التوضيب",
+    "submitInvoice": "تصدير الفاتورة",
+    "item": {
+      "name": "اسم المادة",
+      "count": "عدد المواد"
     }
+  },
+  "storage": {
+    "title": "المستودع",
+    "almousoaa": "الموسوعة",
+    "advanced": "الموسوعة Advanced",
+    "log": "السجلات"
+  },
+  "packer": {
+    "title": "الموضب",
+    "packerIdPlaceholder": "رقم تعريفك",
+    "idNotValid": "رقم الموضب غير صالح",
+    "cannotSubmit": "لا يمكن للموضب توضيب الفاتورة"
+  },
+  "extra": {
+    "doYouWantToRemoveImportantFlag": "سيؤدي هذا إلى إزالة علامة \"مهم\".. هل أنت متأكد؟"
   }
-  
+}
