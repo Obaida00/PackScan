@@ -16,7 +16,8 @@
     "noData": "No data available",
     "close": "Close",
     "remove": "Remove",
-    "creationDate": "Creation date"
+    "creationDate": "Creation date",
+    "reset": "Reset"
   },
   "navigation": {
     "invoiceManager": "Invoice Manager",
@@ -52,7 +53,13 @@
     "createdAt": "Created at",
     "dateOfDelivery": "Date of delivery",
     "netPrice": "Net price",
-    "startPacking": "Start packing"
+    "startPacking": "Start packing",
+    "numberOfPackages": "Number of Packages",
+    "submitInvoice": "Submit Invoice",
+    "item": {
+      "name": "Item Name",
+      "count": "Item Count"
+    }
   },
   "storage": {
     "title": "Storage",
@@ -60,24 +67,14 @@
     "advanced": "Almousoaa advanced",
     "log": "Logs"
   },
-  "packer":{
+  "packer": {
     "title": "Packer",
     "packerIdPlaceholder": "Your ID ",
     "idNotValid": "Packer id not valid",
     "cannotSubmit": "Packer cannot submit"
   },
-  "packing": {
-    "title": "Packing",
-    "scan": "Scan Item",
-    "item": "Item",
-    "quantity": "Quantity",
-    "scanned": "Scanned",
-    "remaining": "Remaining",
-    "complete": "Complete",
-    "incomplete": "Incomplete"
-  },
-  "extra":{
-    "doYouWantToRemoveImportantFlag" : "This will remove the important flag.. Are you sure?"
+  "extra": {
+    "doYouWantToRemoveImportantFlag": "This will remove the important flag.. Are you sure?"
   },
   "errors": {
     "invalidPackerId": "Invalid Packer ID",
