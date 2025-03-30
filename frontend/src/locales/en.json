@@ -62,12 +62,8 @@
   },
   "storage": {
     "title": "Storage",
-    "select": "Select Storage",
-    "id": "Storage ID",
-    "name": "Storage Name",
-    "location": "Location",
-    "invoices": "Invoices",
-    "logs": "Storage Logs"
+    "almousoaa": "Almousoaa",
+    "advanced": "Almousoaa advanced"
   },
   "packing": {
     "title": "Packing",
