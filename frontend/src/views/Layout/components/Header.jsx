@@ -18,9 +18,9 @@ function Header() {
 
   return (
     <nav className="max-h-[10vh] bg-slate-500 dark:bg-gray-800">
-      <div className="max-w-screen-xl flex justify-between mx-auto p-[2vh]">
+      <div className="w-full flex justify-between mx-auto py-[2vh] px-8">
         <div
-          className="flex space-x-2 cursor-pointer"
+          className="flex gap-4 cursor-pointer"
           onClick={handleLogoClick}
         >
           <img className="h-[6vh]" alt="logo" src={logoPath}></img>
@@ -31,7 +31,7 @@ function Header() {
         <div className="flex items-center">
           <button
             onClick={handleSettingsClick}
-            className="text-white hover:text-gray-300 focus:outline-none"
+            className="text-white hover:text-gray-300 focus:outline-none px-2"
             title={t("navigation.settings")}
           >
             <svg
