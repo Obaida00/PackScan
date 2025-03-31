@@ -26,7 +26,7 @@ function StatusBadge({ badgeName }) {
         className="align-middle text-xs font-medium px-4 py-1 rounded-full"
         style={badgeStyle}
       >
-        {t("invoice.status." + badgeName)}
+        {t(`invoice.status.${badgeName}`)}
       </span>
     </div>
   );
