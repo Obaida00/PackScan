@@ -17,5 +17,26 @@
     src: local("Cocon Arabic"),
       url("./assets/fonts/CoconArabic.woff") format("woff");
   }
+  .direction-aware {
+    direction: ltr; /* default LTR */
+  }
 
+  html[dir="rtl"] .direction-aware {
+    direction: rtl;
+  }
+
+  /* Fix button rounding for RTL */
+  html[dir="rtl"] .rounded-e-lg {
+    border-top-left-radius: 0.75rem; /* Adjust to match your rounded-xl */
+    border-bottom-left-radius: 0.75rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  html[dir="ltr"] .rounded-e-lg {
+    border-top-right-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
 }

@@ -6,6 +6,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 const statusOptions = [
   { label: "-", value: "" },
@@ -16,6 +17,7 @@ const statusOptions = [
 ];
 
 function StorageLogsInvoiceFilter({ onChange }) {
+  const { t } = useTranslation();
   const [filters, setFilters] = useState({
     invoiceId: "",
     status: "",
@@ -79,7 +81,7 @@ function StorageLogsInvoiceFilter({ onChange }) {
       <div className="flex flex-wrap gap-1 items-center">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <FormControlLabel
-            label="Missing"
+            label={t("invoice.missing")}
             sx={{ color: "#f0f0f0" }}
             control={
               <Checkbox
@@ -99,7 +101,7 @@ function StorageLogsInvoiceFilter({ onChange }) {
             }
           />
           <FormControlLabel
-            label="Important"
+            label={t("invoice.important")}
             sx={{ color: "#f0f0f0" }}
             control={
               <Checkbox
@@ -120,7 +122,7 @@ function StorageLogsInvoiceFilter({ onChange }) {
           />
           <TextField
             select
-            label="Status"
+            label={t("invoice.status.title")}
             name="status"
             value={filters.status}
             onChange={handleFilterChange}
@@ -129,12 +131,12 @@ function StorageLogsInvoiceFilter({ onChange }) {
           >
             {statusOptions.map((option) => (
               <MenuItem key={option.value} value={option.value}>
-                {option.label}
+                {t("invoice.status." + option.label)}
               </MenuItem>
             ))}
           </TextField>
           <DesktopDatePicker
-            label="Creation Date"
+            label={t("common.creationDate")}
             value={filters.date ? dayjs(filters.date) : null}
             onChange={(newValue) => {
               setFilters((prev) => ({

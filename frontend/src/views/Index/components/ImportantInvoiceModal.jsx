@@ -6,8 +6,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 function ImportantInvoiceModal({ invoice, callback }) {
+  const {t} = useTranslation();
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -28,6 +30,7 @@ function ImportantInvoiceModal({ invoice, callback }) {
     <>
       <Button
         disableRipple
+        title={t("invoice.details")}
         className="hover:bg-transparent w-fit h-full"
         onClick={handleClickOpen}
       >
@@ -59,6 +62,7 @@ function ImportantInvoiceModal({ invoice, callback }) {
           </div>
           <button
             onClick={handleClose}
+            title={t("common.close")}
             type="button"
             className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm inline-flex justify-center items-center transition-colors duration-300 w-[24px]"
           >
@@ -80,7 +84,7 @@ function ImportantInvoiceModal({ invoice, callback }) {
         </DialogTitle>
         <DialogContent>
           <div className="p-2">
-            Do You want to remove the important flag for this invoice ?
+            {t("extra.doYouWantToRemoveImportantFlag")}
           </div>
         </DialogContent>
         <DialogActions>
@@ -88,7 +92,7 @@ function ImportantInvoiceModal({ invoice, callback }) {
             className="text-red-200 border border-slate-400 bg-red-700 hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-slate-300  font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-200"
             type="submit"
           >
-            Remove
+            {t("common.remove")}
           </button>
         </DialogActions>
       </Dialog>

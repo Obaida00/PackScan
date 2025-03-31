@@ -1,7 +1,9 @@
 import * as React from "react";
 import { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 function SearchBox({ action, eraseOnPaste }) {
+  const { t } = useTranslation();
   const [search, _setSearch] = useState("");
   const inputRef = useRef(null);
 
@@ -12,7 +14,6 @@ function SearchBox({ action, eraseOnPaste }) {
     }
   };
 
-  // if the barcode reader relys on pasting which i think it does, then ur good to delete this, and it should be done so the value cannot be typed, its only available through the clipboard
   const handleInputChange = (event) => {
     setSearch(event.target.value);
   };
@@ -33,20 +34,19 @@ function SearchBox({ action, eraseOnPaste }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     setSearch(event.target[0].value);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex items-center max-w-md mx-auto bg-white rounded-xl">
+      <div className="flex items-center max-w-md mx-auto bg-white rounded-xl border border-dashed dark:border-none direction-aware">
         <div className="w-full">
           <input
             ref={inputRef}
             type="search"
             name="searchBox"
             className="w-full px-4 py-1 text-gray-800 rounded-full outline-none focus:ring-0 border-none"
-            placeholder="search"
+            placeholder={t("common.search")}
             value={search}
             onPaste={handlePaste}
             onChange={handleInputChange}
@@ -55,7 +55,7 @@ function SearchBox({ action, eraseOnPaste }) {
         <div>
           <button
             type="submit"
-            className="flex place-items-center bg-slate-800 justify-center w-12 h-12 text-white rounded-r-lg cursor-pointer"
+            className="flex place-items-center bg-slate-800 justify-center w-12 h-12 text-white rounded-e-lg cursor-pointer"
             disabled={search.length === 0}
           >
             <svg

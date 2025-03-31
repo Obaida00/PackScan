@@ -1,0 +1,76 @@
+{
+  "common": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "search": "Search",
+    "close": "Close",
+    "remove": "Remove",
+    "creationDate": "Creation date",
+    "reset": "Reset",
+    "noContent": "No Content"
+  },
+  "navigation": {
+    "invoiceManager": "Invoice Manager",
+    "packagingManager": "Packaging Manager",
+    "settings": "Settings"
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "lightTheme": "Light Theme",
+    "language": "Language",
+    "printing": "Printing",
+    "defaultPrinter": "Default Printer",
+    "selectPrinter": "Select a printer",
+    "developer": "Developer Tools",
+    "showDevTools": "Show Developer Tools",
+    "applicationLogs": "Application Logs",
+    "refresh": "Refresh"
+  },
+  "invoice": {
+    "id": "Invoice ID",
+    "status": {
+      "title": "Status",
+      "Pending": "Pending",
+      "InProgress": "In Progress",
+      "Done": "Done",
+      "Sent": "Sent",
+      "In Progress": "In Progress"
+    },
+    "important": "Important",
+    "importantInvoices": "Important Invoices",
+    "missing": "Missing",
+    "details": "Invoice Details",
+    "statement": "Statement",
+    "pharmacist": "Pharmacist",
+    "createdAt": "Created at",
+    "dateOfDelivery": "Date of delivery",
+    "netPrice": "Net price",
+    "numberOfPackages": "Number of Packages",
+    "doneAt": "Done at",
+    "sentAt": "Sent at",
+    "submittionMode": "Submittion mode",
+    "startPacking": "Start packing",
+    "submitInvoice": "Submit Invoice",
+    "item": {
+      "name": "Item Name",
+      "count": "Item Count"
+    }
+  },
+  "storage": {
+    "title": "Storage",
+    "almousoaa": "Almousoaa",
+    "advanced": "Almousoaa advanced",
+    "log": "Logs"
+  },
+  "packer": {
+    "title": "Packer",
+    "packerIdPlaceholder": "Your ID ",
+    "idNotValid": "Packer id not valid",
+    "cannotSubmit": "Packer cannot submit"
+  },
+  "extra": {
+    "doYouWantToRemoveImportantFlag": "This will remove the important flag.. Are you sure?"
+  }
+}
