@@ -195,7 +195,7 @@
                     <tr>
                         <th colspan="9" class="white-border-left white-border-top white-border-right no-bold">
                             <img src="{{ public_path('images/head.png') }}" class="head-img" />
-                            <div class="time">11:44</div>
+                            <div class="time">{{now("+3")->format('H:i')}}</div>
                             <div class="width-full text-center">مبيعات</div>
                             <div class="title">
                                 <div class="width-half text-right">السيد: {{ $invoice->pharmacist }}</div>
