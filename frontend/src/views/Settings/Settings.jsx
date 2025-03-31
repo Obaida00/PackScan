@@ -93,7 +93,7 @@ function Settings() {
           <h2 className="text-lg mb-4 dark:text-white font-semibold">{t("settings.appearance")}</h2>
             <div className="flex justify-between">
               <p className="dark:text-white">{t("settings.lightTheme")}</p>
-              <Switch onChange={toggleTheme}></Switch>
+              <Switch value={isLightMode} onChange={toggleTheme}></Switch>
             </div>
 
           <div className="mt-4 flex justify-between items-end">
