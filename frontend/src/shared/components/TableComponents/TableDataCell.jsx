@@ -4,7 +4,7 @@ function TableDataCell({ data }) {
   return (
     <td
       scope="row"
-      className="py-4 font-medium whitespace-nowrap dark:text-white text-slate-900"
+      className="py-4 font-medium whitespace-nowrap text-slate-800"
     >
       {data}
     </td>

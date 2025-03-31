@@ -93,7 +93,7 @@ function StorageIndex() {
             </div>
           </div>
           <div className="flex justify-center">
-            <div className="h-full w-full flex justify-center text-center font-sans text-slate-300 text-xl">
+            <div className="h-full w-full flex justify-center text-center font-sans dark:text-slate-300 text-slate-800 text-xl">
               - {storageName && t("storage." + storageName)} -
             </div>
           </div>
@@ -136,7 +136,7 @@ function StorageIndex() {
             {!loadingImportantInvoices && importantInvoices.length > 0 && (
               <div className="my-4">
                 <div className="flex items-center gap-5">
-                  <span className="text-slate-50 text-xl font-sans font-medium">
+                  <span className="dark:text-slate-50 text-slate-800 text-xl font-sans font-medium">
                     {t("invoice.importantInvoices")}
                   </span>
                   <svg

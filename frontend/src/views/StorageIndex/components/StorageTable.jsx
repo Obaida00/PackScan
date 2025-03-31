@@ -7,8 +7,8 @@ function StorageTable({ invoices, RowComponent }) {
   const { t } = useTranslation();
 
   return (
-    <table className="w-full text-md text-gray-300 tracking-wide ">
-      <thead className="text-mg bg-gray-700 text-gray-400">
+    <table className="w-full text-md text-gray-300 tracking-wide">
+      <thead className="text-mg dark:bg-gray-700 bg-gray-300 dark:text-gray-300 text-gray-700">
         <tr>
           <TableHeader columnName={t("invoice.id")} />
           <TableHeader columnName={t("invoice.status.title")} />
