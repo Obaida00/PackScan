@@ -22,6 +22,7 @@ class Invoice extends Model
         'net_price',
         'number_of_items',
         'is_missing',
+        'is_important',
         'total_price',
         'total_discount',
         'balance',
@@ -32,17 +33,17 @@ class Invoice extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    public function invoiceItems() : HasMany
+    public function invoiceItems(): HasMany
     {
         return $this->hasMany(InvoiceItem::class);
     }
 
-    public function storage() : BelongsTo
+    public function storage(): BelongsTo
     {
         return $this->belongsTo(Storage::class);
     }
-    
-    public function packer() : BelongsTo
+
+    public function packer(): BelongsTo
     {
         return $this->belongsTo(Packer::class);
     }
