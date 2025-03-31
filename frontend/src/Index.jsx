@@ -16,17 +16,19 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { createTheme, ThemeProvider as MuiThemeProvider } from "@mui/material";
 import { LoadingProvider } from "./shared/contexts/LoadingContext.jsx";
-import { ThemeProvider } from "./shared/contexts/ThemeContext.jsx";
+import { ThemeProvider, useTheme } from "./shared/contexts/ThemeContext.jsx";
 import LoadingOverlay from "./shared/components/LoadingOverlay.jsx";
 import { useEffect, useState } from "react";
 import { initializeLanguage } from "./i18n.js";
 import "./i18n.js";
+import { ConfigProvider, theme } from "antd";
+import { defaultTheme } from "antd/es/theme/context.js";
 
 initializeLanguage();
 
 const DynamicThemeProvider = ({ children }) => {
   const [muiTheme, setMuiTheme] = useState(null);
-  
+  const {isLightMode} = useTheme(); 
   useEffect(() => {
     const loadTheme = async () => {
       try {
@@ -110,12 +112,12 @@ const DynamicThemeProvider = ({ children }) => {
     
     setMuiTheme(newTheme);
   };
-  
+  const {darkAlgorithm, defaultAlgorithm} = theme;
   if (!muiTheme) {
     return null;
   }
   
-  return <MuiThemeProvider theme={muiTheme}>{children}</MuiThemeProvider>;
+  return <ConfigProvider theme={{algorithm: isLightMode ? defaultAlgorithm : darkAlgorithm, components: {Select: {selectorBg: isLightMode? "#eeeeee" : "#374151"}}}}><MuiThemeProvider theme={muiTheme}>{children}</MuiThemeProvider></ConfigProvider>
 };
 
 const root = createRoot(document.getElementById("root"));
