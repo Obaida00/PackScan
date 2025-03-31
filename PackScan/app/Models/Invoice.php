@@ -7,12 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Orchid\Filters\Filterable;
-use Orchid\Screen\AsSource;
 
 class Invoice extends Model
 {
-    use HasFactory, HasUuids, AsSource, Filterable;
+    use HasFactory, HasUuids;
 
     protected $fillable = [
         'invoice_id',
@@ -24,18 +22,12 @@ class Invoice extends Model
         'net_price',
         'number_of_items',
         'is_missing',
+        'is_important',
         'total_price',
         'total_discount',
         'balance',
         'net_price_in_words',
         'deputy_number'
-    ];
-
-    protected $allowedSorts = [
-        'invoice_id' => Like::class,
-        'storage' => Like::class,
-        'date' => Like::class,
-        'status' => Like::class
     ];
 
     public $incrementing = false;

@@ -5,23 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Orchid\Filters\Filterable;
-use Orchid\Screen\AsSource;
 
 class Product extends Model
 {
-    use HasFactory, HasUuids, AsSource, Filterable;
+    use HasFactory, HasUuids;
 
     protected $fillable = [
         "name",
         "barcode",
         "collection_id"
     ];
-
-    protected $allowedSorts = [
-        'name' => Like::class,
-    ];
-
 
     public $incrementing = false;
     protected $keyType = 'string';

@@ -15,7 +15,7 @@ class Collection extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillables = [
+    protected $fillable = [
         'name',
         'storage_id'
     ];

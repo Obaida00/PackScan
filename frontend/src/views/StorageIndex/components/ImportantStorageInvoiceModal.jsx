@@ -20,6 +20,7 @@ function ImportantStorageInvoiceModal({ invoice }) {
   const rows = [
     { label: "Statement", value: invoice.statement },
     { label: "Pharmacist", value: invoice.pharmacist },
+    { label: "Manager", value: invoice.manager },
     { label: "Created At", value: invoice.created_at },
     { label: "Date Of Delivery", value: invoice.date },
     { label: "Net Price", value: invoice.net_price },
