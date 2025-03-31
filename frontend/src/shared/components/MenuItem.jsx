@@ -5,7 +5,7 @@ function MenuItem({ url, item }) {
   return (
     <Link to={url}>
       <div className="flex place-items-center gap-2 m-2 p-4 transform hover:scale-110 duration-300 transition-all group/item">
-        <p className="text-3xl font-mono text-slate-100">{item}</p>
+        <p className="text-3xl font-mono dark:text-slate-100">{item}</p>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           height="50px"
