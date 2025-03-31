@@ -1,10 +1,11 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
-function StatusBadge({ badgeName}) {
+function StatusBadge({ badgeName }) {
+  const { t } = useTranslation();
   const [badgeStyle, setbadgeStyle] = useState();
 
-  
   useEffect(() => {
     if (badgeName == "Pending") {
       setbadgeStyle({ color: "#fff", backgroundColor: "#747474" });
@@ -17,7 +18,6 @@ function StatusBadge({ badgeName}) {
     } else {
       throw TypeError("badgeName not matching!!!" + badgeName);
     }
-
   }, [badgeName]);
 
   return (
@@ -26,7 +26,7 @@ function StatusBadge({ badgeName}) {
         className="align-middle text-xs font-medium px-4 py-1 rounded-full"
         style={badgeStyle}
       >
-        {badgeName}
+        {t("invoice.status." + badgeName)}
       </span>
     </div>
   );

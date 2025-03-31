@@ -5,8 +5,10 @@ import IndexTable from "./components/IndexTable.jsx";
 import BackButton from "../../shared/components/BackButton.jsx";
 import ReloadButton from "../../shared/components/ReloadButton.jsx";
 import IndexInvoiceFilter from "./components/IndexInvoiceFilter.jsx";
+import { useTranslation } from "react-i18next";
 
 function Index() {
+  const { t } = useTranslation();
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagingMeta, setPagingMeta] = useState();
@@ -60,10 +62,10 @@ function Index() {
           <div className="w-[80vw] my-4 overflow-x-auto shadow-gray-950 shadow-md rounded-xl">
             {loading ? (
               <h1 className="py-3 text-center font-cocon text-xl text-slate-950">
-                Loading...
+                {t("common.loading")}
               </h1>
             ) : (
-              <IndexTable invoices={invoices} reloadInvoices={getInvoices}/>
+              <IndexTable invoices={invoices} reloadInvoices={getInvoices} />
             )}
           </div>
         </div>

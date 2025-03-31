@@ -3,18 +3,20 @@ import { useState, useEffect } from "react";
 import { Select, DatePicker, Checkbox } from "antd";
 import SearchBox from "../../../shared/components/SearchBox.jsx";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 const { Option } = Select;
 
 const statusOptions = [
   { label: "status", value: "" },
   { label: "Pending", value: "Pending" },
-  { label: "In Progress", value: "InProgress" },
+  { label: "InProgress", value: "InProgress" },
   { label: "Done", value: "Done" },
   { label: "Sent", value: "Sent" },
 ];
 
 function IndexInvoiceFilters({ onChange }) {
+  const { t } = useTranslation();
   const [filters, setFilters] = useState({
     invoiceId: "",
     storageId: "",

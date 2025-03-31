@@ -6,8 +6,10 @@ import BackButton from "../../shared/components/BackButton.jsx";
 import ReloadButton from "../../shared/components/ReloadButton.jsx";
 import StorageLogsInvoiceFilter from "./components/StorageLogsInvoiceFilter.jsx";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function StorageLog() {
+  const { t } = useTranslation();
   const { id } = useParams();
 
   const [invoices, setInvoices] = useState([]);
@@ -82,7 +84,7 @@ function StorageLog() {
           <div className="w-[80vw] my-4 overflow-x-auto shadow-gray-950 shadow-md rounded-xl">
             {loading ? (
               <h1 className="py-3 text-center font-cocon text-xl text-slate-950">
-                Loading...
+                {t("common.loading")}
               </h1>
             ) : (
               <LogsTable invoices={invoices} reloadInvoices={getInvoices} />

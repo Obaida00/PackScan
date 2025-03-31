@@ -5,20 +5,22 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { TextField } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [numberOfPackages, setNumberOfPackages] = useState(null);
   const [packageNumberFieldError, setPackageNumberFieldError] = useState(false);
 
   const rows = [
-    { label: "Statement", value: invoice.statement },
-    { label: "Pharmacist", value: invoice.pharmacist },
-    { label: "Created At", value: invoice.created_at },
-    { label: "Date Of Delivery", value: invoice.date },
-    { label: "Net Price", value: invoice.net_price },
-    { label: "Storage", value: invoice.storage_name },
-    { label: "Current Packer Id", value: packerId },
+    { label: "statement", value: invoice.statement },
+    { label: "pharmacist", value: invoice.pharmacist },
+    { label: "createdAt", value: invoice.created_at },
+    { label: "dateOfDelivery", value: invoice.date },
+    { label: "netPrice", value: invoice.net_price },
+    { label: "storage", value: invoice.storage_name },
+    { label: "currentPackerId", value: packerId },
   ];
 
   useEffect(() => {
@@ -53,7 +55,7 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
             className="disabled:bg-slate-600 disabled:text-slate-400 text-slate-100 border border-slate-400 bg-green-700 hover:bg-green-800 focus:ring-2 focus:outline-none focus:ring-slate-300 font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-200"
             disabled={disabled}
           >
-            <p>Submit</p>
+            <p>{t("invoice.submitInvoice")}</p>
             &nbsp;
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -103,7 +105,7 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
               {rows.map((row, index) => (
                 <tr key={index} className="border-b-2 border-slate-50">
                   <td className="py-1 w-48 font-medium text-sm text-gray-500">
-                    {row.label}
+                    {t("invoice." + row.label)}
                   </td>
                   <td className="py-1 w-[300px] font-semibold text-lg text-slate-900">
                     {row.value}
@@ -121,7 +123,7 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
                     size="small"
                     margin="none"
                     defaultValue={invoice.number_of_packages}
-                    placeholder="Number of Packages"
+                    placeholder={t("invoice.numberOfPackages")}
                     error={packageNumberFieldError}
                     id="name"
                     name="id"
@@ -140,7 +142,7 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
             className="text-slate-100 border border-slate-400 bg-green-600 hover:bg-green-700 focus:ring-2 focus:outline-none focus:ring-slate-300 font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-200"
             onClick={submit}
           >
-            <p>Submit Invoice</p>
+            <p>{t("invoice.submitInvoice")}</p>
             &nbsp;
             <svg
               xmlns="http://www.w3.org/2000/svg"

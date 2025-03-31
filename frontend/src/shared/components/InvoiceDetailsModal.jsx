@@ -6,27 +6,30 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 import PrintInvoiceButton from "../../shared/components/PrintInvoiceButton.jsx";
+import { useTranslation } from "react-i18next";
 
 function InvoiceDetailsModal({ invoice }) {
+  const { t } = useTranslation();
+
   const [open, setOpen] = useState(false);
 
   const rows = [
-    { label: "Statement", value: invoice.statement },
-    { label: "Pharmacist", value: invoice.pharmacist },
-    { label: "Created At", value: invoice.created_at },
-    { label: "Date Of Delivery", value: invoice.date },
-    { label: "Net Price", value: invoice.net_price },
-    { label: "Storage", value: invoice.storage_name },
-    { label: "Status", value: invoice.status },
-    { label: "Packer", value: invoice.packer_name ?? "-----------" },
+    { label: "invoice.statement", value: invoice.statement },
+    { label: "invoice.pharmacist", value: invoice.pharmacist },
+    { label: "invoice.createdAt", value: invoice.created_at },
+    { label: "invoice.dateOfDelivery", value: invoice.date },
+    { label: "invoice.netPrice", value: invoice.net_price },
+    { label: "storage.title", value: invoice.storage_name },
+    { label: "invoice.status.title", value: invoice.status },
+    { label: "packer.title", value: invoice.packer_name ?? "-----------" },
     {
-      label: "Number Of Packages",
+      label: "invoice.numberOfPackages",
       value: invoice.number_of_packages ?? "-----------",
     },
-    { label: "Done At", value: invoice.done_at ?? "-----------" },
-    { label: "Sent At", value: invoice.sent_at ?? "-----------" },
+    { label: "invoice.doneAt", value: invoice.done_at ?? "-----------" },
+    { label: "invoice.sentAt", value: invoice.sent_at ?? "-----------" },
     {
-      label: "Submittion Mode",
+      label: "invoice.submittionMode",
       value: invoice.submittion_mode ?? "-----------",
     },
   ];
@@ -95,7 +98,7 @@ function InvoiceDetailsModal({ invoice }) {
                 {rows.map((row, index) => (
                   <tr key={index} className="border-b-2 border-slate-50">
                     <td className="py-1 font-medium text-gray-500">
-                      {row.label}
+                      {t(row.label)}
                     </td>
                     <td className="py-1 font-semibold text-xl text-slate-900">
                       {row.value}

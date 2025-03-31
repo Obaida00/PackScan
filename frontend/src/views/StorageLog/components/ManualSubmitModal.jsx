@@ -8,8 +8,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useSFX } from "../../../shared/hooks/useSFX.jsx";
 import { useLoadingContext } from "../../../shared/contexts/LoadingContext.jsx";
 import "../../../shared/styles/Loader.css";
+import { useTranslation } from "react-i18next";
 
 function ManualSubmitModal({ invoiceId, afterSubmit }) {
+  const { t } = useTranslation();
   const [metaData, setMetaData] = useState({
     packerId: null,
     numberOfPackages: null,
@@ -149,7 +151,7 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
         onKeyUp={(e) => e.key === "Enter" && submit(e)}
       >
         <DialogTitle className="flex justify-between">
-          <div>Submit Package</div>
+          <div>{t("invoice.submitInvoice")}</div>
           <div className="text-2xl font-mono font-semibold text-gray-800">
             -{invoiceId}-
           </div>
@@ -159,7 +161,7 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
             <tbody>
               <tr>
                 <td className="py-2 w-48 font-medium text-gray-500">
-                  Number of packages
+                  {t("invoice.numberOfPackages")}
                 </td>
                 <td className="w-64 py-2 text-xl text-slate-900">
                   <TextField
@@ -167,7 +169,7 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
                     required
                     size="small"
                     margin="none"
-                    placeholder="Number of Packages"
+                    placeholder={t("invoice.numberOfPackages")}
                     error={packageNumberFieldError}
                     name="numberOfPackages"
                     variant="outlined"
@@ -177,7 +179,9 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
                 </td>
               </tr>
               <tr className="border-b-2 border-slate-50">
-                <td className="py-2 w-48 font-medium text-gray-500">Packer</td>
+                <td className="py-2 w-48 font-medium text-gray-500">
+                  {t("packer.title")}
+                </td>
                 <td className="w-64 py-2 text-xl text-slate-900">
                   <div className="flex gap-2 items-center">
                     <div className="w-[100px]">
@@ -188,7 +192,7 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
                         size="small"
                         margin="none"
                         name="packerId"
-                        placeholder="Your ID"
+                        placeholder={t("packer.packerIdPlaceholder")}
                         variant="outlined"
                         onChange={onInputChange}
                       />
@@ -201,9 +205,9 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
                       }`}
                     >
                       {packerFieldError
-                        ? "ID is not valid"
+                        ? t("packer.idNotValid")
                         : !packerHasPermission
-                        ? "Packer cannot submit"
+                        ? t("packer.cannotSubmit")
                         : packerName}
                     </div>
                   </div>
@@ -213,8 +217,8 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
           </table>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={submit}>Submit</Button>
+          <Button onClick={handleClose}>{t("common.cancel")}</Button>
+          <Button onClick={submit}>{t("common.submit")}</Button>
         </DialogActions>
       </Dialog>
     </>

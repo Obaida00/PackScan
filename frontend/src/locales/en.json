@@ -1,24 +1,18 @@
 {
   "common": {
     "back": "Back",
-    "save": "Save",
     "cancel": "Cancel",
     "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "confirm": "Confirm",
-    "delete": "Delete",
-    "edit": "Edit",
-    "view": "View",
     "search": "Search",
-    "filter": "Filter",
-    "refresh": "Refresh",
-    "noData": "No data available"
+    "close": "Close",
+    "remove": "Remove",
+    "creationDate": "Creation date",
+    "reset": "Reset",
+    "noContent": "No Content"
   },
   "navigation": {
-    "home": "Home",
-    "monitor": "Invoice Manager",
-    "storage": "Storage",
+    "invoiceManager": "Invoice Manager",
+    "packagingManager": "Packaging Manager",
     "settings": "Settings"
   },
   "settings": {
@@ -34,57 +28,47 @@
     "applicationLogs": "Application Logs",
     "refresh": "Refresh"
   },
-  "invoices": {
-    "title": "Invoices",
+  "invoice": {
     "id": "Invoice ID",
     "status": {
-      "pending": "Pending",
-      "inProgress": "In Progress",
-      "done": "Done",
-      "important": "Important"
+      "title": "Status",
+      "Pending": "Pending",
+      "InProgress": "In Progress",
+      "Done": "Done"
     },
-    "date": "Date",
-    "storage": "Storage",
-    "items": "Items",
-    "actions": "Actions",
-    "filter": {
-      "all": "All",
-      "pending": "Pending",
-      "inProgress": "In Progress",
-      "done": "Done",
-      "important": "Important"
-    },
+    "important": "Important",
+    "importantInvoices": "Important Invoices",
+    "missing": "Missing",
     "details": "Invoice Details",
-    "print": "Print Invoice",
-    "printSticker": "Print Sticker",
-    "submit": "Submit Invoice",
-    "boxes": "Number of Boxes",
-    "packerId": "Packer ID"
+    "statement": "Statement",
+    "pharmacist": "Pharmacist",
+    "createdAt": "Created at",
+    "dateOfDelivery": "Date of delivery",
+    "netPrice": "Net price",
+    "numberOfPackages": "Number of Packages",
+    "doneAt": "Done at",
+    "sentAt": "Sent at",
+    "submittionMode": "Submittion mode",
+    "startPacking": "Start packing",
+    "submitInvoice": "Submit Invoice",
+    "item": {
+      "name": "Item Name",
+      "count": "Item Count"
+    }
   },
   "storage": {
     "title": "Storage",
-    "select": "Select Storage",
-    "id": "Storage ID",
-    "name": "Storage Name",
-    "location": "Location",
-    "invoices": "Invoices",
-    "logs": "Storage Logs"
+    "almousoaa": "Almousoaa",
+    "advanced": "Almousoaa advanced",
+    "log": "Logs"
   },
-  "packing": {
-    "title": "Packing",
-    "scan": "Scan Item",
-    "item": "Item",
-    "quantity": "Quantity",
-    "scanned": "Scanned",
-    "remaining": "Remaining",
-    "complete": "Complete",
-    "incomplete": "Incomplete"
+  "packer": {
+    "title": "Packer",
+    "packerIdPlaceholder": "Your ID ",
+    "idNotValid": "Packer id not valid",
+    "cannotSubmit": "Packer cannot submit"
   },
-  "errors": {
-    "invalidPackerId": "Invalid Packer ID",
-    "scanningError": "Scanning Error",
-    "printerError": "Printer Error",
-    "connectionError": "Connection Error",
-    "fileError": "File Error"
+  "extra": {
+    "doYouWantToRemoveImportantFlag": "This will remove the important flag.. Are you sure?"
   }
 }
