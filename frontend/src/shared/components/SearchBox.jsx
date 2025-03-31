@@ -39,7 +39,7 @@ function SearchBox({ action, eraseOnPaste }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex items-center max-w-md mx-auto bg-white rounded-xl">
+      <div className="flex items-center max-w-md mx-auto bg-white rounded-xl border border-dashed dark:border-none">
         <div className="w-full">
           <input
             ref={inputRef}
@@ -53,7 +53,7 @@ function SearchBox({ action, eraseOnPaste }) {
           />
         </div>
         <div>
-          <button
+          <button 
             type="submit"
             className="flex place-items-center bg-slate-800 justify-center w-12 h-12 text-white rounded-r-lg cursor-pointer"
             disabled={search.length === 0}
