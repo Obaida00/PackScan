@@ -54,6 +54,7 @@ class InvoiceControllerTest extends TestCase
         // Assert that the invoice and the associated invoice item exist in the database
         $this->assertDatabaseHas('invoices', [
             'invoice_id' => 1,
+            'manager'    => 'mo manager',
             'storage_id' => $storage->id,
         ]);
 
@@ -147,6 +148,7 @@ class InvoiceControllerTest extends TestCase
         // Create an Invoice and associate it with the created Storage
         $invoice = Invoice::create([
             'invoice_id' => 123,
+            'manager'    => 'Manager Name',
             'storage_id' => $storage->id,
             'pharmacist' => 'Pharmacist Name',
             'status'     => 'Pending',
@@ -187,6 +189,7 @@ class InvoiceControllerTest extends TestCase
         // Create an initial invoice (this invoice will be replaced later)
         $invoice = Invoice::create([
             'invoice_id' => 123,
+            'manager'    => 'mo manager',
             'storage_id' => $storage->id,
             'pharmacist' => 'Pharmacist Name',
             'status'     => 'Pending',
@@ -205,7 +208,7 @@ class InvoiceControllerTest extends TestCase
         ]);
 
         // Assert the initial invoice exists and has the product
-        $this->assertDatabaseHas('invoices', ['invoice_id' => 123]);
+        $this->assertDatabaseHas('invoices', ['invoice_id' => 123, 'manager' => 'mo manager']);
         $this->assertCount(1, $invoice->invoiceItems);
 
         // Now, prepare new invoice data to replace the old one (same ID)
@@ -236,6 +239,7 @@ class InvoiceControllerTest extends TestCase
         // Assert that the invoice has been replaced in the database
         $this->assertDatabaseHas('invoices', [
             'invoice_id' => 123,
+            'manager'    => 'mo manager',
             'pharmacist' => 'New Pharmacist Name',
         ]);
 
