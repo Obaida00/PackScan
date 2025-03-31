@@ -6,7 +6,7 @@ import ImportantInvoiceModal from "./ImportantInvoiceModal.jsx";
 
 function IndexTableRow({ i, invoice, reloadInvoices }) {
   return (
-    <tr className=" border-b bg-gray-800 border-gray-700 hover:bg-gray-600 transition ease-in-out text-center">
+    <tr className="border-b dark:bg-gray-800 bg-gray-200 dark:border-gray-700 hover:bg-gray-600 border-gray-300 transition ease-in-out text-center">
       <TableDataCell key={i} data={invoice.invoice_id} />
 
       <td>
