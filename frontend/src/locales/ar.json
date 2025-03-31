@@ -34,7 +34,9 @@
       "title": "الحالة",
       "Pending": "معلق",
       "InProgress": "قيد التنفيذ",
-      "Done": "منتهي"
+      "Done": "منتهي",
+      "Sent": "تم الإرسال",
+      "In Progress": "قيد المعالجة"
     },
     "important": "مهم",
     "importantInvoices": "الفواتير المهمة",

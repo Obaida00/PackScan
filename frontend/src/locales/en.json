@@ -34,7 +34,9 @@
       "title": "Status",
       "Pending": "Pending",
       "InProgress": "In Progress",
-      "Done": "Done"
+      "Done": "Done",
+      "Sent": "Sent",
+      "In Progress": "In Progress"
     },
     "important": "Important",
     "importantInvoices": "Important Invoices",
