@@ -12,7 +12,6 @@
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "orchid/platform": "^14.46",
         "phpoffice/phpspreadsheet": "^4.1",
         "picqer/php-barcode-generator": "^3.2",
         "spatie/laravel-pdf": "^1.5"
@@ -45,8 +44,7 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
-            "@php artisan orchid:publish --ansi"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
