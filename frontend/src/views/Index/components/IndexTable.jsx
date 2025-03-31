@@ -5,8 +5,8 @@ import IndexTableRowForMissingInvoices from "./IndexTableRowForMissingInvoices.j
 
 function IndexTable({ invoices, reloadInvoices }) {
   return (
-    <table className="w-full text-md text-gray-300 tracking-wide ">
-      <thead className="text-mg bg-gray-700 text-gray-400">
+    <table className="w-full text-md text-gray-900 tracking-wide">
+      <thead className="text-mg dark:bg-gray-700 dark:text-gray-300 bg-gray-300 text-gray-700">
         <tr>
           <TableHeader columnName="Invoice ID" />
           <TableHeader columnName="Status" />
