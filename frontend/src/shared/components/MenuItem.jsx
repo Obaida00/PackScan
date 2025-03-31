@@ -7,7 +7,7 @@ function MenuItem({ url, item }) {
     <Link to={url}>
       <div className="flex place-items-center gap-2 m-2 p-4 transform hover:scale-110 duration-300 transition-all group/item">
         <ArrowIcon height="50px" groupName="item" reversed={true}></ArrowIcon>
-        <p className="text-3xl font-mono text-slate-100 px-2">{item}</p>
+        <p className="text-3xl font-mono text-slate-800 dark:text-slate-100 px-2">{item}</p>
       </div>
     </Link>
 
