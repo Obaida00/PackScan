@@ -26,6 +26,8 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->sidebarCollapsibleOnDesktop()
+            ->brandName("PackScan")
             ->login()
             ->colors([
                 'primary' => Color::Amber,
