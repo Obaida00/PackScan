@@ -26,7 +26,8 @@
     "developer": "أدوات المطور",
     "showDevTools": "إظهار أدوات المطور",
     "applicationLogs": "سجلات التطبيق",
-    "refresh": "تحديث"
+    "refresh": "تحديث",
+    "loadingPrinters": "تحميل الطابعات..."
   },
   "invoice": {
     "id": "رقم الفاتورة",

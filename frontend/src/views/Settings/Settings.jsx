@@ -116,7 +116,7 @@ function Settings() {
         <div className="p-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg shadow-md">
           <h2 className="text-lg font-semibold mb-4">{t("settings.printing")}</h2>
           {loadingPrinters ? (
-            <p>Loading printers...</p>
+            <p>{t("settings.loadingPrinters")}</p>
           ) : printerError ? (
             <p className="text-red-500">{printerError}</p>
           ) : (

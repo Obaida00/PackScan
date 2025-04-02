@@ -26,7 +26,8 @@
     "developer": "Developer Tools",
     "showDevTools": "Show Developer Tools",
     "applicationLogs": "Application Logs",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "loadingPrinters": "Loading Printers..."
   },
   "invoice": {
     "id": "Invoice ID",
