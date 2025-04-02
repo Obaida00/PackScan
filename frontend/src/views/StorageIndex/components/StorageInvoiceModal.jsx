@@ -41,7 +41,7 @@ function StorageInvoiceModal({ invoice }) {
     }
 
     let packer = await ipcRenderer.invoke("fetch-packer", id);
-    if (packer.length === 0) {
+    if (!packer.id) {
       setPackerName("");
       return;
     }
@@ -49,21 +49,23 @@ function StorageInvoiceModal({ invoice }) {
     setPackerFieldError(false);
   };
 
-  const submitForm = (event) => {
+  const submitForm = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const formJson = Object.fromEntries(formData.entries());
     const id = formJson.id;
     setPackerById(id);
 
-    if (packerName !== "") {
-      handleClose();
-      nav(`/packing/${invoice.id}`, {
-        state: { packerId: id },
-      });
-    } else {
-      setPackerFieldError(true);
-    }
+    ipcRenderer.invoke("fetch-packer", id).then((packer) => {
+      if (packerName !== "" && packer.id) {
+        handleClose();
+        nav(`/packing/${invoice.id}`, {
+          state: { packerId: id },
+        });
+      } else {
+        setPackerFieldError(true);
+      }
+    });
   };
 
   const handleClickOpen = () => {

@@ -43,7 +43,7 @@ function ImportantStorageInvoiceModal({ invoice }) {
     }
 
     let packer = await ipcRenderer.invoke("fetch-packer", id);
-    if (packer.length === 0) {
+    if (!packer.id) {
       setPackerName("");
       return;
     }
@@ -59,16 +59,18 @@ function ImportantStorageInvoiceModal({ invoice }) {
     const id = formJson.id;
     setPackerById(id);
 
-    if (packerName !== "") {
-      if (!packerFieldPermissionError) {
-        handleClose();
-        nav(`/packing/${invoice.id}`, {
-          state: { packerId: id },
-        });
+    ipcRenderer.invoke("fetch-packer", id).then((packer) => {
+      if (packerName !== "" && packer.id) {
+        if (packer.can_submit_important_invoices) {
+          handleClose();
+          nav(`/packing/${invoice.id}`, {
+            state: { packerId: id },
+          });
+        }
+      } else {
+        setPackerFieldError(true);
       }
-    } else {
-      setPackerFieldError(true);
-    }
+    });
   };
 
   const handleClickOpen = () => {
