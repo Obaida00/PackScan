@@ -8,7 +8,8 @@
     "remove": "إزالة",
     "creationDate": "تاريخ الإنشاء",
     "reset": "إعادة تعيين",
-    "noContent": "لا يوجد محتوى"
+    "noContent": "لا يوجد محتوى",
+    "refresh": "تحديث"
   },
   "navigation": {
     "invoiceManager": "إدارة الفواتير",
@@ -21,12 +22,13 @@
     "lightTheme": "الوضع النهاري",
     "language": "اللغة",
     "printing": "الطباعة",
-    "defaultPrinter": "الطابعة الافتراضية",
+    "defaultPrinters": "الطابعات الافتراضية",
+    "defaultReceiptPrinter": "طابعة الفواتير",
+    "defaultStickerPrinter": "طابعة الملصقات",
     "selectPrinter": "اختر طابعة",
     "developer": "أدوات المطور",
     "showDevTools": "إظهار أدوات المطور",
     "applicationLogs": "سجلات التطبيق",
-    "refresh": "تحديث",
     "loadingPrinters": "تحميل الطابعات..."
   },
   "invoice": {
