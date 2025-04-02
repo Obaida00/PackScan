@@ -144,7 +144,7 @@ ipcMain.handle("go-back", async (event) => {
 ipcMain.handle("play-sound", async (event, soundName) => {
   log.info(`playing sound: ${soundName}`);
 
-  const soundFilePath = path.join(__dirname, `sounds/${soundName}.mp3`);
+  const soundFilePath = getSfxFilePath(`${soundName}.mp3`);
   await sound.play(soundFilePath);
 });
 ipcMain.handle("print-invoice", async (event, invoiceId) => {
@@ -249,6 +249,41 @@ function getPtpExePath() {
 
     log.info("ptp exe path:", PtpExePath);
     return PtpExePath;
+  } catch (error) {
+    log.error(error);
+  }
+}
+
+function getSfxFilePath(sfxFileName) {
+  try {
+    let sfxPath;
+
+    if (app.isPackaged) {
+      const tempDir = os.tmpdir();
+      const soundsDir = path.join(tempDir, "packscan_sounds");
+      
+      
+      if (!fs.existsSync(soundsDir)) {
+        log.info("creating directory ", soundsDir)
+        fs.mkdirSync(soundsDir, { recursive: true });
+      }
+
+      sfxPath = path.join(tempDir, "sounds", sfxFileName);
+      if (!fs.existsSync(sfxPath)) {
+        log.info(`trying to copy the file out of asar for file: ${sfxPath}`);
+        const asarScriptPath = path.join(
+          app.getAppPath(),
+          `.webpack\\main\\sounds\\${sfxFileName}`
+        );
+        fs.copyFileSync(asarScriptPath, sfxPath);
+        log.info(`ptp exe extracted to: ${sfxPath}`);
+      }
+    } else {
+      sfxPath = path.join(__dirname, "sounds", sfxFileName);
+    }
+
+    log.info("sound file path:", sfxPath);
+    return sfxPath;
   } catch (error) {
     log.error(error);
   }
