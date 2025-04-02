@@ -18,7 +18,7 @@ class InvoiceFactory extends Factory
     public function definition(): array
     {
         $done_at = $sent_at = null;
-        $status = $this->faker->randomElement(['Pending', 'In Progress', 'Done', 'Sent']);
+        $status = $this->faker->randomElement(['Pending', 'InProgress', 'Done', 'Sent']);
         if ($status == 'Done' || $status == 'Sent') {
             $done_at = $this->faker->dateTimeBetween('+10 minutes', '+4 hours');
             if ($status == 'Sent') {

@@ -31,12 +31,12 @@
   "invoice": {
     "id": "رقم الفاتورة",
     "status": {
+      "-": "الكل",
       "title": "الحالة",
       "Pending": "معلق",
       "InProgress": "قيد التنفيذ",
       "Done": "منتهي",
-      "Sent": "تم الإرسال",
-      "In Progress": "قيد المعالجة"
+      "Sent": "تم الإرسال"
     },
     "important": "مهم",
     "importantInvoices": "الفواتير المهمة",

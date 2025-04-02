@@ -31,12 +31,12 @@
   "invoice": {
     "id": "Invoice ID",
     "status": {
+      "-": "All",
       "title": "Status",
       "Pending": "Pending",
       "InProgress": "In Progress",
       "Done": "Done",
-      "Sent": "Sent",
-      "In Progress": "In Progress"
+      "Sent": "Sent"
     },
     "important": "Important",
     "importantInvoices": "Important Invoices",
