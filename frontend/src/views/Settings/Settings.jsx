@@ -85,7 +85,7 @@ function Settings() {
     <div className={`container mx-auto p-4 ${isRtl ? "rtl" : "ltr"}`}>
       <div className="flex items-center mb-6">
         <BackButton />
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white ml-4">{t("settings.title")}</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white m-4">{t("settings.title")}</h1>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
