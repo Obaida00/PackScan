@@ -2,7 +2,7 @@ import * as React from "react";
 import "../../../shared/styles/Modal.css";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import { Button, Modal } from "antd";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -79,7 +79,7 @@ function StorageInvoiceModal({ invoice }) {
   return (
     <>
       <Button
-        disableRipple
+        type="text"
         className="hover:bg-transparent w-fit h-full"
         onClick={handleClickOpen}
       >
@@ -89,12 +89,64 @@ function StorageInvoiceModal({ invoice }) {
           viewBox="0 -960 960 960"
           width="24px"
           fill="gray"
-          className=""
         >
           <path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
         </svg>
       </Button>
-      <Dialog
+      <Modal
+        title={`-${invoice.invoice_id}-`}
+        open={open}
+        onOk={handleClose}
+        onCancel={handleClose}
+      >
+        <table className="table-auto text-start w-full">
+          <tbody>
+            {rows.map((row, index) => (
+              <tr key={index} className="border-b-2 border-slate-50">
+                <td className="py-1 w-48 font-medium text-sm text-gray-500">
+                  {t("invoice." + row.label)}
+                </td>
+                <td className="py-1 w-[300px] font-semibold text-lg text-slate-900">
+                  {row.value}
+                </td>
+              </tr>
+            ))}
+            <tr className="border-b-2 border-slate-50">
+              <td className="py-2 w-48 font-medium text-gray-500">
+                {t("packer.title")}
+              </td>
+              <td className="w-64 py-2 text-xl text-slate-900">
+                <div className="flex gap-2 items-center ">
+                  <div className="w-[100px]">
+                    <TextField
+                      autoFocus
+                      required
+                      error={packerFieldError}
+                      size="small"
+                      margin="none"
+                      id="name"
+                      name="id"
+                      placeholder={t("packer.packerIdPlaceholder")}
+                      variant="outlined"
+                      onChange={(e) => setPackerById(e.target.value)}
+                    />
+                  </div>
+                  <div
+                    className={`w-[200px] overflow-hidden text-ellipsis whitespace-nowrap font-medium ${
+                      packerFieldError
+                        ? "text-red-700 text-xs opacity-80"
+                        : "text-slate-800 text-lg"
+                    }`}
+                  >
+                    {packerFieldError ? t("packer.idNotValid") : packerName}
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Modal>
+      {/* <Dialog
         open={open}
         onClose={handleClose}
         PaperProps={{
@@ -196,7 +248,7 @@ function StorageInvoiceModal({ invoice }) {
             </svg>
           </button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 }

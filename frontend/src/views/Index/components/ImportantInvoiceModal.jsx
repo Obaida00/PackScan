@@ -1,18 +1,20 @@
 import * as React from "react";
 import "../../../shared/styles/Modal.css";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Modal, Button } from "antd";
+import { red } from "@mui/material/colors";
 
 function ImportantInvoiceModal({ invoice, callback }) {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
+    warningModal();
     setOpen(true);
   };
 
@@ -26,10 +28,35 @@ function ImportantInvoiceModal({ invoice, callback }) {
     handleClose();
   };
 
+  const modalBtn = () => {
+    <button
+      className="text-red-200 border border-slate-400 bg-red-700 hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-slate-300  font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-200"
+      type="submit"
+    >
+      {t("common.remove")}
+    </button>;
+  };
+  const warningModal = () => {
+    Modal.warning({
+      open: { open },
+      title: `-${invoice.invoice_id}-${invoice.storage_code.toUpperCase()}`,
+      content: t("extra.doYouWantToRemoveImportantFlag"),
+      okButtonProps: {
+        color: "danger",
+        danger: true,
+      },
+      okText: t("common.remove"),
+      onCancel: handleClose,
+      onClose: handleClose,
+      onOk: submitForm
+    });
+  };
+
   return (
     <>
       <Button
         disableRipple
+        type="text"
         title={t("invoice.details")}
         className="hover:bg-transparent w-fit h-full"
         onClick={handleClickOpen}
@@ -44,7 +71,7 @@ function ImportantInvoiceModal({ invoice, callback }) {
           <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm280-590q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z" />
         </svg>
       </Button>
-      <Dialog
+      {/* <Dialog
         open={open}
         onClose={handleClose}
         slotProps={{
@@ -95,7 +122,7 @@ function ImportantInvoiceModal({ invoice, callback }) {
             {t("common.remove")}
           </button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 }

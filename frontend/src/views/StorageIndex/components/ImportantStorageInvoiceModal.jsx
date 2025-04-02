@@ -9,9 +9,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { Modal } from "antd";
 
 function ImportantStorageInvoiceModal({ invoice }) {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [packerName, setPackerName] = useState("");
   const [packerFieldError, setPackerFieldError] = useState(false);
@@ -84,7 +85,6 @@ function ImportantStorageInvoiceModal({ invoice }) {
   return (
     <>
       <Button
-        disableRipple
         className="hover:bg-transparent w-fit h-full"
         onClick={handleClickOpen}
       >
@@ -98,7 +98,64 @@ function ImportantStorageInvoiceModal({ invoice }) {
           <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm280-590q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z" />
         </svg>
       </Button>
-      <Dialog
+      <Modal
+        title={`-${invoice.invoice_id}-`}
+        open={open}
+        onOk={handleClose}
+        
+      >
+        <table className="table-auto text-start w-full">
+          <tbody>
+            {rows.map((row, index) => (
+              <tr key={index} className="border-b-2 border-slate-50">
+                <td className="py-1 w-48 font-medium text-sm text-gray-500">
+                  {t("invoice." + row.label)}
+                </td>
+                <td className="py-1 w-[300px] font-semibold text-lg text-slate-900">
+                  {row.value}
+                </td>
+              </tr>
+            ))}
+            <tr className="border-b-2 border-slate-50">
+              <td className="py-2 w-48 font-medium text-gray-500">
+                {t("packer.title")}
+              </td>
+              <td className="w-64 py-2 text-xl text-slate-900">
+                <div className="flex gap-2 items-center ">
+                  <div className="w-[100px]">
+                    <TextField
+                      autoFocus
+                      required
+                      error={packerFieldError || packerFieldPermissionError}
+                      size="small"
+                      margin="none"
+                      id="name"
+                      name="id"
+                      placeholder={t("packer.packerIdPlaceholder")}
+                      variant="outlined"
+                      onChange={(e) => setPackerById(e.target.value)}
+                    />
+                  </div>
+                  <div
+                    className={`w-[200px] overflow-hidden text-ellipsis whitespace-nowrap font-medium ${
+                      packerFieldError || packerFieldPermissionError
+                        ? "text-red-700 text-xs opacity-80"
+                        : "text-slate-800 text-lg"
+                    }`}
+                  >
+                    {packerFieldError
+                      ? t("packer.idNotValid")
+                      : packerFieldPermissionError
+                      ? t("packer.cannotSubmit")
+                      : packerName}
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Modal>
+      {/* <Dialog
         open={open}
         onClose={handleClose}
         PaperProps={{
@@ -204,7 +261,7 @@ function ImportantStorageInvoiceModal({ invoice }) {
             </svg>
           </button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 }
