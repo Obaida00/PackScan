@@ -1,4 +1,10 @@
-const { app, BrowserWindow, ipcMain, Notification, nativeTheme } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Notification,
+  nativeTheme,
+} = require("electron");
 const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
@@ -61,7 +67,7 @@ const createWindow = () => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools({ mode: "right" });
 
   nativeTheme.themeSource = store.store.theme;
 };
@@ -176,7 +182,7 @@ ipcMain.handle("save-settings", async (event, settings) => {
   log.info("Saving settings:", settings);
   for (const [key, value] of Object.entries(settings)) {
     store.set(key, value);
-    if(key === "theme") nativeTheme.themeSource = value
+    if (key === "theme") nativeTheme.themeSource = value;
   }
   return store.store;
 });
