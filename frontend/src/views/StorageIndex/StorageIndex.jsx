@@ -44,6 +44,7 @@ function StorageIndex() {
         isImportant: true,
         isMissing: false,
         pageNumber: 1,
+        status: 'Pending'
       };
       const data = await ipcRenderer.invoke("fetch-orders", filters);
       setImportantInvoices(data?.data || []);
@@ -69,6 +70,7 @@ function StorageIndex() {
         isImportant: false,
         isMissing: false,
         pageNumber: 1,
+        status: 'Pending'
       };
       const data = await ipcRenderer.invoke("fetch-orders", filters);
 
