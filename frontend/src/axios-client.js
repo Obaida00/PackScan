@@ -102,7 +102,10 @@ export async function submitInvoice(id, packerId, numberOfPackages, manually) {
     });
 
     let header = {
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+      },
     };
 
     const response = await axios
@@ -123,8 +126,15 @@ export async function submitInvoice(id, packerId, numberOfPackages, manually) {
 // Unmark invoice important flag
 export async function unmarkInvoiceAsImportant(id) {
   try {
+    let header = {
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+      },
+    };
+
     const response = await axios
-      .post(`${BASE_URL}/api/invoices/${id}/unmark-important`)
+      .post(`${BASE_URL}/api/invoices/${id}/unmark-important`, null, header)
       .catch((e) => log.error(e));
 
     log.info(
@@ -161,11 +171,11 @@ export async function uploadNewFile(filePath, setProgress) {
   try {
     const formData = new FormData();
     formData.append("file", fs.createReadStream(filePath));
-    const headers = { ...formData.getHeaders() };
+    const headers = { ...formData.getHeaders(), Accepts: "application/json" };
 
     const response = await axios
       .post(`${BASE_URL}/api/invoices/upload`, formData, {
-        headers,
+        headers: headers,
         timeout: 30000,
         onUploadProgress: (progressEvent) => {
           if (progressEvent.total) {
