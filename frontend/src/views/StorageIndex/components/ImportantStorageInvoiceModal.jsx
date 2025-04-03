@@ -2,14 +2,16 @@ import * as React from "react";
 import "../../../shared/styles/Modal.css";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+// import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal } from "antd";
+import { Modal, Button, Form, Input } from "antd";
+import { ArrowRightOutlined } from "@ant-design/icons";
+
 
 function ImportantStorageInvoiceModal({ invoice }) {
   const { t } = useTranslation();
@@ -85,6 +87,7 @@ function ImportantStorageInvoiceModal({ invoice }) {
   return (
     <>
       <Button
+        type="link"
         className="hover:bg-transparent w-fit h-full"
         onClick={handleClickOpen}
       >
@@ -101,29 +104,33 @@ function ImportantStorageInvoiceModal({ invoice }) {
       <Modal
         title={`-${invoice.invoice_id}-`}
         open={open}
-        onOk={handleClose}
-        
+        onCancel={handleClose}
+        footer={[
+          <Button variant="solid" color="green" icon={<ArrowRightOutlined />}>
+            {t("invoice.startPacking")}
+          </Button>,
+        ]}
       >
         <table className="table-auto text-start w-full">
           <tbody>
             {rows.map((row, index) => (
-              <tr key={index} className="border-b-2 border-slate-50">
-                <td className="py-1 w-48 font-medium text-sm text-gray-500">
+              <tr key={index} className="border-b-1 border-slate-50">
+                <td className="py-1 font-normal dark:text-gray-300 text-gray-500">
                   {t("invoice." + row.label)}
                 </td>
-                <td className="py-1 w-[300px] font-semibold text-lg text-slate-900">
+                <td className="py-1 font-medium text-xl text-slate-800 dark:text-slate-100">
                   {row.value}
                 </td>
               </tr>
             ))}
-            <tr className="border-b-2 border-slate-50">
+            <tr className="border-b dark:border-slate-50 border-slate-400">
               <td className="py-2 w-48 font-medium text-gray-500">
                 {t("packer.title")}
               </td>
               <td className="w-64 py-2 text-xl text-slate-900">
                 <div className="flex gap-2 items-center ">
                   <div className="w-[100px]">
-                    <TextField
+                    {/* <TextField
                       autoFocus
                       required
                       error={packerFieldError || packerFieldPermissionError}
@@ -134,9 +141,18 @@ function ImportantStorageInvoiceModal({ invoice }) {
                       placeholder={t("packer.packerIdPlaceholder")}
                       variant="outlined"
                       onChange={(e) => setPackerById(e.target.value)}
-                    />
+                    /> */}
+                    <Form
+                      autoFocus
+                      requiredMark
+                      onFinish={submitForm}
+                    >
+                      <Form.Item >
+                      
+                      </Form.Item>
+                    </Form>
                   </div>
-                  <div
+                  {/* <div
                     className={`w-[200px] overflow-hidden text-ellipsis whitespace-nowrap font-medium ${
                       packerFieldError || packerFieldPermissionError
                         ? "text-red-700 text-xs opacity-80"
@@ -148,7 +164,7 @@ function ImportantStorageInvoiceModal({ invoice }) {
                       : packerFieldPermissionError
                       ? t("packer.cannotSubmit")
                       : packerName}
-                  </div>
+                  </div> */}
                 </div>
               </td>
             </tr>
