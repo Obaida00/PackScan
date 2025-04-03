@@ -25,7 +25,7 @@ class CollectionResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->required()
-                    ->unique('collections', 'name')
+                    ->unique('collections', 'name', fn($record) => $record?->id)
                     ->label('Name'),
                 Select::make('storage_id')
                     ->relationship('storage', 'name')
