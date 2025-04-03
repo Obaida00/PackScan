@@ -120,6 +120,7 @@ function IndexInvoiceFilters({ onChange }) {
         }}
         format="YYYY-MM-DD"
         allowClear
+        placeholder={t("common.chooseDate")}
       />
     </div>
   );

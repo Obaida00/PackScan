@@ -9,7 +9,8 @@
     "creationDate": "تاريخ الإنشاء",
     "reset": "إعادة تعيين",
     "noContent": "لا يوجد محتوى",
-    "refresh": "تحديث"
+    "refresh": "تحديث",
+    "chooseDate": "اختر تاريخاً"
   },
   "navigation": {
     "invoiceManager": "إدارة الفواتير",

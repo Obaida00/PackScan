@@ -110,6 +110,7 @@ function StorageLogsInvoiceFilter({ onChange }) {
           }}
           format="YYYY-MM-DD"
           allowClear
+          placeholder={t("common.chooseDate")}
         />
         {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
           <FormControlLabel

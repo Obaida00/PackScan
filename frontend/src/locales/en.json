@@ -9,7 +9,8 @@
     "creationDate": "Creation date",
     "reset": "Reset",
     "noContent": "No Content",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "chooseDate": "Choose Date"
   },
   "navigation": {
     "invoiceManager": "Invoice Manager",
