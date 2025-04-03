@@ -149,6 +149,52 @@ class InvoiceController extends Controller
     }
 
     /**
+     * Mark the current invoice as Sent.
+     */
+    public function markInvoicePending(Request $request, string $id)
+    {
+        $invoice = Invoice::find($id);
+
+        if (!$invoice) {
+            return response()->json(['message' => 'Invoice not found.'], 404);
+        }
+
+        $invoice->status = "Pending";
+        $invoice->sent_at = null;
+        $invoice->packer_id = null;
+        $invoice->save();
+
+        return new InvoiceResource($invoice);
+    }
+
+    /**
+     * Mark the current invoice as Sent.
+     */
+    public function markInvoiceInProgress(Request $request, string $id)
+    {
+        $request->validate([
+            'packer_id' => 'required|exists:packers,id'
+        ]);
+
+        $packer = Packer::find($request->packer_id);
+        if (!$packer) {
+            return response()->json(['message' => 'Packer not found.'], 404);
+        }
+
+        $invoice = Invoice::find($id);
+
+        if (!$invoice) {
+            return response()->json(['message' => 'Invoice not found.'], 404);
+        }
+
+        $invoice->status = "InProgress";
+        $invoice->packer_id = $request->packer_id;
+        $invoice->save();
+
+        return new InvoiceResource($invoice);
+    }
+
+    /**
      * Unmark the important flag for the invoice.
      */
     public function unmarkInvoiceImportant(Request $request, string $id)

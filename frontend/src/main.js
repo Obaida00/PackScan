@@ -133,6 +133,15 @@ ipcMain.handle(
     await printInvoiceSticker(id);
   }
 );
+ipcMain.handle("mark-invoice-pending", async (event, invoiceId) => {
+  return await axiosClient.markInvoiceAsPending(invoiceId);
+});
+ipcMain.handle(
+  "mark-invoice-in-progress",
+  async (event, { invoiceId, packerId }) => {
+    return await axiosClient.markInvoiceAsImportant(invoiceId, packerId);
+  }
+);
 ipcMain.handle("unmark-invoice-important", async (event, invoiceId) => {
   return await axiosClient.unmarkInvoiceAsImportant(invoiceId);
 });
@@ -261,10 +270,9 @@ function getSfxFilePath(sfxFileName) {
     if (app.isPackaged) {
       const tempDir = os.tmpdir();
       const soundsDir = path.join(tempDir, "packscan_sounds");
-      
-      
+
       if (!fs.existsSync(soundsDir)) {
-        log.info("creating directory ", soundsDir)
+        log.info("creating directory ", soundsDir);
         fs.mkdirSync(soundsDir, { recursive: true });
       }
 
