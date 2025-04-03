@@ -12,7 +12,6 @@ import { useTranslation } from "react-i18next";
 import { Modal, Button, Form, Input } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
 
-
 function ImportantStorageInvoiceModal({ invoice }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -103,77 +102,8 @@ function ImportantStorageInvoiceModal({ invoice }) {
           <path d="M480-280q17 0 28.5-11.5T520-320q0-17-11.5-28.5T480-360q-17 0-28.5 11.5T440-320q0 17 11.5 28.5T480-280Zm-40-160h80v-240h-80v240ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm280-590q13 0 21.5-8.5T510-820q0-13-8.5-21.5T480-850q-13 0-21.5 8.5T450-820q0 13 8.5 21.5T480-790ZM200-200v-560 560Z" />
         </svg>
       </Button>
-      <Modal
-        title={`-${invoice.invoice_id}-`}
-        open={open}
-        onCancel={handleClose}
-        footer={[
-          <Button variant="solid" color="green" icon={<ArrowRightOutlined />}>
-            {t("invoice.startPacking")}
-          </Button>,
-        ]}
-      >
-        <table className="table-auto text-start w-full">
-          <tbody>
-            {rows.map((row, index) => (
-              <tr key={index} className="border-b-1 border-slate-50">
-                <td className="py-1 font-normal dark:text-gray-300 text-gray-500">
-                  {t("invoice." + row.label)}
-                </td>
-                <td className="py-1 font-medium text-xl text-slate-800 dark:text-slate-100">
-                  {row.value}
-                </td>
-              </tr>
-            ))}
-            <tr className="border-b dark:border-slate-50 border-slate-400">
-              <td className="py-2 w-48 font-medium text-gray-500">
-                {t("packer.title")}
-              </td>
-              <td className="w-64 py-2 text-xl text-slate-900">
-                <div className="flex gap-2 items-center ">
-                  <div className="w-[100px]">
-                    {/* <TextField
-                      autoFocus
-                      required
-                      error={packerFieldError || packerFieldPermissionError}
-                      size="small"
-                      margin="none"
-                      id="name"
-                      name="id"
-                      placeholder={t("packer.packerIdPlaceholder")}
-                      variant="outlined"
-                      onChange={(e) => setPackerById(e.target.value)}
-                    /> */}
-                    <Form
-                      autoFocus
-                      requiredMark
-                      onFinish={submitForm}
-                    >
-                      <Form.Item >
-                      
-                      </Form.Item>
-                    </Form>
-                  </div>
-                  {/* <div
-                    className={`w-[200px] overflow-hidden text-ellipsis whitespace-nowrap font-medium ${
-                      packerFieldError || packerFieldPermissionError
-                        ? "text-red-700 text-xs opacity-80"
-                        : "text-slate-800 text-lg"
-                    }`}
-                  >
-                    {packerFieldError
-                      ? t("packer.idNotValid")
-                      : packerFieldPermissionError
-                      ? t("packer.cannotSubmit")
-                      : packerName}
-                  </div> */}
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </Modal>
-      {/* <Dialog
+      
+      <Dialog
         open={open}
         onClose={handleClose}
         PaperProps={{
@@ -279,7 +209,7 @@ function ImportantStorageInvoiceModal({ invoice }) {
             </svg>
           </button>
         </DialogActions>
-      </Dialog> */}
+      </Dialog>
     </>
   );
 }
