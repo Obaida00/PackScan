@@ -8,7 +8,8 @@
     "remove": "Remove",
     "creationDate": "Creation date",
     "reset": "Reset",
-    "noContent": "No Content"
+    "noContent": "No Content",
+    "refresh": "Refresh"
   },
   "navigation": {
     "invoiceManager": "Invoice Manager",
@@ -21,22 +22,24 @@
     "lightTheme": "Light Theme",
     "language": "Language",
     "printing": "Printing",
-    "defaultPrinter": "Default Printer",
+    "defaultPrinters": "Default Printers",
+    "defaultReceiptPrinter": "Receipt printer",
+    "defaultStickerPrinter": "Sticker printer",
     "selectPrinter": "Select a printer",
     "developer": "Developer Tools",
     "showDevTools": "Show Developer Tools",
     "applicationLogs": "Application Logs",
-    "refresh": "Refresh"
+    "loadingPrinters": "Loading Printers..."
   },
   "invoice": {
     "id": "Invoice ID",
     "status": {
+      "-": "All",
       "title": "Status",
       "Pending": "Pending",
       "InProgress": "In Progress",
       "Done": "Done",
-      "Sent": "Sent",
-      "In Progress": "In Progress"
+      "Sent": "Sent"
     },
     "important": "Important",
     "importantInvoices": "Important Invoices",

@@ -9,7 +9,7 @@ function StatusBadge({ badgeName }) {
   useEffect(() => {
     if (badgeName == "Pending") {
       setbadgeStyle({ color: "#fff", backgroundColor: "#747474" });
-    } else if (badgeName == "In Progress") {
+    } else if (badgeName == "InProgress") {
       setbadgeStyle({ color: "#fffde7", backgroundColor: "#cc8b00" });
     } else if (badgeName == "Done") {
       setbadgeStyle({ color: "#dbeafe", backgroundColor: "#1e40af" });

@@ -1,14 +1,16 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "/src/assets/images/Logo.svg";
 import { useTranslation } from "react-i18next";
 
 function Header() {
   const logoPath = Logo;
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation();
 
   const handleSettingsClick = () => {
+    if (location.pathname === "/settings") return;
     navigate("/settings");
   };
 
@@ -19,10 +21,7 @@ function Header() {
   return (
     <nav className="max-h-[10vh] bg-slate-500 dark:bg-gray-800">
       <div className="w-full flex justify-between mx-auto py-[2vh] px-8">
-        <div
-          className="flex gap-4 cursor-pointer"
-          onClick={handleLogoClick}
-        >
+        <div className="flex gap-4 cursor-pointer" onClick={handleLogoClick}>
           <img className="h-[6vh]" alt="logo" src={logoPath}></img>
           <p className="self-center text-2xl whitespace-nowrap font-cocon text-white">
             PackScan

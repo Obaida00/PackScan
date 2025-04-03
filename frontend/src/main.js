@@ -1,4 +1,10 @@
-const { app, BrowserWindow, ipcMain, Notification, nativeTheme } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Notification,
+  nativeTheme,
+} = require("electron");
 const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
@@ -13,7 +19,8 @@ const store = new Store({
   defaults: {
     theme: "dark",
     language: "en",
-    defaultPrinter: "",
+    defaultReceiptPrinter: "",
+    defaultStickerPrinter: "",
   },
 });
 
@@ -61,7 +68,7 @@ const createWindow = () => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools({ mode: "right" });
 
   nativeTheme.themeSource = store.store.theme;
 };
@@ -142,7 +149,8 @@ ipcMain.handle(
   "submit-order",
   async (event, { id, packerId, numberOfPackages, manually = true }) => {
     await axiosClient.submitInvoice(id, packerId, numberOfPackages, manually);
-    await printInvoiceSticker(id);
+    let stickerPrinter = store.get("defaultStickerPrinter");
+    await printInvoiceSticker(id, stickerPrinter);
   }
 );
 ipcMain.handle("unmark-invoice-important", async (event, invoiceId) => {
@@ -159,8 +167,7 @@ ipcMain.handle("play-sound", async (event, soundName) => {
   await sound.play(soundFilePath);
 });
 ipcMain.handle("print-invoice", async (event, invoiceId) => {
-  let r = await axiosClient.downloadInvoiceReceipt(invoiceId, setProgress);
-  printPdf(r);
+  await printInvoiceReceipt(invoiceId);
 });
 ipcMain.handle("print-invoice-sticker", async (event, invoiceId) => {
   await printInvoiceSticker(invoiceId);
@@ -176,7 +183,7 @@ ipcMain.handle("save-settings", async (event, settings) => {
   log.info("Saving settings:", settings);
   for (const [key, value] of Object.entries(settings)) {
     store.set(key, value);
-    if(key === "theme") nativeTheme.themeSource = value
+    if (key === "theme") nativeTheme.themeSource = value;
   }
   return store.store;
 });
@@ -232,13 +239,13 @@ const onFileEvent = async (filePath) => {
   }
 
   let { invoice_id: invoiceId } = await axiosClient.uploadNewFile(filePath);
-  let r = await axiosClient.downloadInvoiceReceipt(invoiceId);
-  printPdf(r);
+  let printer = store.get("defaultReceiptPrinter");
+  await printInvoiceReceipt(invoiceId, printer);
 };
 
-function printPdf(pdf) {
+function printPdf(pdf, printer) {
   sendNotification("Printing...", "Printing new file...");
-  PdfPrintToPrinter(pdf)
+  PdfPrintToPrinter(pdf, printer)
     .then((code) => {
       code == 0
         ? sendNotification("Success!!", "File printed successfully ✔️")
@@ -256,14 +263,19 @@ function printPdf(pdf) {
     });
 }
 
-function PdfPrintToPrinter(file_path) {
+function PdfPrintToPrinter(file_path, printer) {
+  log.info(
+    "printing " +
+      file_path +
+      "with printer.. " +
+      (printer ?? "(selectable by user)")
+  );
   let exePath = getPtpExePath();
-  const defaultPrinter = store.get("defaultPrinter");
   const args = [file_path];
 
-  if (defaultPrinter) {
+  if (printer) {
     args.push("-printer");
-    args.push(defaultPrinter);
+    args.push(printer);
   }
 
   return new Promise((resolve, reject) => {
@@ -322,9 +334,14 @@ function getPtpExePath() {
   }
 }
 
-async function printInvoiceSticker(invoiceId) {
-  let s = await axiosClient.downloadInvoiceSticker(invoiceId, setProgress);
-  printPdf(s);
+async function printInvoiceSticker(id, printer) {
+  let s = await axiosClient.downloadInvoiceSticker(id, setProgress);
+  printPdf(s, printer);
+}
+
+async function printInvoiceReceipt(id, printer) {
+  let r = await axiosClient.downloadInvoiceReceipt(id, setProgress);
+  printPdf(r, printer);
 }
 
 function setProgress(progress) {

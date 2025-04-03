@@ -87,14 +87,14 @@ function IndexInvoiceFilters({ onChange }) {
         checked={filters.isMissing}
         onChange={(e) => updateFilterValue("isMissing", e.target.checked)}
       >
-        Missing
+        {t("invoice.missing")}
       </Checkbox>
 
       <Checkbox
         checked={filters.isImportant}
         onChange={(e) => updateFilterValue("isImportant", e.target.checked)}
       >
-        Important
+        {t("invoice.important")}
       </Checkbox>
 
       <Select
