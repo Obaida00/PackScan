@@ -7,14 +7,6 @@ import { useTranslation } from "react-i18next";
 
 const { Option } = Select;
 
-const statusOptions = [
-  { label: "status", value: "" },
-  { label: "Pending", value: "Pending" },
-  { label: "InProgress", value: "InProgress" },
-  { label: "Done", value: "Done" },
-  { label: "Sent", value: "Sent" },
-];
-
 function IndexInvoiceFilters({ onChange }) {
   const { t } = useTranslation();
   const [filters, setFilters] = useState({
@@ -25,13 +17,20 @@ function IndexInvoiceFilters({ onChange }) {
     isImportant: false,
     isMissing: false,
   });
+  const statusOptions = [
+    { label: t("invoice.status.-"), value: "" },
+    { label: t("invoice.status.Pending"), value: "Pending" },
+    { label: t("invoice.status.InProgress"), value: "InProgress" },
+    { label: t("invoice.status.Done"), value: "Done" },
+    { label: t("invoice.status.Sent"), value: "Sent" },
+  ];
 
   const [storageList, setStorageList] = useState([]);
 
   const storageOptions = [
-    {value: "", label: "storage",},
+    { value: "", label: t("storage.title") },
     ...storageList.map((storage) => ({
-      label: storage.name,
+      label: t(`storage.${storage.name}`),
       value: storage.id,
     })),
   ];
@@ -103,8 +102,7 @@ function IndexInvoiceFilters({ onChange }) {
         onChange={(value) => handleFilterChange("storageId", value)}
         placeholder="Storage"
         options={storageOptions}
-      >
-      </Select>
+      ></Select>
 
       <Select
         defaultValue={filters.status}
@@ -112,9 +110,7 @@ function IndexInvoiceFilters({ onChange }) {
         onChange={(value) => handleFilterChange("status", value)}
         placeholder="Status"
         options={statusOptions}
-      >
-        
-      </Select>
+      ></Select>
 
       <DatePicker
         style={{ width: 130 }}
