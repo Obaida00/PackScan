@@ -97,7 +97,6 @@ function StorageInvoiceModal({ invoice }) {
         title={`-${invoice.invoice_id}-`}
         open={open}
         onOk={handleClose}
-        onCancel={handleClose}
       >
         <table className="table-auto text-start w-full">
           <tbody>
