@@ -148,6 +148,60 @@ export async function unmarkInvoiceAsImportant(id) {
   }
 }
 
+// Mark invoice as pending
+export async function markInvoiceAsPending(id) {
+  try {
+    let header = {
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+      },
+    };
+
+    const response = await axios
+      .post(`${BASE_URL}/api/invoices/${id}/mark-pending`, null, header)
+      .catch((e) => log.error(e));
+
+    log.info(
+      "unmark invoice important flag",
+      "- status : " + response.status,
+      "- data : " + JSON.stringify(response.data)
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Mark invoice as in-progress
+export async function markInvoiceAsImportant(id, packerId) {
+  try {
+    let data = JSON.stringify({
+      packer_id: packerId,
+    });
+
+    let header = {
+      headers: {
+        "Content-Type": "application/json",
+        Accepts: "application/json",
+      },
+    };
+
+    const response = await axios
+      .post(`${BASE_URL}/api/invoices/${id}/mark-in-progress`, data, header)
+      .catch((e) => log.error(e));
+
+    log.info(
+      "unmark invoice important flag",
+      "- status : " + response.status,
+      "- data : " + JSON.stringify(response.data)
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 export async function getPackerById(packerId) {
   try {
     if (packerId == null || packerId == "" || packerId == undefined) return;
