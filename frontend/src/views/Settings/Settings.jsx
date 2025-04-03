@@ -144,6 +144,7 @@ function Settings() {
                     onChange={handleReceiptPrinterChange}
                     options={printersList}
                     className="text-xl w-full"
+                    placeholder={t("common.select")}
                   />
                 </div>
                 <div className="w-1/2">
@@ -156,6 +157,7 @@ function Settings() {
                     onChange={handleStickerPrinterChange}
                     options={printersList}
                     className="text-xl w-full"
+                    placeholder={t("common.select")}
                   />
                 </div>
               </div>

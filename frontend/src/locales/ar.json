@@ -10,7 +10,8 @@
     "reset": "إعادة تعيين",
     "noContent": "لا يوجد محتوى",
     "refresh": "تحديث",
-    "chooseDate": "اختر تاريخاً"
+    "chooseDate": "اختر تاريخاً",
+    "select": "قم بالاختيار"
   },
   "navigation": {
     "invoiceManager": "إدارة الفواتير",

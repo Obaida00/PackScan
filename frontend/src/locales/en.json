@@ -10,7 +10,8 @@
     "reset": "Reset",
     "noContent": "No Content",
     "refresh": "Refresh",
-    "chooseDate": "Choose Date"
+    "chooseDate": "Choose Date",
+    "select": "select"
   },
   "navigation": {
     "invoiceManager": "Invoice Manager",
