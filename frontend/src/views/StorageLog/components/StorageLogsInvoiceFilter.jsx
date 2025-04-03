@@ -1,20 +1,14 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { TextField, MenuItem, FormControlLabel, Checkbox } from "@mui/material";
+import { TextField, MenuItem, FormControlLabel } from "@mui/material";
 import SearchBox from "../../../shared/components/SearchBox.jsx";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import dayjs from "dayjs";
+import { Select, Checkbox, DatePicker } from "antd";
 import { useTranslation } from "react-i18next";
-
-const statusOptions = [
-  { label: "-", value: "" },
-  { label: "Pending", value: "Pending" },
-  { label: "InProgress", value: "InProgress" },
-  { label: "Done", value: "Done" },
-  { label: "Sent", value: "Sent" },
-];
+import { t } from "i18next";
 
 function StorageLogsInvoiceFilter({ onChange }) {
   const { t } = useTranslation();
@@ -26,8 +20,15 @@ function StorageLogsInvoiceFilter({ onChange }) {
     isMissing: false,
   });
 
-  const handleFilterChange = (event) => {
-    const { name, value } = event.target;
+  const statusOptions = [
+    { label: t("invoice.status.-"), value: "" },
+    { label: t("invoice.status.Pending"), value: "Pending" },
+    { label: t("invoice.status.InProgress"), value: "InProgress" },
+    { label: t("invoice.status.Done"), value: "Done" },
+    { label: t("invoice.status.Sent"), value: "Sent" },
+  ];
+
+  const handleFilterChange = (name, value) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [name]: value,
@@ -79,7 +80,38 @@ function StorageLogsInvoiceFilter({ onChange }) {
         eraseOnPaste={false}
       />
       <div className="flex flex-wrap gap-1 items-center">
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Checkbox
+          checked={filters.isMissing}
+          onChange={(e) => updateFilterValue("isMissing", e.target.checked)}
+        >
+          {t("invoice.missing")}
+        </Checkbox>
+
+        <Checkbox
+          checked={filters.isImportant}
+          onChange={(e) => updateFilterValue("isImportant", e.target.checked)}
+        >
+          {t("invoice.important")}
+        </Checkbox>
+
+        <Select
+          defaultValue={filters.status}
+          style={{ width: 130 }}
+          onChange={(value) => handleFilterChange("status", value)}
+          placeholder={t("-")}
+          options={statusOptions}
+        ></Select>
+
+        <DatePicker
+          style={{ width: 130 }}
+          value={filters.date ? dayjs(filters.date) : null}
+          onChange={(date, dateString) => {
+            handleFilterChange("date", dateString);
+          }}
+          format="YYYY-MM-DD"
+          allowClear
+        />
+        {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
           <FormControlLabel
             label={t("invoice.missing")}
             sx={{ color: "#f0f0f0" }}
@@ -160,7 +192,7 @@ function StorageLogsInvoiceFilter({ onChange }) {
               },
             }}
           />
-        </LocalizationProvider>
+        </LocalizationProvider> */}
       </div>
     </div>
   );
