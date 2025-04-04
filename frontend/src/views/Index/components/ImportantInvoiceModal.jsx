@@ -42,7 +42,7 @@ function ImportantInvoiceModal({ invoice, callback }) {
   return (
     <>
       <Button
-        type="text"
+        type="link"
         title={t("invoice.details")}
         className="hover:bg-transparent w-fit h-full"
         onClick={handleClickOpen}

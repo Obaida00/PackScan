@@ -45,7 +45,7 @@ function InvoiceDetailsModal({ invoice }) {
   return (
     <>
       <Button
-        type="text"
+        type="link"
         className="hover:bg-transparent w-fit h-full"
         onClick={handleClickOpen}
       >
