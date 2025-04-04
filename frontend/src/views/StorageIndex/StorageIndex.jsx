@@ -9,11 +9,12 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Divider } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "../../shared/contexts/ThemeContext.jsx";
 
 function StorageIndex() {
   const { t } = useTranslation();
   const { id } = useParams();
-
+  const {isLightMode} = useTheme();
   const [invoices, setInvoices] = useState([]);
   const [importantInvoices, setImportantInvoices] = useState([]);
   const [loadingSearchResult, setLoadingSearchResult] = useState(false);
@@ -144,7 +145,7 @@ function StorageIndex() {
                     height="24px"
                     viewBox="0 -960 960 900"
                     width="24px"
-                    fill="#e8eaed"
+                    fill={isLightMode ? "#1e293b" : "#e8eaed"}
                     className="rtl:rotate-180"
                   >
                     <path d="M600-160H160q-25 0-36-22t4-42l192-256-192-256q-15-20-4-42t36-22h440q19 0 36 8.5t28 23.5l180 240q16 21 16 48t-16 48L664-192q-11 15-28 23.5t-36 8.5Zm-360-80h360l180-240-180-240H240l144 192q16 21 16 48t-16 48L240-240Zm270-240Z" />
