@@ -74,7 +74,7 @@ function Packing() {
             </div>
           </div>
           <div className="flex justify-center px-4">
-            <div className="w-full self-center font-sans text-xl text-slate-300">
+            <div className="w-full self-center font-sans text-xl text-slate-800 dark:text-slate-300">
               {invoice.invoice_id && `- ${invoice.invoice_id} -`}
             </div>
           </div>

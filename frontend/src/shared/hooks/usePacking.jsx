@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSFX } from "./useSFX.jsx";
+import { useTheme } from "../contexts/ThemeContext.jsx";
 
 export function usePacking(id) {
   const [invoice, setInvoice] = useState({});
@@ -14,11 +15,13 @@ export function usePacking(id) {
     playCanSubmitSound,
   } = useSFX();
 
+  const { isLightMode } = useTheme();
+  
   const updateItemState = useCallback(
     (item, { increasing = true, playSounds = true } = {}) => {
       if (item.current_count < item.total_count) {
         if (increasing && playSounds) playItemScanSound();
-        return { ...item, colorMain: "#1f2937", colorSecond: "#1c64f2" };
+        return { ...item, colorMain: isLightMode ? "#e5e7eb" : "#1f2937", colorSecond: "#1c64f2" };
       }
       if (item.current_count === item.total_count) {
         playPackingCompleteSound();

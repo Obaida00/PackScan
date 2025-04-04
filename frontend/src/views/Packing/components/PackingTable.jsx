@@ -7,8 +7,8 @@ import { useTranslation } from "react-i18next";
 function PackingTable({ items, decrementFunc }) {
   const { t } = useTranslation();
   return (
-    <table className="table-fixed w-full text-md text-gray-300 tracking-wide ">
-      <thead className="text-mg bg-gray-700 text-gray-400">
+    <table className="table-fixed w-full text-md tracking-wide ">
+      <thead className="border-b bg-gray-300 border-gray-300 text-slate-800 dark:bg-gray-700 dark:border-gray-700 dark:text-gray-300 transition ease-in-out text-center">
         <tr>
           <TableHeader columnName={t("invoice.item.name")} width={45} />
           <TableHeader columnName={t("invoice.item.count")} />
