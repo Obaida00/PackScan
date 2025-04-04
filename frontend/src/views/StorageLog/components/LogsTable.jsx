@@ -9,7 +9,7 @@ function LogsTable({ invoices, reloadInvoices }) {
 
   return (
     <table className="w-full text-md text-gray-300 tracking-wide ">
-      <thead className="text-mg bg-gray-700 text-gray-400">
+      <thead className="text-mg bg-gray-300 dark:bg-gray-700 text-slate-800 dark:text-gray-400">
         <tr>
           <TableHeader columnName={t("invoice.id")} />
           <TableHeader columnName={t("status")} />

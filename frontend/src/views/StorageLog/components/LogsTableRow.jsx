@@ -6,7 +6,7 @@ import ManualSubmitModal from "./ManualSubmitModal.jsx";
 
 function LogsTableRow({ i, invoice, reloadInvoices }) {
   return (
-    <tr className="border-b bg-gray-800 border-gray-700 hover:bg-gray-600 transition ease-in-out text-center">
+    <tr className="border-b bg-gray-200 border-gray-300 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 transition ease-in-out text-center">
       <TableDataCell key={i} data={invoice.invoice_id} />
 
       <td>
