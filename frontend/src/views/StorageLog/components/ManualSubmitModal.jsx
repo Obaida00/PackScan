@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -9,6 +8,7 @@ import { useSFX } from "../../../shared/hooks/useSFX.jsx";
 import { useLoadingContext } from "../../../shared/contexts/LoadingContext.jsx";
 import "../../../shared/styles/Loader.css";
 import { useTranslation } from "react-i18next";
+import { Button } from "antd";
 
 function ManualSubmitModal({ invoiceId, afterSubmit }) {
   const { t } = useTranslation();
@@ -113,7 +113,7 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
   return (
     <>
       <Button
-        disableRipple
+        type="text"
         className="hover:bg-transparent w-fit h-full"
         onClick={handleClickOpen}
       >
