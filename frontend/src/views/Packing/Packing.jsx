@@ -9,6 +9,7 @@ import { usePacking } from "../../shared/hooks/usePacking.jsx";
 import { useSFX } from "../../shared/hooks/useSFX.jsx";
 import { useLoadingContext } from "../../shared/contexts/LoadingContext.jsx";
 import { useTranslation } from "react-i18next";
+import { Button } from "antd";
 
 function Packing() {
   const { t } = useTranslation();
@@ -98,12 +99,9 @@ function Packing() {
           <div className="w-[90%] flex justify-between px-5">
             <div className="flex justify-center py-4">
               <div className="min-h-[5vh] w-[100%] flex justify-end">
-                <button
-                  onClick={reset}
-                  className="text-slate-100 border border-slate-400 bg-red-900 focus:ring-2 focus:outline-none focus:ring-slate-300 font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-75"
-                >
-                  <p>{t("common.reset")}</p>
-                </button>
+                <Button type="primary" danger shape="rounded" className="border-red-600" onClick={reset}>
+                {t("common.reset")}
+                </Button>
               </div>
             </div>
             <SubmitInvoiceButton
