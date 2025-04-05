@@ -38,7 +38,7 @@ function Index() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       getInvoices();
-    }, 20000);
+    }, 999999);
     return () => clearInterval(intervalId);
   }, [getInvoices]);
 
