@@ -9,10 +9,6 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 function ImportantStorageInvoiceModal({ invoice }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const [packerName, setPackerName] = useState("");
-  const [packerFieldError, setPackerFieldError] = useState(false);
-  const [packerFieldPermissionError, setPackerFieldPermissionError] =
-    useState(false);
   const nav = useNavigate();
 
   const rows = [
@@ -25,7 +21,6 @@ function ImportantStorageInvoiceModal({ invoice }) {
 
   useEffect(() => {
     setPackerById("");
-    setPackerFieldError(false);
   }, [open]);
 
   const setPackerById = async (id) => {
@@ -35,35 +30,25 @@ function ImportantStorageInvoiceModal({ invoice }) {
       id.toString().trim() === "" ||
       !/^-?\d{4,}$/.test(id)
     ) {
-      setPackerName("");
       return;
     }
 
     let packer = await ipcRenderer.invoke("fetch-packer", id);
     if (!packer.id) {
-      setPackerName("");
       return;
     }
-    setPackerName(packer.name);
-    setPackerFieldError(false);
-    setPackerFieldPermissionError(!packer.can_submit_important_invoices);
   };
 
   const submitForm = (event) => {
-
-    const id = document.getElementById("name").value;
+    const id = event.id;
     setPackerById(id);
 
     ipcRenderer.invoke("fetch-packer", id).then((packer) => {
-      if (packerName !== "" && packer.id) {
-        if (packer.can_submit_important_invoices) {
-          handleClose();
-          nav(`/packing/${invoice.id}`, {
-            state: { packerId: id },
-          });
-        }
-      } else {
-        setPackerFieldError(true);
+      if (packer.id) {
+        handleClose();
+        nav(`/packing/${invoice.id}`, {
+          state: { packerId: id },
+        });
       }
     });
   };
@@ -133,8 +118,7 @@ function ImportantStorageInvoiceModal({ invoice }) {
             <tr className="border-b dark:border-slate-50 border-slate-400">
               <td className="py-2 w-48 font-medium text-gray-500"></td>
               <td className="w-64 py-2 text-xl text-slate-900">
-                <div className="flex gap-2 items-center ">
-                </div>
+                <div className="flex gap-2 items-center "></div>
               </td>
             </tr>
           </tbody>
