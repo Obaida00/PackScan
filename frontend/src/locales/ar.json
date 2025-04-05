@@ -12,7 +12,8 @@
     "refresh": "تحديث",
     "chooseDate": "اختر تاريخاً",
     "select": "قم بالاختيار",
-    "submit": "إرسال"
+    "submit": "إرسال",
+    "print": "طباعة"
   },
   "navigation": {
     "invoiceManager": "إدارة الفواتير",

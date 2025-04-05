@@ -12,7 +12,8 @@
     "refresh": "Refresh",
     "chooseDate": "Choose Date",
     "select": "select",
-    "submit": "Submit"
+    "submit": "Submit",
+    "print": "Print"
   },
   "navigation": {
     "invoiceManager": "Invoice Manager",

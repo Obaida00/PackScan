@@ -2,6 +2,7 @@ import React from "react";
 import { IconButton } from "@mui/material";
 import { PrinterOutlined } from "@ant-design/icons";
 import { Button } from "antd";
+import { t } from "i18next";
 
 function PrintInvoiceButton({ invoiceId }) {
   const printInvoice = () => {
@@ -14,7 +15,7 @@ function PrintInvoiceButton({ invoiceId }) {
       icon={<PrinterOutlined />}
       onClick={printInvoice}
     >
-      Print
+      {t("common.print")}
     </Button>
   );
 }

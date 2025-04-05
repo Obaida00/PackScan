@@ -88,7 +88,7 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
             ))}
             <tr>
               <td className="py-2 w-48 font-medium dark text-gray-500">
-                Number of packages
+                {t("invoice.numberOfPackages")}
               </td>
               <td className="w-64 py-2 text-xl dark:text-gray-300 text-gray-600">
                 <Input
