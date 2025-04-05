@@ -108,7 +108,7 @@ function Settings() {
             <Switch value={isLightMode} onChange={handleThemeChange}></Switch>
           </div>
 
-          <div className="mt-4 flex justify-between items-end">
+          <div className="mt-11 flex justify-between items-end">
             <label className="block mb-2">{t("settings.language")}</label>
             <Select
               size="large"
