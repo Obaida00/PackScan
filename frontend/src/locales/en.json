@@ -11,7 +11,8 @@
     "noContent": "No Content",
     "refresh": "Refresh",
     "chooseDate": "Choose Date",
-    "select": "select"
+    "select": "select",
+    "submit": "Submit"
   },
   "navigation": {
     "invoiceManager": "Invoice Manager",
@@ -73,9 +74,13 @@
     "title": "Packer",
     "packerIdPlaceholder": "Your ID ",
     "idNotValid": "Packer id not valid",
-    "cannotSubmit": "Packer cannot submit"
+    "cannotSubmit": "Packer cannot submit",
+    "emptyNumberOfPackagesField": "Please enter the number of packages",
+    "emptyPackerIdField": "Please enter packer ID"
   },
   "extra": {
     "doYouWantToRemoveImportantFlag": "This will remove the important flag.. Are you sure?"
+    
+
   }
 }

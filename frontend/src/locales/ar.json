@@ -11,7 +11,8 @@
     "noContent": "لا يوجد محتوى",
     "refresh": "تحديث",
     "chooseDate": "اختر تاريخاً",
-    "select": "قم بالاختيار"
+    "select": "قم بالاختيار",
+    "submit": "إرسال"
   },
   "navigation": {
     "invoiceManager": "إدارة الفواتير",
@@ -73,7 +74,9 @@
     "title": "الموضب",
     "packerIdPlaceholder": "رقم تعريفك",
     "idNotValid": "رقم الموضب غير صالح",
-    "cannotSubmit": "لا يمكن للموضب توضيب الفاتورة"
+    "cannotSubmit": "لا يمكن للموضب توضيب الفاتورة",
+    "emptyNumberOfPackagesField": "الرجاء إدخال عدد الطرود",
+    "emptyPackerIdField": "الرجاء إدخال رقم الموضب"
   },
   "extra": {
     "doYouWantToRemoveImportantFlag": "سيؤدي هذا إلى إزالة علامة \"مهم\".. هل أنت متأكد؟"

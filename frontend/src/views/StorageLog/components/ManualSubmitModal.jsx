@@ -8,7 +8,7 @@ import { useSFX } from "../../../shared/hooks/useSFX.jsx";
 import { useLoadingContext } from "../../../shared/contexts/LoadingContext.jsx";
 import "../../../shared/styles/Loader.css";
 import { useTranslation } from "react-i18next";
-import { Button } from "antd";
+import { Button, Modal, Form, Input } from "antd";
 
 function ManualSubmitModal({ invoiceId, afterSubmit }) {
   const { t } = useTranslation();
@@ -25,8 +25,12 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
 
   const { setProgressLoading } = useLoadingContext();
 
-  const onInputChange = (e) => {
-    setMetaData({ ...metaData, [e.target.name]: e.target.value });
+  const onInputChange = (values) => {
+    setMetaData({
+      ...metaData,
+      numberOfPackages: values.numberOfPackages,
+      packerId: values.packerId,
+    });
   };
 
   const handleClickOpen = () => {
@@ -67,10 +71,13 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
     setPackerFieldError(false);
   };
 
-  const submit = (e) => {
-    e.preventDefault();
+  const onFinish = (values) => {
+    console.log(values.numberOfPackages);
+  };
+
+  const submit = (values) => {
     let err = false;
-    if (metaData.numberOfPackages === null || metaData.numberOfPackages <= 0) {
+    if (values.numberOfPackages === null || values.numberOfPackages <= 0) {
       console.log("invalid number of packages");
       setPackageNumberFieldError(true);
       err = true;
@@ -78,13 +85,13 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
       setPackageNumberFieldError(false);
     }
 
-    if (packerName === "") {
-      console.log("invalid packer name");
-      setPackerFieldError(true);
-      err = true;
-    } else {
-      setPackerFieldError(false);
-    }
+    // if (packerName === "") {
+    //   console.log("invalid packer name");
+    //   setPackerFieldError(true);
+    //   err = true;
+    // } else {
+    //   setPackerFieldError(false);
+    // }
 
     if (!packerHasPermission) {
       console.log("invalid packer permission");
@@ -104,6 +111,8 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
         numberOfPackages: metaData.numberOfPackages,
       })
       .then(async () => {
+        console.log("submitted successfully------");
+
         playCanSubmitSound();
         setProgressLoading(false);
         afterSubmit();
@@ -141,7 +150,57 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
           </g>
         </svg>
       </Button>
-      <Dialog
+      <Modal
+        title={`${t("invoice.submitInvoice")} -${invoiceId}-`}
+        open={open}
+        onClose={handleClose}
+        onCancel={handleClose}
+        okButtonProps={null}
+        cancelText={t("common.cancel")}
+        footer={[
+          <Form
+          name="basic"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          style={{ maxWidth: 600 }}
+          onFinish={submit}
+          autoComplete="off"
+        >
+          <Form.Item
+            label={t("invoice.numberOfPackages")}
+            name="numberOfPackages"
+            onMetaChange={metaData.numberOfPackages}
+            rules={[
+              {
+                required: true,
+                message: t("packer.emptyNumberOfPackagesField"),
+              },
+            ]}
+          >
+            <Input onChange={onInputChange} />
+          </Form.Item>
+
+          <Form.Item
+            label={t("packer.title")}
+            name="packerId"
+            onMetaChange={metaData.packerId}
+            rules={[{ required: true, message: t("packer.emptyPackerIdField") }]}
+          >
+            <Input onChange={onInputChange} placeholder={t("packer.packerIdPlaceholder")}/>
+          </Form.Item>
+
+          <Form.Item label={null}>
+            <Button color="green" variant="solid" htmlType="submit">
+              {t("common.submit")}
+            </Button>
+          </Form.Item>
+        </Form>
+
+        ]}
+      >
+        
+      </Modal>
+      {/* <Dialog
         open={open}
         onClose={handleClose}
         PaperProps={{
@@ -220,7 +279,7 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
           <Button onClick={handleClose}>{t("common.cancel")}</Button>
           <Button onClick={submit}>{t("common.submit")}</Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 }
