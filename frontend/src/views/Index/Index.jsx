@@ -61,7 +61,7 @@ function Index() {
         <div className="flex justify-center">
           <div className="w-[80vw] my-4 overflow-x-auto shadow-gray-950 shadow-md rounded-xl">
             {loading ? (
-              <h1 className="py-3 text-center font-cocon text-xl text-slate-950">
+              <h1 className="py-3 text-center font-cocon text-xl dark:text-slate-200 text-slate-950">
                 {t("common.loading")}
               </h1>
             ) : (
