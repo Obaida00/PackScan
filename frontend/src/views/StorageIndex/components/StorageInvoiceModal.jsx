@@ -26,28 +26,28 @@ function StorageInvoiceModal({ invoice }) {
   ];
 
   useEffect(() => {
-    setPackerById("");
+    // setPackerById("");
   }, [open]);
 
-  const setPackerById = async (id) => {
-    if (
-      id === null ||
-      id === undefined ||
-      id.toString().trim() === "" ||
-      !/^-?\d{4,}$/.test(id)
-    ) {
-      return;
-    }
+  // const setPackerById = async (id) => {
+  //   if (
+  //     id === null ||
+  //     id === undefined ||
+  //     id.toString().trim() === "" ||
+  //     !/^-?\d{4,}$/.test(id)
+  //   ) {
+  //     return;
+  //   }
 
-    let packer = await ipcRenderer.invoke("fetch-packer", id);
-    if (packer.length === 0) {
-      return;
-    }
-  };
+  //   let packer = await ipcRenderer.invoke("fetch-packer", id);
+  //   if (packer.length === 0) {
+  //     return;
+  //   }
+  // };
 
   const submitForm = (event) => {
     const id = event.id;
-    setPackerById(id);
+    // setPackerById(id);
 
     ipcRenderer.invoke("fetch-packer", id).then((packer) => {
       if (packer.id) {
@@ -63,7 +63,7 @@ function StorageInvoiceModal({ invoice }) {
   };
 
   const handleClose = () => {
-    setPackerById(0);
+    // setPackerById(0);
     setOpen(false);
   };
 

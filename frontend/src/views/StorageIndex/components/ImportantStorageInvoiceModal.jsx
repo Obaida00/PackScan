@@ -19,29 +19,8 @@ function ImportantStorageInvoiceModal({ invoice }) {
     { label: "netPrice", value: invoice.net_price },
   ];
 
-  useEffect(() => {
-    setPackerById("");
-  }, [open]);
-
-  const setPackerById = async (id) => {
-    if (
-      id === null ||
-      id === undefined ||
-      id.toString().trim() === "" ||
-      !/^-?\d{4,}$/.test(id)
-    ) {
-      return;
-    }
-
-    let packer = await ipcRenderer.invoke("fetch-packer", id);
-    if (!packer.id) {
-      return;
-    }
-  };
-
   const submitForm = (event) => {
     const id = event.id;
-    setPackerById(id);
 
     ipcRenderer.invoke("fetch-packer", id).then((packer) => {
       if (packer.id) {
@@ -58,7 +37,6 @@ function ImportantStorageInvoiceModal({ invoice }) {
   };
 
   const handleClose = () => {
-    setPackerById(0);
     setOpen(false);
   };
 
