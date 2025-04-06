@@ -22,8 +22,6 @@ import { useEffect, useState } from "react";
 import { initializeLanguage } from "./i18n.js";
 import "./i18n.js";
 import { ConfigProvider, theme } from "antd";
-import { defaultTheme } from "antd/es/theme/context.js";
-import { blue } from "@mui/material/colors";
 
 initializeLanguage();
 

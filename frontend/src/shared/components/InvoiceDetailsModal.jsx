@@ -1,9 +1,6 @@
 import * as React from "react";
 import "../../shared/styles/Modal.css";
 import { Modal, Button } from "antd";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 import PrintInvoiceButton from "../../shared/components/PrintInvoiceButton.jsx";
 import { useTranslation } from "react-i18next";
