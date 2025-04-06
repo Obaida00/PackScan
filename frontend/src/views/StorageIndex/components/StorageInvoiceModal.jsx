@@ -1,13 +1,8 @@
 import * as React from "react";
 import "../../../shared/styles/Modal.css";
 import { useNavigate } from "react-router-dom";
-import TextField from "@mui/material/TextField";
 import { Button, Modal, Form, Input } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -26,28 +21,10 @@ function StorageInvoiceModal({ invoice }) {
   ];
 
   useEffect(() => {
-    // setPackerById("");
   }, [open]);
-
-  // const setPackerById = async (id) => {
-  //   if (
-  //     id === null ||
-  //     id === undefined ||
-  //     id.toString().trim() === "" ||
-  //     !/^-?\d{4,}$/.test(id)
-  //   ) {
-  //     return;
-  //   }
-
-  //   let packer = await ipcRenderer.invoke("fetch-packer", id);
-  //   if (packer.length === 0) {
-  //     return;
-  //   }
-  // };
 
   const submitForm = (event) => {
     const id = event.id;
-    // setPackerById(id);
 
     ipcRenderer.invoke("fetch-packer", id).then((packer) => {
       if (packer.id) {
@@ -63,7 +40,6 @@ function StorageInvoiceModal({ invoice }) {
   };
 
   const handleClose = () => {
-    // setPackerById(0);
     setOpen(false);
   };
 
