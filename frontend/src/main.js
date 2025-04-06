@@ -82,7 +82,7 @@ if (!gotTheLock) {
   app.on("second-instance", (event, commandLine, workingDirectory) => {
     if (mainWindow) {
       const filePath = commandLine[commandLine.length - 1];
-      if (filePath && filePath.endsWith(`.${FILE_EXTENSION}`)) {
+      if (filePath && filePath.endsWith(.${FILE_EXTENSION})) {
         onFileEvent(filePath);
       }
     }
@@ -94,7 +94,7 @@ if (!gotTheLock) {
   app.whenReady().then(() => {
     const success = app.setAsDefaultProtocolClient(FILE_EXTENSION);
     log.info(
-      `Registered as default handler for .${FILE_EXTENSION}: ${success}`
+      Registered as default handler for .${FILE_EXTENSION}: ${success}
     );
 
     createWindow();
@@ -110,7 +110,7 @@ if (!gotTheLock) {
 
   if (process.argv.length >= 2) {
     const filePath = process.argv[1];
-    if (filePath && filePath.endsWith(`.${FILE_EXTENSION}`)) {
+    if (filePath && filePath.endsWith(.${FILE_EXTENSION})) {
       app.whenReady().then(() => {
         onFileEvent(filePath);
       });
@@ -153,6 +153,15 @@ ipcMain.handle(
     await printInvoiceSticker(id, stickerPrinter);
   }
 );
+ipcMain.handle("mark-invoice-pending", async (event, invoiceId) => {
+  return await axiosClient.markInvoiceAsPending(invoiceId);
+});
+ipcMain.handle(
+  "mark-invoice-in-progress",
+  async (event, { invoiceId, packerId }) => {
+    return await axiosClient.markInvoiceAsImportant(invoiceId, packerId);
+  }
+);
 ipcMain.handle("unmark-invoice-important", async (event, invoiceId) => {
   return await axiosClient.unmarkInvoiceAsImportant(invoiceId);
 });
@@ -162,8 +171,9 @@ ipcMain.handle("go-back", async (event) => {
   }
 });
 ipcMain.handle("play-sound", async (event, soundName) => {
-  log.info(`playing sound: ${soundName}`);
-  const soundFilePath = path.join(__dirname, `sounds/${soundName}.mp3`);
+  log.info(playing sound: ${soundName});
+
+  const soundFilePath = getSfxFilePath(${soundName}.mp3);
   await sound.play(soundFilePath);
 });
 ipcMain.handle("print-invoice", async (event, invoiceId) => {
@@ -231,10 +241,10 @@ const onFileEvent = async (filePath) => {
     "New File Opened!",
     "New file has just been opened, proceessing in progress..."
   );
-  log.info(`New file opened: ${filePath}`);
+  log.info(New file opened: ${filePath});
 
-  if (path.extname(filePath) != `.${FILE_EXTENSION}`) {
-    log.error(`File type \"${path.extname(filePath)}\" is not supported !!!`);
+  if (path.extname(filePath) != .${FILE_EXTENSION}) {
+    log.error(File type \"${path.extname(filePath)}\" is not supported !!!);
     return;
   }
 
@@ -248,10 +258,10 @@ function printPdf(pdf, printer) {
   PdfPrintToPrinter(pdf, printer)
     .then((code) => {
       code == 0
-        ? sendNotification("Success!!", "File printed successfully ✔️")
+        ? sendNotification("Success!!", "File printed successfully ✔")
         : sendNotification(
             "Something went wrong",
-            "File printing cancelled ✖️"
+            "File printing cancelled ✖"
           );
     })
     .catch((e) => {
@@ -321,7 +331,7 @@ function getPtpExePath() {
           ".webpack\\main\\PDFtoPrinterSelect.exe"
         );
         fs.copyFileSync(asarScriptPath, PtpExePath);
-        log.info(`ptp exe extracted to: ${PtpExePath}`);
+        log.info(ptp exe extracted to: ${PtpExePath});
       }
     } else {
       PtpExePath = path.join(__dirname, "PDFtoPrinterSelect.exe");
@@ -344,6 +354,40 @@ async function printInvoiceReceipt(id, printer) {
   printPdf(r, printer);
 }
 
+function getSfxFilePath(sfxFileName) {
+  try {
+    let sfxPath;
+
+    if (app.isPackaged) {
+      const tempDir = os.tmpdir();
+      const soundsDir = path.join(tempDir, "packscan_sounds");
+
+      if (!fs.existsSync(soundsDir)) {
+        log.info("creating directory ", soundsDir);
+        fs.mkdirSync(soundsDir, { recursive: true });
+      }
+
+      sfxPath = path.join(tempDir, "sounds", sfxFileName);
+      if (!fs.existsSync(sfxPath)) {
+        log.info(trying to copy the file out of asar for file: ${sfxPath});
+        const asarScriptPath = path.join(
+          app.getAppPath(),
+          .webpack\\main\\sounds\\${sfxFileName}
+        );
+        fs.copyFileSync(asarScriptPath, sfxPath);
+        log.info(ptp exe extracted to: ${sfxPath});
+      }
+    } else {
+      sfxPath = path.join(__dirname, "sounds", sfxFileName);
+    }
+
+    log.info("sound file path:", sfxPath);
+    return sfxPath;
+  } catch (error) {
+    log.error(error);
+  }
+}
+
 function setProgress(progress) {
   log.info("Taskbar progress: ", progress);
   if (mainWindow) mainWindow.setProgressBar(progress);
@@ -352,7 +396,7 @@ function setProgress(progress) {
 }
 
 function sendNotification(title, body, timeout = null) {
-  log.info(`sending notification - title: ${title} - body: ${body}`);
+  log.info(sending notification - title: ${title} - body: ${body});
   startFlashing();
   try {
     if (Notification.isSupported()) {

@@ -24,12 +24,12 @@ class ProductResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->required()
-                    ->unique('products', 'name')
+                    ->unique('products', 'name', fn($record) => $record?->id)
                     ->label('Name'),
                 TextInput::make('barcode')
                     ->required()
                     ->numeric()
-                    ->unique('products', 'barcode')
+                    ->unique('products', 'barcode', fn($record) => $record?->id)
                     ->label('Barcode'),
                 Select::make('collection_id')
                     ->relationship('collection', 'name')

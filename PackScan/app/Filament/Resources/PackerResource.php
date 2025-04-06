@@ -24,6 +24,11 @@ class PackerResource extends Resource
     {
         return $form
             ->schema([
+                TextInput::make('id')
+                    ->required()
+                    ->numeric()
+                    ->label('ID')
+                    ->unique('packers', 'id', fn($record) => $record?->id),
                 TextInput::make('name')
                     ->required()
                     ->label('Name'),
@@ -43,6 +48,10 @@ class PackerResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('Id')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('name')
                     ->label('Name')
                     ->sortable()

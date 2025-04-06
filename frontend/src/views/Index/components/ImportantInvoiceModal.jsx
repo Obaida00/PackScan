@@ -18,7 +18,6 @@ function ImportantInvoiceModal({ invoice, callback }) {
   };
 
   const submitForm = async (e) => {
-    await ipcRenderer.invoke("unmark-invoice-important", invoice.id);
     callback();
     handleClose();
   };
