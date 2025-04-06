@@ -24,14 +24,14 @@ class StorageResource extends Resource
                 TextInput::make('barcode_id')
                     ->required()
                     ->numeric()
-                    ->unique('storages', 'barcode_id')
+                    ->unique('storages', 'barcode_id', fn($record) => $record?->id)
                     ->label('Barcode ID'),
                 TextInput::make('name')
                     ->required()
                     ->label('Name'),
                 TextInput::make('code')
                     ->required()
-                    ->unique('storages', 'code')
+                    ->unique('storages', 'code', fn($record) => $record?->id)
                     ->label('Code'),
             ]);
     }

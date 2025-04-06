@@ -20,9 +20,6 @@ function StorageInvoiceModal({ invoice }) {
     { label: "netPrice", value: invoice.net_price },
   ];
 
-  useEffect(() => {
-  }, [open]);
-
   const submitForm = (event) => {
     const id = event.id;
 
@@ -33,7 +30,7 @@ function StorageInvoiceModal({ invoice }) {
           state: { packerId: id },
         });
       }
-    });
+    }
   };
   const handleClickOpen = () => {
     setOpen(true);

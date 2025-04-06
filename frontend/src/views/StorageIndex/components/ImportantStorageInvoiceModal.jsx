@@ -29,7 +29,7 @@ function ImportantStorageInvoiceModal({ invoice }) {
           state: { packerId: id },
         });
       }
-    });
+    }
   };
 
   const handleClickOpen = () => {

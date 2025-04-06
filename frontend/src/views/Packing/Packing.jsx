@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import PackingTable from "./components/PackingTable.jsx";
 import SearchBox from "../../shared/components/SearchBox.jsx";
@@ -31,6 +31,18 @@ function Packing() {
 
   const { playCanSubmitSound } = useSFX();
 
+  const isSubmitted = useRef(false);
+
+  useEffect(() => {
+    ipcRenderer.invoke("mark-invoice-in-progress", { invoiceId: id, packerId: packerId });
+
+    return () => {
+      if (!isSubmitted.current) {
+        ipcRenderer.invoke("mark-invoice-pending", id);
+      }
+    };
+  }, []);
+
   const handleBarcode = (input) => {
     const numericBarcode = Number(input);
     incrementItem(numericBarcode);
@@ -46,6 +58,7 @@ function Packing() {
         manually: false,
       })
       .then(async () => {
+        isSubmitted.current = true;
         playCanSubmitSound();
         setProgressLoading(false);
         await ipcRenderer.invoke("go-back");
