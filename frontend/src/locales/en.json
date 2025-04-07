@@ -36,6 +36,7 @@
     "loadingPrinters": "Loading Printers..."
   },
   "invoice": {
+    "title": "invoice",
     "id": "Invoice ID",
     "status": {
       "-": "All",

@@ -11,22 +11,22 @@ function InvoiceDetailsModal({ invoice }) {
   const [open, setOpen] = useState(false);
 
   const rows = [
-    { label: "invoice.statement", value: invoice.statement },
-    { label: "invoice.pharmacist", value: invoice.pharmacist },
-    { label: "invoice.createdAt", value: invoice.created_at },
-    { label: "invoice.dateOfDelivery", value: invoice.date },
-    { label: "invoice.netPrice", value: invoice.net_price },
-    { label: "storage.title", value: invoice.storage_name },
-    { label: "invoice.status.title", value: invoice.status },
-    { label: "packer.title", value: invoice.packer_name ?? "-----------" },
+    { label: t("invoice.statement"), value: invoice.statement },
+    { label: t("invoice.pharmacist"), value: invoice.pharmacist },
+    { label: t("invoice.createdAt"), value: invoice.created_at },
+    { label: t("invoice.dateOfDelivery"), value: invoice.date },
+    { label: t("invoice.netPrice"), value: invoice.net_price },
+    { label: t("storage.title"), value: t("storage." + invoice.storage_name) },
+    { label: t("invoice.status.title"), value: invoice.status },
+    { label: t("packer.title"), value: invoice.packer_name ?? "-----------" },
     {
-      label: "invoice.numberOfPackages",
+      label: t("invoice.numberOfPackages"),
       value: invoice.number_of_packages ?? "-----------",
     },
-    { label: "invoice.doneAt", value: invoice.done_at ?? "-----------" },
-    { label: "invoice.sentAt", value: invoice.sent_at ?? "-----------" },
+    { label: t("invoice.doneAt"), value: invoice.done_at ?? "-----------" },
+    { label: t("invoice.sentAt"), value: invoice.sent_at ?? "-----------" },
     {
-      label: "invoice.submittionMode",
+      label: t("invoice.submittionMode"),
       value: invoice.submittion_mode ?? "-----------",
     },
   ];
@@ -61,16 +61,14 @@ function InvoiceDetailsModal({ invoice }) {
         open={open}
         onOk={handleClose}
         onCancel={handleClose}
-        footer={
-          <PrintInvoiceButton invoiceId={invoice.id} />
-        }
+        footer={<PrintInvoiceButton invoiceId={invoice.id} />}
       >
         <table className="table-auto text-start w-full">
           <tbody>
             {rows.map((row, index) => (
               <tr key={index} className="border-b-1 border-slate-50">
                 <td className="py-1 font-normal dark:text-gray-300 text-gray-500">
-                  {t(row.label)}
+                  {row.label}
                 </td>
                 <td className="py-1 font-medium text-xl text-slate-800 dark:text-slate-100">
                   {row.value}
