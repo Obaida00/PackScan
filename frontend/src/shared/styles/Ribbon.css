@@ -1,10 +1,36 @@
-.ribbon {
-    width: 100%;
-    font-size: 0.75rem;
-    font-weight: bold;
-    padding: 7px 150px;
-    z-index: 9;
-    text-align: center;
-    white-space: nowrap;
+.ribbon-column {
+  position: relative;
+  border-bottom: 2px solid #7f1d1d;
+  border-top: 2px solid #7f1d1d;
+  background-color: #fef2f2;
+  transition: background-color 0.2s ease-in-out;
+  color: #7f1d1d;
+  text-align: center;
+}
+
+.ribbon-column:hover {
+  background-color: #fecaca;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ribbon-column {
+    background-color: #4a0a0a;
+    border-bottom: 2px solid #7f1d1d;
+    border-top: 2px solid #7f1d1d;
+    color: #fecaca;
   }
-  
+
+  .ribbon-column:hover {
+    background-color: #7f1d1d;
+  }
+}
+
+.ribbon {
+  width: 100%;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 7px 150px;
+  z-index: 9;
+  text-align: center;
+  white-space: nowrap;
+}

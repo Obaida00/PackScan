@@ -1,11 +1,11 @@
 import * as React from "react";
 import TableHeader from "../../../shared/components/TableComponents/TableHeader.jsx";
 import IndexTableRow from "./IndexTableRow.jsx";
-import IndexTableRowForMissingInvoices from "./IndexTableRowForMissingInvoices.jsx";
+import MissingInvoiceTableRow from "../../../shared/components/TableComponents/MissingInvoiceTableRow.jsx";
 import { useTranslation } from "react-i18next";
 
 function IndexTable({ invoices, reloadInvoices }) {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <table className="w-full text-md text-gray-900 tracking-wide">
@@ -20,9 +20,18 @@ function IndexTable({ invoices, reloadInvoices }) {
       <tbody>
         {invoices.map((invoice, key) =>
           invoice.is_missing ? (
-            <IndexTableRowForMissingInvoices key={key} id={invoice.invoice_id} storageCode={invoice.storage_code} />
+            <MissingInvoiceTableRow
+              key={key}
+              data={`${
+                invoice.invoice_id
+              }-${invoice.storage_code.toUpperCase()}`}
+            />
           ) : (
-            <IndexTableRow key={key} invoice={invoice} reloadInvoices={reloadInvoices}/>
+            <IndexTableRow
+              key={key}
+              invoice={invoice}
+              reloadInvoices={reloadInvoices}
+            />
           )
         )}
       </tbody>

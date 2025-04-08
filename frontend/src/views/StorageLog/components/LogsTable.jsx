@@ -1,7 +1,7 @@
 import * as React from "react";
 import TableHeader from "../../../shared/components/TableComponents/TableHeader.jsx";
 import LogsTableRow from "./LogsTableRow.jsx";
-import LogsTableRowForMissingInvoices from "./LogsTableRowForMissingInvoices.jsx";
+import MissingInvoiceTableRow from "../../../shared/components/TableComponents/MissingInvoiceTableRow.jsx";
 import { useTranslation } from "react-i18next";
 
 function LogsTable({ invoices, reloadInvoices }) {
@@ -19,7 +19,7 @@ function LogsTable({ invoices, reloadInvoices }) {
       <tbody>
         {invoices.map((invoice, key) =>
           invoice.is_missing ? (
-            <LogsTableRowForMissingInvoices key={key} id={invoice.invoice_id} />
+            <MissingInvoiceTableRow key={key} data={invoice.invoice_id} />
           ) : (
             <LogsTableRow
               key={key}
