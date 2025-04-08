@@ -76,6 +76,7 @@
     "title": "الموضب",
     "packerIdPlaceholder": "رقم تعريفك",
     "idNotValid": "رقم الموضب غير صالح",
+    "idMustBeAnInteger": "رقم الموضب يجب أن يكون عدد صحيح",
     "cannotSubmit": "لا يمكن للموضب توضيب الفاتورة",
     "emptyNumberOfPackagesField": "الرجاء إدخال عدد الطرود",
     "emptyPackerIdField": "الرجاء إدخال رقم الموضب"

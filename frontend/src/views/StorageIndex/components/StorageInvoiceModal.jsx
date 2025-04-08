@@ -1,15 +1,14 @@
 import * as React from "react";
 import "../../../shared/styles/Modal.css";
 import { useNavigate } from "react-router-dom";
-import { Button, Modal, Form, Input } from "antd";
-import { ArrowRightOutlined } from "@ant-design/icons";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Modal, Button, Form, Input } from "antd";
+import { ArrowRightOutlined } from "@ant-design/icons";
 
-function StorageInvoiceModal({ invoice }) {
-  const { t } = useTranslation();
+function StorageInvoiceModal({ invoice, modalIcon, validator }) {
+  const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
-  
   const nav = useNavigate();
 
   const rows = [
@@ -19,6 +18,12 @@ function StorageInvoiceModal({ invoice }) {
     { label: "dateOfDelivery", value: invoice.date },
     { label: "netPrice", value: invoice.net_price },
   ];
+
+  const packerIdValidationRules = [
+    { required: true, message: t("packer.emptyPackerIdField") },
+    { pattern: "^\\d+$", message: t("packer.idMustBeAnInteger") },
+  ];
+  if (validator) packerIdValidationRules.push({ validator });
 
   const submitForm = (event) => {
     const id = event.id;
@@ -30,8 +35,9 @@ function StorageInvoiceModal({ invoice }) {
           state: { packerId: id },
         });
       }
-    }
+    });
   };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -43,30 +49,22 @@ function StorageInvoiceModal({ invoice }) {
   return (
     <>
       <Button
-        type="text"
+        type="link"
         className="hover:bg-transparent w-fit h-full"
         onClick={handleClickOpen}
       >
-        <svg
-          xmlns="http://wwz.w3.org/2000/svg"
-          height="24px"
-          viewBox="0 -960 960 960"
-          width="24px"
-          fill="gray"
-        >
-          <path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
-        </svg>
+        {modalIcon}
       </Button>
       <Modal
         title={`-${invoice.invoice_id}-`}
         open={open}
         onCancel={handleClose}
-        footer={[
+        footer={
           <Form onFinish={submitForm}>
             <Form.Item
               label={t("packer.title")}
               name="id"
-              rules={[{ required: true, message: "Please enter ID" }]}
+              rules={packerIdValidationRules}
             >
               <Input placeholder={t("packer.packerIdPlaceholder")} id="name" />
             </Form.Item>
@@ -74,12 +72,15 @@ function StorageInvoiceModal({ invoice }) {
               htmlType="submit"
               variant="solid"
               color="green"
-              icon={<ArrowRightOutlined />}
+              iconPosition="end"
+              icon={
+                <ArrowRightOutlined rotate={i18n.language === "ar" ? 180 : 0} />
+              }
             >
               {t("invoice.startPacking")}
             </Button>
-          </Form>,
-        ]}
+          </Form>
+        }
       >
         <table className="table-auto text-start w-full">
           <tbody>

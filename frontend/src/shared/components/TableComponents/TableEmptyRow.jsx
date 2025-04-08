@@ -10,6 +10,7 @@ function TableEmptyRow() {
       <TableDataCell data={t("common.noContent")} />
       <TableDataCell data="" />
       <TableDataCell data="" />
+      <TableDataCell data="" />
     </tr>
   );
 }
