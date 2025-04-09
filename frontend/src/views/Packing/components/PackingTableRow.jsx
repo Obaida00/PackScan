@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import TableDataCell from "../../../shared/components/TableComponents/TableDataCell.jsx";
 import ProgressBar from "../../../shared/components/ProgressBar.jsx";
 import Decrement from "./Decrement.jsx";
-import { useTheme } from "../../../shared/contexts/ThemeContext.jsx";
 
 function PackingTableRow({ item, decrementFunc }) {
 

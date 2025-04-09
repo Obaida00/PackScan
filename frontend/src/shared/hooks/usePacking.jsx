@@ -16,21 +16,33 @@ export function usePacking(id) {
   } = useSFX();
 
   const { isLightMode } = useTheme();
-  
+
   const updateItemState = useCallback(
     (item, { increasing = true, playSounds = true } = {}) => {
       if (item.current_count < item.total_count) {
         if (increasing && playSounds) playItemScanSound();
-        return { ...item, colorMain: isLightMode ? "#e5e7eb" : "#1f2937", colorSecond: "#1c64f2" };
+        return {
+          ...item,
+          colorMain: isLightMode ? "#e5e7eb" : "#1f2937",
+          colorSecond: "#1c64f2",
+        };
       }
       if (item.current_count === item.total_count) {
         playPackingCompleteSound();
         if (increasing && playSounds) playItemScanSound();
-        return { ...item, colorMain: "#03543f", colorSecond: "#0e9f6e" };
+        return {
+          ...item,
+          colorMain: isLightMode ? "#a9d4c9" : "#03543f",
+          colorSecond: "#0e9f6e",
+        };
       }
       if (item.current_count > item.total_count) {
         if (increasing && playSounds) playItemOverScanSound();
-        return { ...item, colorMain: "#c81e1e", colorSecond: "#771d1d" };
+        return {
+          ...item,
+          colorMain: isLightMode ? "#e9b1b1" : "#c81e1e",
+          colorSecond: isLightMode ? "#a43939" : "#771d1d",
+        };
       }
       return item;
     },

@@ -7,16 +7,15 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [numberOfPackages, setNumberOfPackages] = useState(null);
-  const [packageNumberFieldError, setPackageNumberFieldError] = useState(false);
 
   const rows = [
-    { label: "statement", value: invoice.statement },
-    { label: "pharmacist", value: invoice.pharmacist },
-    { label: "createdAt", value: invoice.created_at },
-    { label: "dateOfDelivery", value: invoice.date },
-    { label: "netPrice", value: invoice.net_price },
-    { label: "storage", value: invoice.storage_name },
-    { label: "currentPackerId", value: packerId },
+    { label: "invoice.statement", value: invoice.statement },
+    { label: "invoice.pharmacist", value: invoice.pharmacist },
+    { label: "invoice.createdAt", value: invoice.created_at },
+    { label: "invoice.dateOfDelivery", value: invoice.date },
+    { label: "invoice.netPrice", value: invoice.net_price },
+    { label: "storage.title", value: invoice.storage_name },
+    { label: "packer.currentPacker", value: packerId },
   ];
 
   useEffect(() => {
@@ -27,7 +26,6 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
     e.preventDefault();
     if (numberOfPackages === null || numberOfPackages <= 0) {
       console.log("invalid number of packages");
-      setPackageNumberFieldError(true);
       return;
     }
     handleClose();
@@ -48,7 +46,7 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
         <div className="min-h-[5vh] w-fll flex justify-end">
           <button
             onClick={handleClickOpen}
-            className="disabled:bg-slate-600 disabled:text-slate-400 text-slate-100 border border-slate-400 bg-green-700 hover:bg-green-800 focus:ring-2 focus:outline-none focus:ring-slate-300 font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-200"
+            className="disabled:bg-slate-500 disabled:text-slate-300 text-slate-100 border border-slate-400 bg-green-700 hover:bg-green-800 focus:ring-2 focus:outline-none focus:ring-slate-300 font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-200"
             disabled={disabled}
           >
             <p>{t("invoice.submitInvoice")}</p>
@@ -57,7 +55,7 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
               xmlns="http://www.w3.org/2000/svg"
               height="20px"
               viewBox="0 -960 960 960"
-              className="fill-slate-200 rtl:rotate-180"
+              className="fill-slate-300 rtl:rotate-180"
             >
               <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z" />
             </svg>
@@ -68,18 +66,18 @@ function SubmitInvoiceButton({ packerId, invoice, action, disabled }) {
         open={open}
         onCancel={handleClose}
         title={`-${invoice.invoice_id}-`}
-        footer={[
+        footer={
           <Button onClick={submit} color="green" variant="solid">
             {t("invoice.submitInvoice")}
           </Button>
-        ]}
+        }
       >
         <table className="table-auto text-start w-full">
           <tbody>
             {rows.map((row, index) => (
               <tr key={index} className="border-b border-gray-400">
                 <td className="py-1 w-48 font-medium text-sm dark:text-gray-300 text-gray-600">
-                  {t("invoice." + row.label)}
+                  {t(row.label)}
                 </td>
                 <td className="py-1 w-[300px] font-semibold text-lg dark:text-gray-200 text-slate-900">
                   {row.value}

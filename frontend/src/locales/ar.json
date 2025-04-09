@@ -78,7 +78,8 @@
     "idNotValid": "رقم الموضب غير صالح",
     "idMustBeAnInteger": "رقم الموضب يجب أن يكون عدد صحيح",
     "cannotSubmit": "لا يمكن للموضب توضيب الفاتورة",
-    "emptyPackerIdField": "الرجاء إدخال رقم الموضب"
+    "emptyPackerIdField": "الرجاء إدخال رقم الموضب",
+    "currentPacker": "الموضب الحالي"
   },
   "extra": {
     "emptyNumberOfPackagesField": "الرجاء إدخال عدد الطرود",

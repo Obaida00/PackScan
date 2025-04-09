@@ -78,7 +78,8 @@
     "idNotValid": "Packer id not valid",
     "idMustBeAnInteger": "Packer id must be an integer",
     "cannotSubmit": "Packer cannot submit",
-    "emptyPackerIdField": "Please enter packer ID"
+    "emptyPackerIdField": "Please enter packer ID",
+    "currentPacker": "Current packer"
   },
   "extra": {
     "emptyNumberOfPackagesField": "Please enter the number of packages",
