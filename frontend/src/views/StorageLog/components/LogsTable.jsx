@@ -9,10 +9,11 @@ function LogsTable({ invoices, reloadInvoices }) {
 
   return (
     <table className="w-full text-md text-gray-300 tracking-wide ">
-      <thead className="text-mg bg-gray-300 dark:bg-gray-700 text-slate-800 dark:text-gray-400">
+      <thead className="text-mg dark:bg-gray-700 dark:text-gray-300 bg-gray-300 text-gray-700">
         <tr>
           <TableHeader columnName={t("invoice.id")} />
-          <TableHeader columnName={t("status")} />
+          <TableHeader columnName={t("invoice.pharmacist")} />
+          <TableHeader columnName={t("invoice.status.title")} />
           <TableHeader columnName="" />
         </tr>
       </thead>
@@ -23,7 +24,6 @@ function LogsTable({ invoices, reloadInvoices }) {
           ) : (
             <LogsTableRow
               key={key}
-              i={key}
               invoice={invoice}
               reloadInvoices={reloadInvoices}
             />

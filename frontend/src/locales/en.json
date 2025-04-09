@@ -78,10 +78,11 @@
     "idNotValid": "Packer id not valid",
     "idMustBeAnInteger": "Packer id must be an integer",
     "cannotSubmit": "Packer cannot submit",
-    "emptyNumberOfPackagesField": "Please enter the number of packages",
     "emptyPackerIdField": "Please enter packer ID"
   },
   "extra": {
+    "emptyNumberOfPackagesField": "Please enter the number of packages",
+    "numberOfPackagesMustBeAnInteger": "Number of packages must be an integer",
     "doYouWantToRemoveImportantFlag": "This will remove the important flag.. Are you sure?"
   }
 }
