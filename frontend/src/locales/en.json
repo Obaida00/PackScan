@@ -36,6 +36,7 @@
     "loadingPrinters": "Loading Printers..."
   },
   "invoice": {
+    "title": "invoice",
     "id": "Invoice ID",
     "status": {
       "-": "All",
@@ -75,13 +76,14 @@
     "title": "Packer",
     "packerIdPlaceholder": "Your ID ",
     "idNotValid": "Packer id not valid",
+    "idMustBeAnInteger": "Packer id must be an integer",
     "cannotSubmit": "Packer cannot submit",
-    "emptyNumberOfPackagesField": "Please enter the number of packages",
-    "emptyPackerIdField": "Please enter packer ID"
+    "emptyPackerIdField": "Please enter packer ID",
+    "currentPacker": "Current packer"
   },
   "extra": {
+    "emptyNumberOfPackagesField": "Please enter the number of packages",
+    "numberOfPackagesMustBeAnInteger": "Number of packages must be an integer",
     "doYouWantToRemoveImportantFlag": "This will remove the important flag.. Are you sure?"
-    
-
   }
 }

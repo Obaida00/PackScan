@@ -36,6 +36,7 @@
     "loadingPrinters": "تحميل الطابعات..."
   },
   "invoice": {
+    "title": "الفاتورة",
     "id": "رقم الفاتورة",
     "status": {
       "-": "الكل",
@@ -75,11 +76,14 @@
     "title": "الموضب",
     "packerIdPlaceholder": "رقم تعريفك",
     "idNotValid": "رقم الموضب غير صالح",
+    "idMustBeAnInteger": "رقم الموضب يجب أن يكون عدد صحيح",
     "cannotSubmit": "لا يمكن للموضب توضيب الفاتورة",
-    "emptyNumberOfPackagesField": "الرجاء إدخال عدد الطرود",
-    "emptyPackerIdField": "الرجاء إدخال رقم الموضب"
+    "emptyPackerIdField": "الرجاء إدخال رقم الموضب",
+    "currentPacker": "الموضب الحالي"
   },
   "extra": {
+    "emptyNumberOfPackagesField": "الرجاء إدخال عدد الطرود",
+    "numberOfPackagesMustBeAnInteger": "عدد الطرود يجب أن يكون عدد صحيح",
     "doYouWantToRemoveImportantFlag": "سيؤدي هذا إلى إزالة علامة \"مهم\".. هل أنت متأكد؟"
   }
 }

@@ -129,9 +129,17 @@ if (!gotTheLock) {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
+// In memory cache
+let cachedStorages = null;
+const packerCache = new Map();
+
+ipcMain.handle('get-app-path', () => app.getAppPath());
+
 // renderer process event listeners for axios callouts
 ipcMain.handle("fetch-storages", async (event) => {
-  return await axiosClient.fetchStorages();
+  if (cachedStorages) return cachedStorages;
+  cachedStorages = await axiosClient.fetchStorages();
+  return cachedStorages;
 });
 ipcMain.handle("fetch-storage-by-id", async (event, id) => {
   return await axiosClient.fetchStorageById(id);
@@ -143,7 +151,13 @@ ipcMain.handle("fetch-order", async (event, id) => {
   return await axiosClient.getInvoiceById(id);
 });
 ipcMain.handle("fetch-packer", async (event, id) => {
-  return await axiosClient.getPackerById(id);
+  const cacheKey = String(id);
+  if (packerCache.has(cacheKey)) {
+    return packerCache.get(cacheKey);
+  }
+  const packer = await axiosClient.getPackerById(id);
+  packerCache.set(cacheKey, packer);
+  return packer;
 });
 ipcMain.handle(
   "submit-order",
@@ -375,7 +389,7 @@ function getSfxFilePath(sfxFileName) {
           `.webpack\\main\\sounds\\${sfxFileName}`
         );
         fs.copyFileSync(asarScriptPath, sfxPath);
-        log.info(`ptp exe extracted to: ${sfxPath}`);
+        log.info(`Sound file extracted to: ${sfxPath}`);
       }
     } else {
       sfxPath = path.join(__dirname, "sounds", sfxFileName);

@@ -1,23 +1,36 @@
-/* Custom ribbon style */
-.ribbon-wrapper {
+.ribbon-column {
   position: relative;
-  height: 50px;
+  border-bottom: 2px solid #7f1d1d;
+  border-top: 2px solid #7f1d1d;
+  background-color: #fef2f2;
+  transition: background-color 0.2s ease-in-out;
+  color: #7f1d1d;
+  text-align: center;
+}
+
+.ribbon-column:hover {
+  background-color: #fecaca;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ribbon-column {
+    background-color: #4a0a0a;
+    border-bottom: 2px solid #7f1d1d;
+    border-top: 2px solid #7f1d1d;
+    color: #fecaca;
+  }
+
+  .ribbon-column:hover {
+    background-color: #7f1d1d;
+  }
 }
 
 .ribbon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-20em, -50%) rotate(0deg);
-    background: #640a0a;
-    color: white;
-    font-size: 0.75rem;
-    font-weight: bold;
-    padding: 10px 150px;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px #0000004d;
-    z-index: 9;
-    text-align: center;
-    white-space: nowrap;
-  }
-  
+  width: 100%;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 7px 150px;
+  z-index: 9;
+  text-align: center;
+  white-space: nowrap;
+}
