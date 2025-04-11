@@ -1,7 +1,7 @@
 import * as React from "react";
 import "../../../shared/styles/Modal.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Modal, Button, Form, Input } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
@@ -10,6 +10,7 @@ function StorageInvoiceModal({ invoice, modalIcon, validator }) {
   const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
   const nav = useNavigate();
+  const inputRef = useRef(null);
 
   const rows = [
     { label: "statement", value: invoice.statement },
@@ -19,6 +20,12 @@ function StorageInvoiceModal({ invoice, modalIcon, validator }) {
     { label: "netPrice", value: invoice.net_price },
   ];
 
+  useEffect(() => {
+    if (open && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [open]);
+
   const packerIdValidationRules = [
     { required: true, message: t("packer.emptyPackerIdField") },
     { pattern: "^\\d+$", message: t("packer.idMustBeAnInteger") },
@@ -27,14 +34,9 @@ function StorageInvoiceModal({ invoice, modalIcon, validator }) {
 
   const submitForm = (event) => {
     const id = event.id;
-
-    ipcRenderer.invoke("fetch-packer", id).then((packer) => {
-      if (packer.id) {
-        handleClose();
-        nav(`/packing/${invoice.id}`, {
-          state: { packerId: id },
-        });
-      }
+    handleClose();
+    nav(`/packing/${invoice.id}`, {
+      state: { packerId: id },
     });
   };
 
@@ -66,7 +68,11 @@ function StorageInvoiceModal({ invoice, modalIcon, validator }) {
               name="id"
               rules={packerIdValidationRules}
             >
-              <Input placeholder={t("packer.packerIdPlaceholder")} id="name" />
+              <Input
+                placeholder={t("packer.packerIdPlaceholder")}
+                id="name"
+                ref={inputRef}
+              />
             </Form.Item>
             <Button
               htmlType="submit"

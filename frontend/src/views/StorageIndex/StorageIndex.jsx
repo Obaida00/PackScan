@@ -86,7 +86,7 @@ function StorageIndex() {
   };
 
   const basePackerValidator = async (_, value) => {
-    if (isNaN(value) || !value) {
+    if (isNaN(value) || !value || value.length < 4) {
       return Promise.reject();
     }
 
