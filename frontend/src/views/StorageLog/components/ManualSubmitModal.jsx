@@ -1,31 +1,15 @@
-import React, { useEffect, useState } from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
+import React, { useState } from "react";
 import { useSFX } from "../../../shared/hooks/useSFX.jsx";
-import { useLoadingContext } from "../../../shared/contexts/LoadingContext.jsx";
 import "../../../shared/styles/Loader.css";
+import { useTranslation } from "react-i18next";
+import { Button, Modal, Form, Input } from "antd";
 
-function ManualSubmitModal({ invoiceId, afterSubmit }) {
-  const [metaData, setMetaData] = useState({
-    packerId: null,
-    numberOfPackages: null,
-  });
+function ManualSubmitModal({ invoiceId, invoiceGuid, afterSubmit }) {
+  const { t } = useTranslation();
+  const [packerIdFieldValidationStatus, setPackerIdFieldValidationStatus] =
+    useState("");
   const [open, setOpen] = useState(false);
-  const [packerName, setPackerName] = useState("");
-  const [packerHasPermission, setPackerHasPermission] = useState(true);
-  const [packerFieldError, setPackerFieldError] = useState(false);
-  const [packageNumberFieldError, setPackageNumberFieldError] = useState(false);
   const { playCanSubmitSound } = useSFX();
-
-  const { setProgressLoading } = useLoadingContext();
-
-  const onInputChange = (e) => {
-    setMetaData({ ...metaData, [e.target.name]: e.target.value });
-  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -35,89 +19,66 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
     setOpen(false);
   };
 
-  useEffect(() => {
-    setPackerById("");
-    setPackerFieldError(false);
-  }, [open]);
+  const submit = (values) => {
+    const packerId = values.packerId;
+    const numberOfPackages = values.numberOfPackages;
 
-  useEffect(() => {
-    setPackerById(metaData.packerId);
-  }, [metaData.packerId]);
-
-  const setPackerById = async (id) => {
-    if (
-      id === null ||
-      id === undefined ||
-      id.toString().trim() === "" ||
-      !/^-?\d{4,}$/.test(id)
-    ) {
-      setPackerName("");
-      return;
-    }
-
-    let packer = await ipcRenderer.invoke("fetch-packer", id);
-    if (packer.length === 0) {
-      setPackerName("");
-      return;
-    }
-    setPackerName(packer.name);
-    setPackerHasPermission(packer.can_manually_submit);
-    setPackerFieldError(false);
-  };
-
-  const submit = (e) => {
-    e.preventDefault();
-    let err = false;
-    if (metaData.numberOfPackages === null || metaData.numberOfPackages <= 0) {
-      console.log("invalid number of packages");
-      setPackageNumberFieldError(true);
-      err = true;
-    } else {
-      setPackageNumberFieldError(false);
-    }
-
-    if (packerName === "") {
-      console.log("invalid packer name");
-      setPackerFieldError(true);
-      err = true;
-    } else {
-      setPackerFieldError(false);
-    }
-
-    if (!packerHasPermission) {
-      console.log("invalid packer permission");
-      err = true;
-    }
-
-    if (err) {
-      return;
-    }
-
-    handleClose();
-    setProgressLoading(true);
     ipcRenderer
       .invoke("submit-order", {
-        invoiceId: invoiceId,
-        packerId: metaData.packerId,
-        numberOfPackages: metaData.numberOfPackages,
+        id: invoiceGuid,
+        packerId: packerId,
+        numberOfPackages: numberOfPackages,
+        manually: true,
       })
       .then(async () => {
+        console.log("submitted successfully------");
+
         playCanSubmitSound();
-        setProgressLoading(false);
         afterSubmit();
       });
   };
 
+  const packerPermissionValidator = async (_, value) => {
+    setPackerIdFieldValidationStatus("validating");
+    if (isNaN(value) || !value) {
+      setPackerIdFieldValidationStatus("error");
+      return Promise.reject();
+    }
+    const packer = await ipcRenderer.invoke("fetch-packer", value);
+    if (!packer.id) {
+      setPackerIdFieldValidationStatus("error");
+      return Promise.reject(new Error(t("packer.idNotValid")));
+    }
+
+    if (!packer.can_manually_submit) {
+      setPackerIdFieldValidationStatus("error");
+      return Promise.reject(new Error(t("packer.cannotSubmit")));
+    }
+    setPackerIdFieldValidationStatus("success");
+    return Promise.resolve();
+  };
+
+  const numberOfPackagesValidationRules = [
+    { required: true, message: t("extra.emptyNumberOfPackagesField") },
+    { pattern: "^\\d+$", message: t("extra.numberOfPackagesMustBeAnInteger") },
+  ];
+
+  const packerIdValidationRules = [
+    { required: true, message: t("packer.emptyPackerIdField") },
+    { pattern: "^\\d+$", message: t("packer.idMustBeAnInteger") },
+    { validator: packerPermissionValidator },
+  ];
+
   return (
     <>
       <Button
-        disableRipple
+        type="link"
         className="hover:bg-transparent w-fit h-full"
         onClick={handleClickOpen}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 14 14"
+          viewBox="-1 -1 16 16"
           width="24px"
           fill="gray"
         >
@@ -128,95 +89,59 @@ function ManualSubmitModal({ invoiceId, afterSubmit }) {
             strokeLinejoin="round"
           ></g>
           <g id="SVGRepo_iconCarrier">
-            <path d="M7 14A7 7 0 1 1 7 0a7 7 0 0 1 0 14z"></path>
             <path
-              d="M7 13A6 6 0 1 0 7 1a6 6 0 0 0 0 12z"
-              fill="#FFF"
-              fillRule="nonzero"
-              style={{ fill: "var(--svg-status-bg, #1f2937)" }}
+              d="M7 14A7 7 0 1 1 7 0a7 7 0 0 1 0 14z"
+              fill="none"
+              stroke="gray"
+              strokeWidth="1"
             ></path>
-            <path d="M6.415 7.04L4.579 5.203a.295.295 0 0 1 .004-.416l.349-.349a.29.29 0 0 1 .416-.004l2.214 2.214a.289.289 0 0 1 .019.021l.132.133c.11.11.108.291 0 .398L5.341 9.573a.282.282 0 0 1-.398 0l-.331-.331a.285.285 0 0 1 0-.399L6.415 7.04zm2.54 0L7.119 5.203a.295.295 0 0 1 .004-.416l.349-.349a.29.29 0 0 1 .416-.004l2.214 2.214a.289.289 0 0 1 .019.021l.132.133c.11.11.108.291 0 .398L7.881 9.573a.282.282 0 0 1-.398 0l-.331-.331a.285.285 0 0 1 0-.399L8.955 7.04z"></path>
+            <path
+              d="M6.415 7.04L4.579 5.203a.295.295 0 0 1 .004-.416l.349-.349a.29.29 0 0 1 .416-.004l2.214 2.214a.289.289 0 0 1 .019.021l.132.133c.11.11.108.291 0 .398L5.341 9.573a.282.282 0 0 1-.398 0l-.331-.331a.285.285 0 0 1 0-.399L6.415 7.04zm2.54 0L7.119 5.203a.295.295 0 0 1 .004-.416l.349-.349a.29.29 0 0 1 .416-.004l2.214 2.214a.289.289 0 0 1 .019.021l.132.133c.11.11.108.291 0 .398L7.881 9.573a.282.282 0 0 1-.398 0l-.331-.331a.285.285 0 0 1 0-.399L8.955 7.04z"
+              fill="gray"
+            ></path>
           </g>
         </svg>
       </Button>
-      <Dialog
+      <Modal
+        title={`${t("invoice.submitInvoice")} -${invoiceId}-`}
         open={open}
         onClose={handleClose}
-        PaperProps={{
-          component: "form",
-          onSubmit: submit,
-        }}
-        onKeyUp={(e) => e.key === "Enter" && submit(e)}
-      >
-        <DialogTitle className="flex justify-between">
-          <div>Submit Package</div>
-          <div className="text-2xl font-mono font-semibold text-gray-800">
-            -{invoiceId}-
-          </div>
-        </DialogTitle>
-        <DialogContent>
-          <table className="table-auto text-start w-full">
-            <tbody>
-              <tr>
-                <td className="py-2 w-48 font-medium text-gray-500">
-                  Number of packages
-                </td>
-                <td className="w-64 py-2 text-xl text-slate-900">
-                  <TextField
-                    autoFocus
-                    required
-                    size="small"
-                    margin="none"
-                    placeholder="Number of Packages"
-                    error={packageNumberFieldError}
-                    name="numberOfPackages"
-                    variant="outlined"
-                    type="number"
-                    onChange={onInputChange}
-                  />
-                </td>
-              </tr>
-              <tr className="border-b-2 border-slate-50">
-                <td className="py-2 w-48 font-medium text-gray-500">Packer</td>
-                <td className="w-64 py-2 text-xl text-slate-900">
-                  <div className="flex gap-2 items-center">
-                    <div className="w-[100px]">
-                      <TextField
-                        autoFocus
-                        required
-                        error={packerFieldError || !packerHasPermission}
-                        size="small"
-                        margin="none"
-                        name="packerId"
-                        placeholder="Your ID"
-                        variant="outlined"
-                        onChange={onInputChange}
-                      />
-                    </div>
-                    <div
-                      className={`w-[200px] overflow-hidden text-ellipsis whitespace-nowrap font-medium ${
-                        packerFieldError || !packerHasPermission
-                          ? "text-red-700 text-xs opacity-80"
-                          : "text-slate-800 text-lg"
-                      }`}
-                    >
-                      {packerFieldError
-                        ? "ID is not valid"
-                        : !packerHasPermission
-                        ? "Packer cannot submit"
-                        : packerName}
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={submit}>Submit</Button>
-        </DialogActions>
-      </Dialog>
+        onCancel={handleClose}
+        okButtonProps={null}
+        cancelText={t("common.cancel")}
+        footer={
+          <Form
+            name="basic"
+            labelAlign="left"
+            labelCol={{ span: 8 }}
+            style={{ maxWidth: 600 }}
+            onFinish={submit}
+            autoComplete="off"
+          >
+            <Form.Item
+              label={t("invoice.numberOfPackages")}
+              name="numberOfPackages"
+              rules={numberOfPackagesValidationRules}
+            >
+              <Input placeholder={t("invoice.numberOfPackages")} />
+            </Form.Item>
+
+            <Form.Item
+              label={t("packer.title")}
+              name="packerId"
+              hasFeedback
+              validateStatus={packerIdFieldValidationStatus}
+              rules={packerIdValidationRules}
+            >
+              <Input placeholder={t("packer.packerIdPlaceholder")} />
+            </Form.Item>
+
+            <Button color="green" variant="solid" htmlType="submit">
+              {t("common.submit")}
+            </Button>
+          </Form>
+        }
+      ></Modal>
     </>
   );
 }

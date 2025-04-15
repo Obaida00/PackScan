@@ -72,7 +72,7 @@ class InvoiceResource extends Resource
                 Select::make('status')
                     ->options([
                         'Pending' => 'Pending',
-                        'In Progress' => 'In Progress',
+                        'In Progress' => 'InProgress',
                         'Done' => 'Done',
                         'Sent' => 'Sent',
                     ])
@@ -155,7 +155,7 @@ class InvoiceResource extends Resource
                 SelectFilter::make('status')
                     ->options([
                         'Pending' => 'Pending',
-                        'In Progress' => 'In Progress',
+                        'In Progress' => 'InProgress',
                         'Done' => 'Done',
                         'Sent' => 'Sent',
                     ])

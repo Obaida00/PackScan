@@ -4,26 +4,30 @@ import TableDataCell from "../../../shared/components/TableComponents/TableDataC
 import InvoiceDetailsModal from "../../../shared/components/InvoiceDetailsModal.jsx";
 import ImportantInvoiceModal from "./ImportantInvoiceModal.jsx";
 
-function IndexTableRow({ i, invoice, reloadInvoices }) {
+function IndexTableRow({ invoice, reloadInvoices }) {
   return (
-    <tr className=" border-b bg-gray-800 border-gray-700 hover:bg-gray-600 transition ease-in-out text-center">
-      <TableDataCell key={i} data={invoice.invoice_id} />
+    <tr className="border-b bg-gray-200 border-gray-300 dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition ease-in-out text-center">
+      <TableDataCell
+        key={invoice.invoice_id}
+        data={`${invoice.invoice_id}-${invoice.storage_code.toUpperCase()}`}
+      />
+
+      <TableDataCell key={invoice.pharmacist} data={invoice.pharmacist} />
 
       <td>
         <StatusBadge badgeName={invoice.status} />
       </td>
       <td className="px-6 py-4 flex justify-end items-center">
         {!!invoice.is_important && (
-          <div>
-            <ImportantInvoiceModal
-              key={i}
-              invoice={invoice}
-              callback={reloadInvoices}
-            ></ImportantInvoiceModal>
-          </div>
+          <ImportantInvoiceModal
+            key={invoice.invoice_id}
+            invoice={invoice}
+            callback={reloadInvoices}
+          ></ImportantInvoiceModal>
         )}
-        <div>
-          <InvoiceDetailsModal key={i} invoice={invoice} />
+
+        <div className="h-full flex items-center">
+          <InvoiceDetailsModal key={invoice.invoice_id} invoice={invoice} />
         </div>
       </td>
     </tr>

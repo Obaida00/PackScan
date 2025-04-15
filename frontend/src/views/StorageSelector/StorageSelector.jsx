@@ -2,8 +2,10 @@ import * as React from "react";
 import MenuItem from "../../shared/components/MenuItem.jsx";
 import BackButton from "../../shared/components/BackButton.jsx";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 function StorageSelector() {
+  const {t} = useTranslation();
   const [storageList, setStorageList] = useState([]);
 
 React.useEffect(() => {
@@ -28,7 +30,7 @@ React.useEffect(() => {
             <MenuItem
               key={storage.id}
               url={storage.id}
-              item={storage.name.charAt(0).toUpperCase() + storage.name.slice(1)}
+              item={t("storage."+storage.name)}
             />
           ))}
         </div>

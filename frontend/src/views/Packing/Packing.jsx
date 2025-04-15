@@ -8,8 +8,11 @@ import "../../shared/styles/Loader.css";
 import { usePacking } from "../../shared/hooks/usePacking.jsx";
 import { useSFX } from "../../shared/hooks/useSFX.jsx";
 import { useLoadingContext } from "../../shared/contexts/LoadingContext.jsx";
+import { useTranslation } from "react-i18next";
+import { Button } from "antd";
 
 function Packing() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const { state } = useLocation();
   const { packerId } = state || {};
@@ -85,7 +88,7 @@ function Packing() {
             </div>
           </div>
           <div className="flex justify-center px-4">
-            <div className="w-full self-center font-sans text-xl text-slate-300">
+            <div className="w-full self-center font-sans text-xl text-slate-800 dark:text-slate-300">
               {invoice.invoice_id && `- ${invoice.invoice_id} -`}
             </div>
           </div>
@@ -96,8 +99,8 @@ function Packing() {
         <div className="flex justify-center my-2">
           <div className="w-[80vw] my-4 overflow-x-auto shadow-gray-950 shadow-md rounded-xl">
             {loading ? (
-              <h1 className="py-3 text-center font-cocon text-xl text-slate-950">
-                Loading...
+              <h1 className="py-3 text-center font-cocon text-xl dark:text-slate-200 text-slate-950">
+                {t("common.loading")}
               </h1>
             ) : (
               <PackingTable items={items} decrementFunc={decrementItem} />
@@ -108,13 +111,10 @@ function Packing() {
         <div className="flex justify-center">
           <div className="w-[90%] flex justify-between px-5">
             <div className="flex justify-center py-4">
-              <div className="min-h-[5vh] w-[90%] flex justify-end">
-                <button
-                  onClick={reset}
-                  className="text-slate-100 border border-slate-400 bg-red-900 focus:ring-2 focus:outline-none focus:ring-slate-300 font-semibold rounded-xl text-sm px-4 py-2 text-center flex items-center transition-all duration-75"
-                >
-                  <p>Reset</p>
-                </button>
+              <div className="min-h-[5vh] w-[100%] flex justify-end">
+                <Button type="primary" danger shape="rounded" className="border-red-600" onClick={reset}>
+                {t("common.reset")}
+                </Button>
               </div>
             </div>
             <SubmitInvoiceButton

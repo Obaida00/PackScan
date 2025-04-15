@@ -22,7 +22,7 @@ function ProgressBar({ currentCount, totalCount, color }) {
             <div className="w-[75%] bg-white opacity-80 rounded-full h-full">
                 <div className="h-1.5 rounded-full " style={barSytle}></div>
             </div>
-            <span className="w-[25%] text-sm font-medium text-slate-200">{`${currentCount} / ${totalCount}`}</span>
+            <span className="w-[25%] text-lg font-medium text-slate-800 dark:text-slate-200">{`${currentCount} / ${totalCount}`}</span>
         </div>
     );
 }

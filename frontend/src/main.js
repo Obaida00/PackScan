@@ -1,11 +1,28 @@
-const { app, BrowserWindow, ipcMain, Notification } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Notification,
+  nativeTheme,
+} = require("electron");
 const fs = require("fs");
-import * as axiosClient from "./axios-client.js";
 const path = require("path");
 const child_process = require("child_process");
 const sound = require("sound-play");
 const log = require("electron-log");
 const os = require("os");
+import Store from "electron-store";
+const axiosClient = require("./axios-client.js");
+
+const store = new Store({
+  name: "settings",
+  defaults: {
+    theme: "dark",
+    language: "en",
+    defaultReceiptPrinter: "",
+    defaultStickerPrinter: "",
+  },
+});
 
 log.transports.file.level = "info";
 log.transports.file.file = __dirname + "/log/log";
@@ -51,7 +68,9 @@ const createWindow = () => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools({ mode: "right" });
+
+  nativeTheme.themeSource = store.store.theme;
 };
 
 // Single-instance lock
@@ -74,7 +93,7 @@ if (!gotTheLock) {
   // Some APIs can only be used after this event occurs.
   app.whenReady().then(() => {
     const success = app.setAsDefaultProtocolClient(FILE_EXTENSION);
-    console.log(
+    log.info(
       `Registered as default handler for .${FILE_EXTENSION}: ${success}`
     );
 
@@ -110,9 +129,17 @@ if (!gotTheLock) {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
+// In memory cache
+let cachedStorages = null;
+const packerCache = new Map();
+
+ipcMain.handle('get-app-path', () => app.getAppPath());
+
 // renderer process event listeners for axios callouts
 ipcMain.handle("fetch-storages", async (event) => {
-  return await axiosClient.fetchStorages();
+  if (cachedStorages) return cachedStorages;
+  cachedStorages = await axiosClient.fetchStorages();
+  return cachedStorages;
 });
 ipcMain.handle("fetch-storage-by-id", async (event, id) => {
   return await axiosClient.fetchStorageById(id);
@@ -124,13 +151,20 @@ ipcMain.handle("fetch-order", async (event, id) => {
   return await axiosClient.getInvoiceById(id);
 });
 ipcMain.handle("fetch-packer", async (event, id) => {
-  return await axiosClient.getPackerById(id);
+  const cacheKey = String(id);
+  if (packerCache.has(cacheKey)) {
+    return packerCache.get(cacheKey);
+  }
+  const packer = await axiosClient.getPackerById(id);
+  packerCache.set(cacheKey, packer);
+  return packer;
 });
 ipcMain.handle(
   "submit-order",
   async (event, { id, packerId, numberOfPackages, manually = true }) => {
     await axiosClient.submitInvoice(id, packerId, numberOfPackages, manually);
-    await printInvoiceSticker(id);
+    let stickerPrinter = store.get("defaultStickerPrinter");
+    await printInvoiceSticker(id, stickerPrinter);
   }
 );
 ipcMain.handle("mark-invoice-pending", async (event, invoiceId) => {
@@ -157,14 +191,63 @@ ipcMain.handle("play-sound", async (event, soundName) => {
   await sound.play(soundFilePath);
 });
 ipcMain.handle("print-invoice", async (event, invoiceId) => {
-  let r = await axiosClient.downloadInvoiceReceipt(invoiceId, setProgress);
-  printPdf(r);
+  await printInvoiceReceipt(invoiceId);
 });
 ipcMain.handle("print-invoice-sticker", async (event, invoiceId) => {
   await printInvoiceSticker(invoiceId);
 });
 ipcMain.handle("notify", (event, title, body) => {
   sendNotification(title, body);
+});
+ipcMain.handle("get-settings", async (event) => {
+  log.info("Getting settings");
+  return store.store;
+});
+ipcMain.handle("save-settings", async (event, settings) => {
+  log.info("Saving settings:", settings);
+  for (const [key, value] of Object.entries(settings)) {
+    store.set(key, value);
+    if (key === "theme") nativeTheme.themeSource = value;
+  }
+  return store.store;
+});
+ipcMain.handle("get-printers", async (event) => {
+  log.info("Getting printers");
+  try {
+    if (mainWindow) {
+      let printers = await mainWindow.webContents.getPrintersAsync();
+      log.info("printers found...", printers);
+      return printers.map((p) => p.name);
+    } else {
+      log.error("Couldnt get printers, try again later");
+      return [];
+    }
+  } catch (error) {
+    log.error("Error getting printers:", error);
+    return [];
+  }
+});
+ipcMain.handle("get-log-content", async (event) => {
+  log.info("Getting log content");
+  try {
+    const logFilePath = log.transports.file.getFile().path;
+    log.info("log file: ", logFilePath);
+    if (fs.existsSync(logFilePath)) {
+      const logContent = fs.readFileSync(logFilePath, "utf8");
+      const lines = logContent.split("\n");
+      return lines.slice(-1000).join("\n");
+    }
+    return "No log file found";
+  } catch (error) {
+    log.error("Error reading log file:", error);
+    return "Error reading log file: " + error.message;
+  }
+});
+ipcMain.handle("show-dev-tools", async (event) => {
+  log.info("Opening DevTools");
+  if (mainWindow) {
+    mainWindow.webContents.openDevTools();
+  }
 });
 
 const onFileEvent = async (filePath) => {
@@ -180,13 +263,13 @@ const onFileEvent = async (filePath) => {
   }
 
   let { invoice_id: invoiceId } = await axiosClient.uploadNewFile(filePath);
-  let r = await axiosClient.downloadInvoiceReceipt(invoiceId);
-  printPdf(r);
+  let printer = store.get("defaultReceiptPrinter");
+  await printInvoiceReceipt(invoiceId, printer);
 };
 
-function printPdf(pdf) {
+function printPdf(pdf, printer) {
   sendNotification("Printing...", "Printing new file...");
-  PdfPrintToPrinter(pdf)
+  PdfPrintToPrinter(pdf, printer)
     .then((code) => {
       code == 0
         ? sendNotification("Success!!", "File printed successfully ✔️")
@@ -204,11 +287,23 @@ function printPdf(pdf) {
     });
 }
 
-function PdfPrintToPrinter(file_path) {
+function PdfPrintToPrinter(file_path, printer) {
+  log.info(
+    "printing " +
+      file_path +
+      "with printer.. " +
+      (printer ?? "(selectable by user)")
+  );
   let exePath = getPtpExePath();
+  const args = [file_path];
+
+  if (printer) {
+    args.push("-printer");
+    args.push(printer);
+  }
 
   return new Promise((resolve, reject) => {
-    const ptpProcess = child_process.spawn(exePath, [file_path]);
+    const ptpProcess = child_process.spawn(exePath, args);
 
     ptpProcess.stdout.on("data", (data) => {
       const output = data.toString();
@@ -263,6 +358,16 @@ function getPtpExePath() {
   }
 }
 
+async function printInvoiceSticker(id, printer) {
+  let s = await axiosClient.downloadInvoiceSticker(id, setProgress);
+  printPdf(s, printer);
+}
+
+async function printInvoiceReceipt(id, printer) {
+  let r = await axiosClient.downloadInvoiceReceipt(id, setProgress);
+  printPdf(r, printer);
+}
+
 function getSfxFilePath(sfxFileName) {
   try {
     let sfxPath;
@@ -284,7 +389,7 @@ function getSfxFilePath(sfxFileName) {
           `.webpack\\main\\sounds\\${sfxFileName}`
         );
         fs.copyFileSync(asarScriptPath, sfxPath);
-        log.info(`ptp exe extracted to: ${sfxPath}`);
+        log.info(`Sound file extracted to: ${sfxPath}`);
       }
     } else {
       sfxPath = path.join(__dirname, "sounds", sfxFileName);
@@ -295,11 +400,6 @@ function getSfxFilePath(sfxFileName) {
   } catch (error) {
     log.error(error);
   }
-}
-
-async function printInvoiceSticker(invoiceId) {
-  let s = await axiosClient.downloadInvoiceSticker(invoiceId, setProgress);
-  printPdf(s);
 }
 
 function setProgress(progress) {

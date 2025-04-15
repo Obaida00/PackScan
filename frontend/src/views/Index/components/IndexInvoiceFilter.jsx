@@ -1,21 +1,14 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { TextField, MenuItem, FormControlLabel, Checkbox } from "@mui/material";
+import { Select, DatePicker, Checkbox } from "antd";
 import SearchBox from "../../../shared/components/SearchBox.jsx";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
-const statusOptions = [
-  { label: "-", value: "" },
-  { label: "Pending", value: "Pending" },
-  { label: "In Progress", value: "InProgress" },
-  { label: "Done", value: "Done" },
-  { label: "Sent", value: "Sent" },
-];
+const { Option } = Select;
 
 function IndexInvoiceFilters({ onChange }) {
+  const { t } = useTranslation();
   const [filters, setFilters] = useState({
     invoiceId: "",
     storageId: "",
@@ -24,19 +17,25 @@ function IndexInvoiceFilters({ onChange }) {
     isImportant: false,
     isMissing: false,
   });
+  const statusOptions = [
+    { label: t("invoice.status.-"), value: "" },
+    { label: t("invoice.status.Pending"), value: "Pending" },
+    { label: t("invoice.status.InProgress"), value: "InProgress" },
+    { label: t("invoice.status.Done"), value: "Done" },
+    { label: t("invoice.status.Sent"), value: "Sent" },
+  ];
 
   const [storageList, setStorageList] = useState([]);
 
   const storageOptions = [
-    { label: "-", value: "" },
+    { value: "", label: t("storage.title") },
     ...storageList.map((storage) => ({
-      label: storage.name,
+      label: t(`storage.${storage.name}`),
       value: storage.id,
     })),
   ];
 
-  const handleFilterChange = (event) => {
-    const { name, value } = event.target;
+  const handleFilterChange = (name, value) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [name]: value,
@@ -67,133 +66,62 @@ function IndexInvoiceFilters({ onChange }) {
     onChange(cleanFilters(filters));
   }, [filters]);
 
-  const whiteStyles = {
-    "& .MuiOutlinedInput-root": {
-      "& fieldset, &:hover fieldset, &.Mui-focused fieldset": {
-        borderColor: "#f0f0f0",
-      },
-    },
-    "& .MuiInputLabel-root, & .MuiInputBase-input, & .MuiSelect-icon, & .MuiFormHelperText-root, & .Mui-focused":
-      {
-        color: "#f0f0f0 !important",
-      },
-    "& .MuiInputBase-root": {
-      height: "40px",
-      width: "130px",
-    },
-    "& .MuiInputBase-adornedEnd.MuiInputBase-colorPrimary.MuiInputBase-formControl.MuiInputBase-root.MuiInputBase-sizeSmall.MuiOutlinedInput-root.css-jupps9-MuiInputBase-root-MuiOutlinedInput-root":
-      {
-        width: "180px",
-      },
-  };
-
   return (
-    <div className="flex flex-nowrap gap-2 justify-between items-center">
-      <div className="mr-4">
+    <div
+      style={{
+        display: "flex",
+        gap: 8,
+        alignItems: "center",
+        flexWrap: "wrap",
+      }}
+    >
+      <div style={{ marginRight: 16 }}>
         <SearchBox
           action={(v) => updateFilterValue("invoiceId", v)}
           eraseOnPaste={false}
         />
       </div>
-      <div className="flex flex-wrap gap-1 items-center">
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <FormControlLabel
-            label="Missing"
-            sx={{ color: "#f0f0f0" }}
-            control={
-              <Checkbox
-                name="isMissing"
-                checked={!!filters.isMissing}
-                size="small"
-                onChange={(e) =>
-                  updateFilterValue("isMissing", e.target.checked)
-                }
-                sx={{
-                  color: "#f0f0f0",
-                  "&.Mui-checked": {
-                    color: "#f0f0f0",
-                  },
-                }}
-              />
-            }
-          />
-          <FormControlLabel
-            label="Important"
-            sx={{ color: "#f0f0f0" }}
-            control={
-              <Checkbox
-                name="isImportant"
-                checked={!!filters.isImportant}
-                size="small"
-                onChange={(e) =>
-                  updateFilterValue("isImportant", e.target.checked)
-                }
-                sx={{
-                  color: "#f0f0f0",
-                  "&.Mui-checked": {
-                    color: "#f0f0f0",
-                  },
-                }}
-              />
-            }
-          />
-          <TextField
-            select
-            label="Storage"
-            name="storageId"
-            value={filters.storageId}
-            onChange={handleFilterChange}
-            size="small"
-            sx={{ ...whiteStyles }}
-          >
-            {storageOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            select
-            label="Status"
-            name="status"
-            value={filters.status}
-            onChange={handleFilterChange}
-            size="small"
-            sx={{ ...whiteStyles }}
-          >
-            {statusOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-          <DesktopDatePicker
-            label="Creation Date"
-            value={filters.date ? dayjs(filters.date) : null}
-            onChange={(newValue) => {
-              setFilters((prev) => ({
-                ...prev,
-                date: newValue ? newValue.format("YYYY-MM-DD") : "",
-              }));
-            }}
-            sx={{ ...whiteStyles }}
-            slotProps={{
-              textField: {
-                variant: "outlined",
-                size: "small",
-              },
-              actionBar: {
-                actions: ["clear"],
-              },
-              openPickerButton: {
-                sx: {
-                  color: "#f0f0f0",
-                },
-              },
-            }}
-          />
-        </LocalizationProvider>
-      </div>
+
+      <Checkbox
+        checked={filters.isMissing}
+        onChange={(e) => updateFilterValue("isMissing", e.target.checked)}
+      >
+        {t("invoice.missing")}
+      </Checkbox>
+
+      <Checkbox
+        checked={filters.isImportant}
+        onChange={(e) => updateFilterValue("isImportant", e.target.checked)}
+      >
+        {t("invoice.important")}
+      </Checkbox>
+
+      <Select
+        style={{ width: 130 }}
+        defaultValue={filters.storageId}
+        onChange={(value) => handleFilterChange("storageId", value)}
+        placeholder="Storage"
+        options={storageOptions}
+      ></Select>
+
+      <Select
+        defaultValue={filters.status}
+        style={{ width: 130 }}
+        onChange={(value) => handleFilterChange("status", value)}
+        placeholder="Status"
+        options={statusOptions}
+      ></Select>
+
+      <DatePicker
+        style={{ width: 130 }}
+        value={filters.date ? dayjs(filters.date) : null}
+        onChange={(date, dateString) => {
+          handleFilterChange("date", dateString);
+        }}
+        format="YYYY-MM-DD"
+        allowClear
+        placeholder={t("common.chooseDate")}
+      />
     </div>
   );
 }

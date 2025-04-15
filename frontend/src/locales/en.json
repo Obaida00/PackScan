@@ -1,0 +1,89 @@
+{
+  "common": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "search": "Search",
+    "close": "Close",
+    "remove": "Remove",
+    "creationDate": "Creation date",
+    "reset": "Reset",
+    "noContent": "No Content",
+    "refresh": "Refresh",
+    "chooseDate": "Choose Date",
+    "select": "select",
+    "submit": "Submit",
+    "print": "Print"
+  },
+  "navigation": {
+    "invoiceManager": "Invoice Manager",
+    "packagingManager": "Packaging Manager",
+    "settings": "Settings"
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "lightTheme": "Light Theme",
+    "language": "Language",
+    "printing": "Printing",
+    "defaultPrinters": "Default Printers",
+    "defaultReceiptPrinter": "Receipt printer",
+    "defaultStickerPrinter": "Sticker printer",
+    "selectPrinter": "Select a printer",
+    "developer": "Developer Tools",
+    "showDevTools": "Show Developer Tools",
+    "applicationLogs": "Application Logs",
+    "loadingPrinters": "Loading Printers..."
+  },
+  "invoice": {
+    "title": "invoice",
+    "id": "Invoice ID",
+    "status": {
+      "-": "All",
+      "title": "Status",
+      "Pending": "Pending",
+      "InProgress": "In Progress",
+      "Done": "Done",
+      "Sent": "Sent"
+    },
+    "important": "Important",
+    "importantInvoices": "Important Invoices",
+    "missing": "Missing",
+    "details": "Invoice Details",
+    "statement": "Statement",
+    "pharmacist": "Pharmacist",
+    "createdAt": "Created at",
+    "dateOfDelivery": "Date of delivery",
+    "netPrice": "Net price",
+    "numberOfPackages": "Number of Packages",
+    "doneAt": "Done at",
+    "sentAt": "Sent at",
+    "submittionMode": "Submittion mode",
+    "startPacking": "Start packing",
+    "submitInvoice": "Submit Invoice",
+    "item": {
+      "name": "Item Name",
+      "count": "Item Count"
+    }
+  },
+  "storage": {
+    "title": "Storage",
+    "almousoaa": "Almousoaa",
+    "advanced": "Almousoaa advanced",
+    "log": "Logs"
+  },
+  "packer": {
+    "title": "Packer",
+    "packerIdPlaceholder": "Your ID ",
+    "idNotValid": "Packer id not valid",
+    "idMustBeAnInteger": "Packer id must be an integer",
+    "cannotSubmit": "Packer cannot submit",
+    "emptyPackerIdField": "Please enter packer ID",
+    "currentPacker": "Current packer"
+  },
+  "extra": {
+    "emptyNumberOfPackagesField": "Please enter the number of packages",
+    "numberOfPackagesMustBeAnInteger": "Number of packages must be an integer",
+    "doYouWantToRemoveImportantFlag": "This will remove the important flag.. Are you sure?"
+  }
+}
