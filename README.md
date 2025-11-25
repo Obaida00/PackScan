@@ -11,3 +11,7 @@ a cross platform app that enables easy packaging orders for costumers through in
 `
 php artisan make:filament-user
 `
+
+
+
+## This Repository has been archieved due to unexpected scaling of the project that made it increasingly hard to maintain with react and javascript, we moved to a new version that relies on .Net9 (MAUI for desktop application, ABP framework for backend)
